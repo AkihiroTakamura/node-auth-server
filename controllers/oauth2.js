@@ -10,6 +10,9 @@ var Code = require('../models/code');
 var uid = require('../util/uid').uid;
 var config = require('config');
 
+// =======================
+// Registers
+// =======================
 // Register serialiazation function
 server.serializeClient(function(client, callback) {
   return callback(null, client._id);
@@ -36,6 +39,9 @@ function(client, redirectUri, user, ares, callback) {
     userId: user._id,
     scope: ares.scope
   });
+
+  console.log("* Get grant code client[", client ,"] code[", code.code ,"] ares[", ares ,"] user[", user ,"]");
+
   code.save(function(err) {
     if (err) return callback(err);
 
@@ -45,6 +51,8 @@ function(client, redirectUri, user, ares, callback) {
 
 // Exchange authorization codes for access token
 server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, callback) {
+  console.log("* Exchange access token client[", client ,"] code[", code ,"] redirectUri[", redirectUri,"]");
+
   Code.findOne({code: code}, function (err, authCode) {
     if (err) return callback(err);
 
@@ -60,11 +68,14 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
       // create and send AccessToken
       var token = new Token({
         accesstoken: uid(256),
+        refreshtoken: uid(256),
         clientId: authCode.clientId,
         userId: authCode.userId,
         expirationDate: new Date(new Date().getTime() + (config.token.expiresIn * 1000)),
         scope: authCode.scope
       });
+
+      console.log("* Get access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
 
       token.save(function(err) {
         if (err) return callback(err);
@@ -77,6 +88,32 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
 
 }));
 
+// Exchange refresh token for access token
+server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken, scope, callback) {
+  console.log("* Exchange refresh token");
+
+  Token.findOne({refreshtoken: refreshtoken}, function (err, token) {
+    if (err) return callback(err);
+
+    console.log("- refresh token valid");
+
+    // access token update
+    token.accesstoken = uid(256);
+    token.expirationDate = new Date(new Date().getTime() + (config.token.expiresIn * 1000));
+
+    token.save(function(err) {
+      if (err) return callback(err);
+      console.log("- token refreshed");
+      callback(null, token, {expires_in: config.token.expiresIn});
+    });
+
+  });
+
+}));
+
+// =======================
+// Endpoints
+// =======================
 // User authorization endpoint
 exports.authorization = [
   // OAuth Client認証 -> clietid, redirectUriのチェック

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var TokenSchema = new mongoose.Schema({
   accesstoken: {type: String, required: true},
+  refreshtoken: {type: String, required: true},
   userId: {type: String, required: true},
   clientId: {type: String, required: true},
   expirationDate: {type: Date, required: true},
