@@ -8,6 +8,7 @@ var Token = require('../models/token');
 
 // =======================
 // User Authentification(Basic)
+// no use now
 // =======================
 passport.use(new BasicStrategy(
   function(username, password, callback) {
@@ -31,8 +32,8 @@ passport.use(new BasicStrategy(
 // User Authentification(Local)
 // =======================
 passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'pass'
+    usernameField: 'username',
+    passwordField: 'password'
   },
   function(username, password, callback) {
     User.findOne({username: username}, function(err, user) {
@@ -44,6 +45,8 @@ passport.use(new LocalStrategy({
         if (err) return callback(err);
 
         if (!isMatch) return callback(null, false);
+
+        //TODO: Add other checks
 
         return callback(null, user);
       });
@@ -59,7 +62,6 @@ passport.use('client-basic', new BasicStrategy(
     Client.findOne({id: username}, function(err, client) {
       if (err) return callback(err);
 
-      // TODO: encrypt password
       if (!client || client.secret !== password) return callback(null, false);
 
       return callback(null, client);
@@ -71,8 +73,8 @@ passport.use('client-basic', new BasicStrategy(
 // Oauth2 Code Flow
 // =======================
 passport.use(new BearerStrategy(
-  function(accessToken, callback) {
-    Token.findOne({value: accessToken}, function(err, token) {
+  function(accesstoken, callback) {
+    Token.findOne({accesstoken: accesstoken}, function(err, token) {
       if (err) return callback(err);
 
       if (!token) return callback(null, false);
@@ -89,6 +91,16 @@ passport.use(new BearerStrategy(
   }
 ));
 
-exports.isAuthentiacted = passport.authenticate(['basic', 'local', 'bearer'], {session: false});
+passport.serializeUser(function(user, callback) {
+  callback(null, user.id);
+});
+
+passport.deserializeUser(function(id, callback) {
+  User.findById(id, function(err, user) {
+    callback(err, err ? null : user);
+  });
+});
+
+exports.isUserAuthentiacted = passport.authenticate(['local'], {session: true});
 exports.isClientAuthenticated = passport.authenticate('client-basic', {session: false});
 exports.isBearerAuthentiacted = passport.authenticate('bearer', {session: false});

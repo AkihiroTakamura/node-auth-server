@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 
 var TokenSchema = new mongoose.Schema({
-  value: {type: String, required: true},
+  accesstoken: {type: String, required: true},
   userId: {type: String, required: true},
-  clientId: {type: String, required: true}
+  clientId: {type: String, required: true},
+  expirationDate: {type: Date, required: true},
+  scope: {type: String, required: false}
 });
-
-//TODO: encrypt value(access token)
 
 module.exports = mongoose.model('Token', TokenSchema);

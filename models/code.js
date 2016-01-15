@@ -1,12 +1,10 @@
 var mongoose = require('mongoose');
 
 var CodeSchema = new mongoose.Schema({
-  value: {type: String, required: true},
-  redirectUri: {type: String, required: true},
+  code: {type: String, required: true},
+  clientId: {type: String, required: true},
   userId: {type: String, required: true},
-  clientId: {type: String, required: true}
+  scope: {type: String, required: false}
 });
-
-//TODO: encrypt value(authorization code)
 
 module.exports = mongoose.model('Code', CodeSchema);

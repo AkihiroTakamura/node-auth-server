@@ -7,7 +7,9 @@ exports.postClients = function(req, res) {
   client.id = req.body.id;
   client.secret = req.body.secret;
   client.userId = req.user._id;
+  client.domain = req.body.domain;
 
+  // TODO: encrypt password
   client.save(function(err) {
     if (err) res.send(err);
 

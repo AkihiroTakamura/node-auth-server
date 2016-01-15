@@ -1,0 +1,20 @@
+{
+  "server": {
+    "port": 8080
+  },
+  "session": {
+    "secret": "Super Secret Session Key"
+  },
+  "database": {
+    "mongo": "mongodb://localhost/nodeauthserver"
+  },
+  "token": {
+    "expiresIn": 3600
+  },
+  "scope": {
+    "map": {
+      "read": "execute view api",
+      "write": "execute write api"
+    }
+  }
+}
