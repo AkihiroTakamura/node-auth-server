@@ -128,7 +128,7 @@ Body:
 
 # TODO
 * userの権限(admin権限は全ユーザ・クライアント見れる）
-* redirect_uriのvalidation
-* clientsecretのencrypt
-* deny押した時の挙動
+* ~~redirect_uriのvalidation~~
+* ~~clientsecretのencrypt~~
+* ~~deny押した時の挙動~~
 * accessTokenの有効期限とrefreshToken

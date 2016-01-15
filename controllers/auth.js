@@ -79,6 +79,9 @@ passport.use(new BearerStrategy(
 
       if (!token) return callback(null, false);
 
+      // validate token expired
+      if (!token.active) return callback(null, false);
+
       User.findOne({ _id: token.userId}, function (err, user) {
         if (err) return callback(err);
 
@@ -101,6 +104,15 @@ passport.deserializeUser(function(id, callback) {
   });
 });
 
-exports.isUserAuthentiacted = passport.authenticate(['local'], {session: true});
+exports.isUserAuthentiacted = passport.authenticate('local', {session: true});
 exports.isClientAuthenticated = passport.authenticate('client-basic', {session: false});
-exports.isBearerAuthentiacted = passport.authenticate('bearer', {session: false});
+
+exports.isBearerAuthentiacted = function(req, res, callback) {
+  passport.authenticate('bearer', {session: false}, function(err, user, info) {
+    if (err) return callback(err);
+
+    if (!user) return res.status(401).json({message: "Access token invalid or expired"})
+
+    callback();
+  })(req, res, callback);
+}
