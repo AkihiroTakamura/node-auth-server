@@ -1,6 +1,9 @@
 # node-auth-server
 * Authorization Server by node
-* ref: [here](https://github.com/scottksmith95/beerlocker)
+* ref1: [here](https://github.com/scottksmith95/beerlocker)
+* ref2: [here](https://github.com/IGZangelsanchez/oauth2orize-example-extended)
+* ref3: [here](https://hnryjms.github.io/2014/04/authentication/) [here](https://hnryjms.github.io/2014/07/oauth2/)
+* source code: [github](https://github.com/AkihiroTakamura/node-auth-server)
 
 # Getting Stated
 
@@ -55,19 +58,20 @@ $ npm start
   * name: client(application) name
   * id: client(application) id
   * secret: client(application) password
+  * domain: client(application) domain e.g)hostname
 
 ![Kobito.DbRnho.png](https://qiita-image-store.s3.amazonaws.com/0/60056/472bd078-19e7-7d97-2b26-e2308d5c07dc.png "Kobito.DbRnho.png")
 
-![Kobito.pwN24N.png](https://qiita-image-store.s3.amazonaws.com/0/60056/db6b7b2d-3cc4-4fc8-336b-cd2eeb088c8c.png "Kobito.pwN24N.png")
+![Kobito.r5qlJD.png](https://qiita-image-store.s3.amazonaws.com/0/60056/71d60236-a411-e551-c6d0-f120d7f5b19f.png "Kobito.r5qlJD.png")
 
 
 ## get OAuth code
 * ブラウザより
-  * http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080
+  * http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080&scope=read write
 
-* allowをクリックしてredirectされるcodeをメモ
+* 登録したuserid/passwordを入力、redirectされるcodeをメモ
 
-## get Access Token
+## get Access Token and Refresh Token
 * url: /api/oauth2/token
 * method: POST
 * header
@@ -79,6 +83,9 @@ $ npm start
 
 ![Kobito.P3f8Fz.png](https://qiita-image-store.s3.amazonaws.com/0/60056/22f03cf3-bb4b-238a-de65-56937508b9c3.png "Kobito.P3f8Fz.png")
 
+![Kobito.vzYo7K.png](https://qiita-image-store.s3.amazonaws.com/0/60056/3530d64a-4fdf-b0ba-fb1c-1e1c8d409f81.png "Kobito.vzYo7K.png")
+
+
 ## execute secure api
 * url: /api/users/
 * method: POST
@@ -87,48 +94,27 @@ $ npm start
 
 ![Kobito.nyeua4.png](https://qiita-image-store.s3.amazonaws.com/0/60056/42f9bf52-316f-4452-8ba1-afed5b2b5a1c.png "Kobito.nyeua4.png")
 
+# refresh token
+* url: /api/oauth2/token
+* method: POST
+* header
+  * Authorization: Basic clientid:clientsecret
+* body
+  * grant_type: refresh_token
+  * refresh_token: accessTokenと一緒に取得したrefreshToken
 
-
-# Demo
-* userid/passwordの登録
-* OAuth clientの登録
-* userid/passwordでユーザ認証
-* clientid/clientsecretでアプリケーション認証
-  * scopeの認可画面を経由
-* redirect_uriで指定したURLにcodeを返却
-* codeをPOSTしてaccessTokenを取得
-* accessTokenをBearerに指定して認証済みサイトにアクセス
-  * accessTokenよりuseridの判別可能
-
-
-userid: testuser
-password: password
-clientid: clientid
-clientsecret: clientsecret
-redirect_uri: xxxxx
-
-http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080
-
-userid/passを入力
-
-Allowを押下
-
-codeを取得
-
-postmanより
-Basic Auth:
-  Username: clientid
-  Password: clientsecret
-Body:
-  code: 取得したcode
-  grant_type: authorization_code
-  redirect_uri: 登録したredirect_uri
-
+![Kobito.ydlc18.png](https://qiita-image-store.s3.amazonaws.com/0/60056/015ee593-74f4-1f0c-28ee-b7f967abd23a.png "Kobito.ydlc18.png")
 
 
 # TODO
-* userの権限(admin権限は全ユーザ・クライアント見れる）
 * ~~redirect_uriのvalidation~~
 * ~~clientsecretのencrypt~~
 * ~~deny押した時の挙動~~
-* accessTokenの有効期限とrefreshToken
+* ~~accessTokenの有効期限とrefreshToken~~
+* userのログアウト
+* userの権限(admin権限は全ユーザ・クライアント見れる)
+* user認証の共有api
+* user認可ありのアプリ一覧、認可の解除機能
+* 通常ログイン時のprofile等、メニュー画面
+
+
