@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h2 Log in
+
+  each message in error
+    .alert.alert-warning
+      p= message
+
+  form(action="/login", method="post")
+    div
+      label Username:
+      input(type="text", name="username")
+    div
+      label Password:
+      input(type="password", name="password")
+    div
+      input(type="submit", value="submit")
+

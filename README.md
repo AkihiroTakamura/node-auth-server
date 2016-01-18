@@ -111,10 +111,10 @@ $ npm start
 * ~~clientsecretのencrypt~~
 * ~~deny押した時の挙動~~
 * ~~accessTokenの有効期限とrefreshToken~~
-* userのログアウト
+* ~~userのログアウト~~
+* ~~通常ログイン時のprofile等、メニュー画面~~
 * userの権限(admin権限は全ユーザ・クライアント見れる)
 * user認証の共有api
 * user認可ありのアプリ一覧、認可の解除機能
-* 通常ログイン時のprofile等、メニュー画面
 
 

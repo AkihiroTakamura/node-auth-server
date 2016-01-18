@@ -169,7 +169,7 @@ exports.decision = [
 
       if (!user) {
         req.flash('info', info);
-        req.flash('error', 'username or password was incorrect. Try again');
+        req.flash('error', info.message);
         res.redirect(req.body['auth_url']);
         return;
       }

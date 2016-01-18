@@ -39,15 +39,14 @@ passport.use(new LocalStrategy({
     User.findOne({username: username}, function(err, user) {
       if (err) return callback(err);
 
-      if (!user) return callback(null, false);
+      if (!user) return callback(null, false, {message: 'user not found'});
 
       user.verifyPassword(password, function(err, isMatch) {
         if (err) return callback(err);
 
-        if (!isMatch) return callback(null, false);
+        if (!isMatch) return callback(null, false, {message: 'invalid password'});
 
         //TODO: Add other checks
-
         return callback(null, user);
       });
     });
@@ -100,6 +99,7 @@ passport.serializeUser(function(user, callback) {
 
 passport.deserializeUser(function(id, callback) {
   User.findById(id, function(err, user) {
+    user.password = undefined;
     callback(err, err ? null : user);
   });
 });
@@ -113,6 +113,10 @@ exports.isBearerAuthentiacted = function(req, res, callback) {
 
     if (!user) return res.status(401).json({message: "Access token invalid or expired"})
 
-    callback();
+    req.logIn(user, function(err) {
+      if (err) return callback(err);
+      return callback();
+    });
+
   })(req, res, callback);
 }

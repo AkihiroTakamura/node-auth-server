@@ -22,13 +22,10 @@ exports.postClients = function(req, res) {
 
 exports.getClients = function(req, res) {
   Client.find(
-    {userId: req.user._id},
+    {userId: req.user.id},
     function(err, clients) {
       if (err) res.send(err);
       res.json(clients);
     }
   );
 }
-
-
-

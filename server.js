@@ -3,7 +3,6 @@
 // =======================
 var express           = require('express');
 var app               = express();
-var router            = express.Router();
 var bodyParser        = require('body-parser');
 var mongoose          = require('mongoose');
 var passport          = require('passport');
@@ -11,6 +10,7 @@ var session            = require('express-session');
 var config             = require('config');
 var flash              = require('connect-flash');
 
+var siteController    = require('./controllers/site');
 var userController    = require('./controllers/user');
 var authController    = require('./controllers/auth');
 var clientController   = require('./controllers/client');
@@ -40,34 +40,58 @@ app.use(session({
   resave: true
 }));
 
+// connect-flash
+app.use(flash());
+
 // passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-// connect-flash
-app.use(flash());
 
 // =======================
 // routes
 // =======================
-router.route('/users')
+
+// root routes
+var router = express.Router();
+
+router.route('/')
+  .get(siteController.index);
+
+router.route('/login')
+  .get(siteController.loginForm)
+  .post(siteController.login);
+
+router.route('/logout')
+  .get(siteController.logout);
+
+router.route('/profile')
+  .get(authController.isUserAuthentiacted, siteController.profile);
+
+app.use('/', router);
+
+// api routes
+var apiRouter = express.Router();
+
+apiRouter.route('/users')
   .post(userController.postUsers)
   .get(authController.isBearerAuthentiacted, userController.getUsers);
 
-router.route('/clients')
+apiRouter.route('/clients')
   .post(clientController.postClients)
   .get(authController.isBearerAuthentiacted, clientController.getClients);
 
 // http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080&scope=read write
-router.route('/oauth2/authorize')
+apiRouter.route('/oauth2/authorize')
   //.ユーザ認証はoauth2Controller内で実施する
   .get(oauth2Controller.authorization)
   .post(oauth2Controller.decision);
 
-router.route('/oauth2/token')
+apiRouter.route('/oauth2/token')
   .post(authController.isClientAuthenticated, oauth2Controller.token);
 
-app.use('/api', router);
+app.use('/api', apiRouter);
+
 
 // =======================
 // start the server

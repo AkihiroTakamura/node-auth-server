@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h2 Welcome index!
+
+  if user
+    p!= 'hello, <strong>' + user.username + '</strong>'
+    a(href='/logout') logout
+  else
+    a(href='/login') login

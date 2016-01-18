@@ -17,9 +17,10 @@ exports.postUsers = function(req, res) {
 }
 
 exports.getUsers = function(req, res) {
-  User.find(function(err, users) {
-    if (err) res.send(err);
-    res.json(users);
+  User.find(
+    {username: req.user.username},
+    function(err, users) {
+      if (err) res.send(err);
+      res.json(users);
   });
 }
-
