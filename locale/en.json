@@ -1,0 +1,18 @@
+{
+  "app": {
+    name: "User Authorization and Authentification Application"
+  },
+  "msg": {
+    "hello": "hello",
+    "user": {
+      "title": "."
+    },
+    "msg": {
+      "require": {
+        "permission": " requires permission to",
+        "login": "Sign in below to allow this app to connect with your account.",
+        "logined": "Click <em>Authorize</em> to allow this app to connect with your account."
+      }
+    }
+  }
+}

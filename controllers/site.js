@@ -16,7 +16,11 @@ exports.login = passport.authenticate('local', {
 
 exports.logout = function(req, res) {
   req.logout();
-  res.redirect('/');
+  if (req.query.next) {
+    res.redirect(req.query.next);
+  } else {
+    res.redirect('/');
+  }
 }
 
 exports.profile = function(req, res) {

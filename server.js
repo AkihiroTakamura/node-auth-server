@@ -9,6 +9,7 @@ var passport          = require('passport');
 var session            = require('express-session');
 var config             = require('config');
 var flash              = require('connect-flash');
+var i18n               = require('i18n');
 
 var siteController    = require('./controllers/site');
 var userController    = require('./controllers/user');
@@ -47,6 +48,14 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+// multi language
+i18n.configure({
+  locales: ['ja', 'en'],
+  defaultLocale: 'ja',
+  directory: __dirname + "/locale",
+  objectNotation: true
+});
+app.use(i18n.init);
 
 // =======================
 // routes

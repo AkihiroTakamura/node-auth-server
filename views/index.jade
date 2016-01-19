@@ -1,10 +1,10 @@
 extends layout
 
 block content
-  h2 Welcome index!
+  h2 Welcome #{__('app.name')}
 
   if user
-    p!= 'hello, <strong>' + user.username + '</strong>'
-    a(href='/logout') logout
+    p !{__('dsp.hello') + ' <strong>' + user.username + '</strong>' + __('dsp.user.title')}
+    a(href='/logout') #{__('dsp.control.logout')}
   else
-    a(href='/login') login
+    a(href='/login') #{__('dsp.control.login')}

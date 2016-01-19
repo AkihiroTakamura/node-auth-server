@@ -1,0 +1,33 @@
+{
+	"app": {
+		"name": "ユーザ認証＆認可アプリケーション"
+	},
+	"dsp": {
+		"hello": "こんにちは",
+		"user": {
+			"title": "さん"
+		},
+		"control": {
+			"login": "ログイン",
+			"logout": "ログアウト",
+			"username": "ユーザID",
+			"password": "パスワード",
+			"authorize": "許可して続行"
+		},
+		"login": "ログイン",
+		"msg": {
+			"require": {
+				"permission": "が次の権限を使います",
+				"login": "ログインすると権限の許可となります",
+				"logined": "<em>Authorize</em> をクリックして続行してください（権限の許可となります）"
+			},
+			"application": {
+				"connect": "に接続しようとしています"
+			},
+			"sinedin": "ログイン中：",
+			"password": {
+				"notshare": "このパスワードはアプリケーションには通知されません"
+			}
+		}
+	}
+}

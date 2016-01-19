@@ -1,7 +1,9 @@
 extends layout
 
 block content
-  div.text-center!= 'Connect with ' + client.name
+  h2 Welcome #{__('app.name')}
+
+  div.text-center!= client.name + __('dsp.msg.application.connect')
     form(method='post', action='/api/oauth2/authorize')
         input(type='hidden', name='transaction_id', value=transaction_id)
         input(type='hidden', name='response_type', value=response_type)
@@ -10,20 +12,14 @@ block content
         input(type='hidden', name='scope', value=scope.join(','))
 
         .well
-            p= client.name + ' requires permission to '
+            p= client.name + __('dsp.msg.require.permission')
+              ul
                 each item in scope
-                    if scope.indexOf(item) == scope.length-2
-                        != '<strong>' + map[item] + '</strong> and '
-                    else
-                        if scope.indexOf(item) == scope.length-1
-                            != '<strong>' + map[item] + '</strong>'
-                        else
-                            != '<strong>' + map[item] + '</strong>, '
-                | .
+                  li!= '<strong>' + map[item] + '</strong>'
             if user
-                p Click <em>Authorize</em> to allow this app to connect with your account.
+                p!=__('dsp.msg.require.logined')
             else
-                p Sign in below to allow this app to connect with your account.
+                p!=__('dsp.msg.require.login')
 
         each message in errors
           .alert.alert-warning
@@ -31,17 +27,17 @@ block content
 
         if user
             .form-group.info-padded
-                p.text-center!= 'Signed in as <strong>' + user.username + '</strong>'
+                p.text-center!= __('dsp.msg.sinedin') + '<strong>' + user.username + '</strong>'
             p.text-right
                 a(href='/logout?next=' + encodeURIComponent(currentURL))= 'Not ' + user.username + '?'
-                button.btn.btn-default(type='submit') Authorize →
+                button.btn.btn-default(type='submit')!= __('dsp.control.authorize')
         else
             .form-group
-                label(for='username') username
-                input.form-control#email(type='text', name='username', autofocus)
+                label(for='username') #{__('dsp.control.username')}:
+                input.form-control#username(type='text', name='username', autofocus)
             .form-group
-                label(for='password') Password
-                p.small!= 'Your password will <strong>not</strong> be shared with <strong>' + client.name + '</strong>'
+                label(for='password') #{__('dsp.control.password')}:
+                p.small #{__('dsp.msg.password.notshare')}
                 input.form-control#password(type='password', name='password')
             p.text-right
-                button.btn.btn-default(type='submit') Authorize →
+                button.btn.btn-default(type='submit')!= __('dsp.control.authorize')
