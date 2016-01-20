@@ -12,12 +12,15 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.2",
+    "bootstrap": "^3.3.6",
     "config": "^1.19.0",
     "connect-flash": "^0.1.1",
     "express": "^4.13.3",
     "express-session": "^1.13.0",
+    "font-awesome": "^4.5.0",
     "i18n": "^0.5.0",
     "jade": "^1.11.0",
+    "jquery": "^2.2.0",
     "js-yaml": "^3.5.2",
     "kerberos": "0.0.17",
     "mongoose": "^4.3.4",
@@ -26,6 +29,24 @@
     "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
+    "path": "^0.12.7",
     "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "cssify": "^1.0.2",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-nodemon": "^2.0.6",
+    "gulp-plumber": "^1.0.1",
+    "gulp-sass": "^2.1.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.1",
+    "jshint": "^2.9.1",
+    "tiny-lr": "^0.2.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   }
 }

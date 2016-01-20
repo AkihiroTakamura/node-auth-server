@@ -1,0 +1,13 @@
+.login .panel-heading {
+  padding: 5px 15px; }
+
+.login .panel-footer {
+  padding: 1px 15px;
+  color: #A0A0A0; }
+
+.login .profile-img {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 10px;
+  display: block;
+  border-radius: 50%; }

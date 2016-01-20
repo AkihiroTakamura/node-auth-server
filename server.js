@@ -10,6 +10,7 @@ var session            = require('express-session');
 var config             = require('config');
 var flash              = require('connect-flash');
 var i18n               = require('i18n');
+var path               = require('path');
 
 var siteController    = require('./controllers/site');
 var userController    = require('./controllers/user');
@@ -29,6 +30,9 @@ mongoose.connect(config.database.mongo);
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+// static file folder
+app.use(express.static('public'));
 
 // html template
 app.set('view engine', 'jade');
@@ -106,5 +110,5 @@ app.use('/api', apiRouter);
 // start the server
 // =======================
 app.listen(port);
-console.log('application started. port:' + port);
+console.log('application started');
 

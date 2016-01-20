@@ -1,13 +1,18 @@
 # node-auth-server
-* Authorization Server by node
+ Authorization Server by node
+
+# reffrences
 * ref1: [here](https://github.com/scottksmith95/beerlocker)
 * ref2: [here](https://github.com/IGZangelsanchez/oauth2orize-example-extended)
 * ref3: [here](https://hnryjms.github.io/2014/04/authentication/) [here](https://hnryjms.github.io/2014/07/oauth2/)
-* source code: [github](https://github.com/AkihiroTakamura/node-auth-server)
+
+# source code
+* [github](https://github.com/AkihiroTakamura/node-auth-server)
+
 
 # Getting Stated
 
-## mongoDB
+## install mongoDB
 
 ```
 # install
@@ -19,14 +24,23 @@ $ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
 
 ```
 
-## application
+## install global node modules
+
+```
+$ npm install -g node-inspector gulp nodemon
+
+```
+
+
+## how to start application
 
 ```
 $ git clone ...
 $ cd node-auth-server
 $ npm install
-$ npm start
+$ gulp
 ```
+
 
 # Functions
 * id/pass等によるユーザ認証
@@ -111,10 +125,10 @@ $ npm start
 * ~~clientsecretのencrypt~~
 * ~~deny押した時の挙動~~
 * ~~accessTokenの有効期限とrefreshToken~~
-* ~~userのログアウト~~
-* ~~通常ログイン時のprofile等、メニュー画面~~
+* userのログアウト
 * userの権限(admin権限は全ユーザ・クライアント見れる)
 * user認証の共有api
 * user認可ありのアプリ一覧、認可の解除機能
+* 通常ログイン時のprofile等、メニュー画面
 
 

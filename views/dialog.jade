@@ -3,41 +3,63 @@ extends layout
 block content
   h2 Welcome #{__('app.name')}
 
-  div.text-center!= client.name + __('dsp.msg.application.connect')
-    form(method='post', action='/api/oauth2/authorize')
-        input(type='hidden', name='transaction_id', value=transaction_id)
-        input(type='hidden', name='response_type', value=response_type)
-        input(type='hidden', name='client_id', value=client._id)
-        input(type='hidden', name='auth_url', value=currentURL)
-        input(type='hidden', name='scope', value=scope.join(','))
+  div(class="login container" style="margin-top: 40px")
 
-        .well
-            p= client.name + __('dsp.msg.require.permission')
-              ul
-                each item in scope
-                  li!= '<strong>' + map[item] + '</strong>'
-            if user
-                p!=__('dsp.msg.require.logined')
-            else
-                p!=__('dsp.msg.require.login')
+    each message in errors
+      .alert.alert-warning
+        p= message
 
-        each message in errors
-          .alert.alert-warning
-            p= message
+    div(class="row")
+      div(class="col-sm-6 col-md-4 col-md-offset-4")
+        div(class="panel panel-default")
+          div(class="panel-heading")
+            strong Authorization
+          div(class="panel-body")
+            form(role="form", action="/api/oauth2/authorize", method="post")
+              input(type='hidden', name='transaction_id', value=transaction_id)
+              input(type='hidden', name='response_type', value=response_type)
+              input(type='hidden', name='client_id', value=client._id)
+              input(type='hidden', name='auth_url', value=currentURL)
+              input(type='hidden', name='scope', value=scope.join(','))
 
-        if user
-            .form-group.info-padded
-                p.text-center!= __('dsp.msg.sinedin') + '<strong>' + user.username + '</strong>'
-            p.text-right
-                a(href='/logout?next=' + encodeURIComponent(currentURL))= 'Not ' + user.username + '?'
-                button.btn.btn-default(type='submit')!= __('dsp.control.authorize')
-        else
-            .form-group
-                label(for='username') #{__('dsp.control.username')}:
-                input.form-control#username(type='text', name='username', autofocus)
-            .form-group
-                label(for='password') #{__('dsp.control.password')}:
-                p.small #{__('dsp.msg.password.notshare')}
-                input.form-control#password(type='password', name='password')
-            p.text-right
-                button.btn.btn-default(type='submit')!= __('dsp.control.authorize')
+              fieldset
+                div(class="row")
+                  div(class="center-block text-center")
+                    p!= client.name + __('dsp.msg.application.connect')
+                    p!= client.name + __('dsp.msg.require.permission')
+
+                    ul.list-group
+                      each item in scope
+                        li.list-group-item!= '<strong>' + map[item] + '</strong>'
+
+                    if user
+                        p!=__('dsp.msg.require.logined')
+                    else
+                        p!=__('dsp.msg.require.login')
+
+                div(class="row")
+                  div(class="col-sm-12 col-md-10 col-md-offset-1")
+                    if user
+                      .form-group.info-padded
+                          p.text-center!= __('dsp.msg.sinedin') + '<strong>' + user.username + '</strong>'
+                      p.text-center
+                          a(href='/logout?next=' + encodeURIComponent(currentURL))= 'Not ' + user.username + '?'
+                    else
+                      div(class="form-group")
+                        div(class="input-group")
+                          span(class="input-group-addon")
+                            i(class="glyphicon glyphicon-user")
+                          input(class="form-control", type="text", name="username", placeholder="Username", autofocus)
+                      div(class="form-group")
+                        div(class="input-group")
+                          span(class="input-group-addon")
+                            i(class="glyphicon glyphicon-lock")
+                          input(class="form-control", type="password", name="password", placeholder="Password", value="")
+
+                    div(class="form-group")
+                      input(class="btn btn-lg btn-primary btn-block", type="submit", value="#{__('dsp.control.authorize')}")
+
+          div(class="panel-footer")
+            span Don't have an account!
+            a(href="#") SignupHere
+

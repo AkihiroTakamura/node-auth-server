@@ -19,7 +19,7 @@
 			"require": {
 				"permission": "が次の権限を使います",
 				"login": "ログインすると権限の許可となります",
-				"logined": "<em>Authorize</em> をクリックして続行してください（権限の許可となります）"
+				"logined": "クリックすると権限の許可となります"
 			},
 			"application": {
 				"connect": "に接続しようとしています"
