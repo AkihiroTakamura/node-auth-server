@@ -15,6 +15,7 @@
     "bootstrap": "^3.3.6",
     "config": "^1.19.0",
     "connect-flash": "^0.1.1",
+    "domready": "^1.0.8",
     "express": "^4.13.3",
     "express-session": "^1.13.0",
     "font-awesome": "^4.5.0",

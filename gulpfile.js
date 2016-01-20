@@ -40,7 +40,7 @@ gulp.task('debugserver', function() {
   nodemon({
     exec: 'node-inspector --web-port 3002 & node --debug',
     script: './server.js',
-    ext: ['js', 'json'],
+    ext: 'js, json',
     ignore: [   // nodemon ignore directory
       'views',
       'public',
