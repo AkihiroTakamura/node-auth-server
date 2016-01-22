@@ -4,9 +4,10 @@
 var express           = require('express');
 var app               = express();
 var bodyParser        = require('body-parser');
-var mongoose          = require('mongoose');
-var passport          = require('passport');
 var session            = require('express-session');
+var mongoose          = require('mongoose');
+var MongoStore         = require('connect-mongo')(session);
+var passport          = require('passport');
 var config             = require('config');
 var flash              = require('connect-flash');
 var i18n               = require('i18n');
@@ -42,7 +43,11 @@ app.set('views', __dirname + '/views');
 app.use(session({
   secret: config.session.secret,
   saveUninitialized: true,
-  resave: true
+  resave: true,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: config.session.expiresInDate * 24 * 60 * 60 // session exouration 14days
+  })
 }));
 
 // connect-flash
