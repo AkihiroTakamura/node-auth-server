@@ -107,6 +107,11 @@ passport.deserializeUser(function(id, callback) {
 exports.isUserAuthentiacted = passport.authenticate('local', {session: true});
 exports.isClientAuthenticated = passport.authenticate('client-basic', {session: false});
 
+exports.isSessionAuthenticated = function(req, res, callback) {
+  if (!req.user) return res.status(401).json({message: 'not logined'});
+  callback();
+}
+
 exports.isBearerAuthentiacted = function(req, res, callback) {
   passport.authenticate('bearer', {session: false}, function(err, user, info) {
     if (err) return callback(err);

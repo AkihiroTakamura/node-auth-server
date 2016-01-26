@@ -1,0 +1,27 @@
+#template-user.container.contents(style="display: none;")
+  h1 user list
+  button.btn.btn-primary.btn-user-add add
+  .userlist
+
+  #template-user-modal.modal.fade(role='dialog')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', area-label='close')
+            span(area-hidden='true')
+          h4.modal-title Modal title
+        .modal-body
+          form.template-user-form
+            input#input-id(name='_id', type='hidden')
+            .form-group
+              label(for='input-username') username
+              input#input-username.form-control(name='username', type='text', placeholder='username')
+            .form-group
+              label(for='input-password') password
+              input#input-password.form-control(name='password', type='password')
+
+
+        .modal-footer
+          button.btn.btn-default(data-dismiss='modal') Close
+          button.btn.btn-primary.btn-user-post Save changes
+          button.btn.btn-primary.btn-user-put Save changes

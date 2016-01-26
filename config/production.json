@@ -20,19 +20,34 @@
   },
   // log4js see https://github.com/nomiddlename/log4js-node/wiki/Appenders
   "log4js": {
-    "level": "ALL",
+    "level": "INFO",  //INFO以上を出力
     "configure": {
       "appenders": [
         {
           "category": "system",
-          "type": "console"
+          "type": "dateFile",
+          "filename": "logs/system.log",
+          "pattern": "-yyyy-MM-dd",
+          "alwaysIncludePattern": false,
+          "backups": 10
         },
         {
           "category": "access",
-          "type": "console"
+          "type": "dateFile",
+          "filename": "logs/access.log",
+          "pattern": "-yyyy-MM-dd",
+          "alwaysIncludePattern": false,
+          "backups": 10
         },
         {
           "category": "error",
+          "type": "dateFile",
+          "filename": "logs/error.log",
+          "pattern": "-yyyy-MM-dd",
+          "alwaysIncludePattern": false,
+          "backups": 10
+        },
+        {
           "type": "console"
         }
       ],

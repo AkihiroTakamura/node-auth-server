@@ -13,6 +13,8 @@ var flash              = require('connect-flash');
 var i18n               = require('i18n');
 var path               = require('path');
 
+var logger             = require('./util/logger');
+
 var siteController    = require('./controllers/site');
 var userController    = require('./controllers/user');
 var authController    = require('./controllers/auth');
@@ -22,6 +24,9 @@ var oauth2Controller   = require('./controllers/oauth2');
 // =======================
 // configuration
 // =======================
+// logger set to express
+app.use(logger.express);
+
 var port = process.env.PORT || config.server.port || 8080;
 
 // connect db
@@ -92,7 +97,7 @@ app.use('/', router);
 var apiRouter = express.Router();
 
 apiRouter.route('/users')
-  .post(userController.postUsers)
+  .post(userController.postUser)
   .get(authController.isBearerAuthentiacted, userController.getUsers);
 
 apiRouter.route('/clients')
@@ -109,6 +114,19 @@ apiRouter.route('/oauth2/token')
   .post(authController.isClientAuthenticated, oauth2Controller.token);
 
 app.use('/api', apiRouter);
+
+// local api routes
+var localApiRouter = express.Router();
+
+localApiRouter.route('/users')
+  .post(authController.isSessionAuthenticated, userController.postUser)
+  .put(authController.isSessionAuthenticated, userController.putUser)
+  .delete(authController.isSessionAuthenticated, userController.deleteUser)
+//  .get(userController.getUsers);
+  .get(authController.isSessionAuthenticated, userController.getUsers);
+
+app.use('/local/api', localApiRouter);
+
 
 
 // =======================

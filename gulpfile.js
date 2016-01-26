@@ -25,7 +25,7 @@ gulp.task('js', function() {
     transform: ['cssify']
   })
   .bundle()
-  .pipe(plumber())
+  .on('error', console.error.bind(console)) // js compileエラーでもwatchを止めない
   .pipe(source("app.js")) // ビルド後のファイル名
   .pipe(buffer())
   .pipe(sourcemaps.init({loadMaps: true}))

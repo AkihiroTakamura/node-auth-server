@@ -1,10 +1,10 @@
 extends layout
 
 block content
-  h2 Welcome #{__('app.name')}
+  include templates/navbar
 
-  if user
-    p !{__('dsp.hello') + ' <strong>' + user.username + '</strong>' + __('dsp.user.title')}
-    a(href='/logout') #{__('dsp.control.logout')}
-  else
-    a(href='/login') #{__('dsp.control.login')}
+  div.container(style='margin-top: 80px;')
+
+    if user
+      include templates/menu
+      include templates/user

@@ -11,7 +11,7 @@ exports.postClients = function(req, res) {
 
   // TODO: encrypt password
   client.save(function(err) {
-    if (err) res.send(err);
+    if (err) res.status(500).send(err);
 
     res.json({
       message: 'OAuth2 Client added',
@@ -24,7 +24,7 @@ exports.getClients = function(req, res) {
   Client.find(
     {userId: req.user.id},
     function(err, clients) {
-      if (err) res.send(err);
+      if (err) res.status(500).send(err);
       res.json(clients);
     }
   );

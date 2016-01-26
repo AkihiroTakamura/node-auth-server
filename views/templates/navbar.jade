@@ -1,0 +1,22 @@
+nav.navbar.navbar-light.bg-faded.navbar-fixed-top
+  button.navbar-toggler.hidden-sm-up(type='button' data-toggle='collapse' data-target='#collapseNavbar') &#9776
+
+  div#collapseNavbar.collapse.navbar-toggleable-xs
+    a.navbar-brand #{__('app.name')}
+    ul.nav.navbar-nav
+      li.nav-item.active
+        a.nav-link(data-href='home') Home
+          span.sr-only (current)
+      li.nav-item
+        a.nav-link Features
+      li.nav-item
+        a.nav-link Features2
+
+    .pull-xs-right
+      if user
+        span !{__('dsp.hello') + ' <strong>' + user.username + '</strong>' + __('dsp.user.title')}
+        a(class='btn btn-primary', href='/logout') #{__('dsp.control.logout')}
+      else
+        a(class='btn btn-primary', href='/login') #{__('dsp.control.login')}
+
+
