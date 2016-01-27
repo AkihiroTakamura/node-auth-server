@@ -12,9 +12,7 @@ var config             = require('config');
 var flash              = require('connect-flash');
 var i18n               = require('i18n');
 var path               = require('path');
-
 var logger             = require('./util/logger');
-
 var siteController    = require('./controllers/site');
 var userController    = require('./controllers/user');
 var authController    = require('./controllers/auth');
@@ -127,6 +125,13 @@ localApiRouter.route('/users')
 
 app.use('/local/api', localApiRouter);
 
+// =======================
+// error handler
+// =======================
+app.use(function(err, req, res, next) {
+  logger.system.fatal(err);
+  res.status(500).send('something wrong');
+});
 
 
 // =======================
