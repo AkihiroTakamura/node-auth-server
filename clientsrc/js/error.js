@@ -30,7 +30,14 @@ var AjaxException = function(xhr) {
 
     if (json.errmsg) this.message = json.errmsg;
     if (json.message) this.message = json.message;
+    return;
   }
+
+  if (xhr.state && (xhr.state() == 'rejected')) {
+    this.message = 'failed connect server'
+    return;
+  }
+
 }
 AjaxException.prototype = new Error();
 AjaxException.prototype.constructor = AjaxException;
