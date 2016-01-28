@@ -1,30 +1,31 @@
 div.container.contents#template-menu(style="display: none;")
-  h2 Menu
-  div.row
-    if user.is('admin')
-    div(class="col-sm-6 col-md-4")
-      div.card
-        img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
-        div.card-block
-          h4.card-title Manage Users
-          p.card-text some text here...
-          a(class="btn btn-primary btn-start", data-kind="user") start
+  if user
+    h2 Menu
+    div.row
+      if user && user.is('admin')
+        div(class="col-sm-6 col-md-4")
+          div.card
+            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
+            div.card-block
+              h4.card-title Manage Users
+              p.card-text some text here...
+              a(class="btn btn-primary btn-start", data-kind="user") start
 
-    div(class="col-sm-6 col-md-4")
-      div.card
-        img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
-        div.card-block
-          h4.card-title Manage Applications
-          p.card-text some text here...
-          a(class="btn btn-primary btn-start", data-kind="client") start
+        div(class="col-sm-6 col-md-4")
+          div.card
+            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
+            div.card-block
+              h4.card-title Manage Applications
+              p.card-text some text here...
+              a(class="btn btn-primary btn-start", data-kind="client") start
 
-    div(class="col-sm-6 col-md-4")
-      div.card
-        img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
-        div.card-block
-          h4.card-title Card title
-          p.card-text some text here...
-          a(class="btn btn-primary btn-start") Button
+        div(class="col-sm-6 col-md-4")
+          div.card
+            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
+            div.card-block
+              h4.card-title Card title
+              p.card-text some text here...
+              a(class="btn btn-primary btn-start") Button
 
-if user.is('admin')
-include user
+if user && user.is('admin')
+  include user
