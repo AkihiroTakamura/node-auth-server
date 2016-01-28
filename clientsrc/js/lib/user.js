@@ -136,6 +136,7 @@ function setUserTable() {
             $('<tr></tr>')
               .append($('<th></th>').text('id'))
               .append($('<th></th>').text('username'))
+              .append($('<th></th>').text('roles'))
               .append($('<th></th>').text('action'))
           )
       )
@@ -167,6 +168,7 @@ function setUserTableRow(json) {
         .attr('data-json', JSON.stringify(user))
         .append($('<td></td>').text(user._id))
         .append($('<td></td>').text(user.username))
+        .append($('<td></td>').text(user.roles.map(function(elem){ return elem.name}).join(',')))
         .append($('<td></td>').append([
           $('<button></button>')
             .addClass('btn btn-primary btn-edit')
@@ -194,6 +196,22 @@ function getUsers() {
     $.ajax({
       type: 'get',
       url: '/local/api/users',
+      success: resolve,
+      error: function(xhr) {
+        if (xhr.status == 401) {
+          throw new error.UnAuthorizedException();
+        }
+        reject(new error.AjaxException(xhr));
+      }
+    });
+  });
+}
+
+function getRoles() {
+  return new Promise(function(resolve, reject) {
+    $.ajax({
+      type: 'get',
+      url: '/local/api/roles',
       success: resolve,
       error: function(xhr) {
         if (xhr.status == 401) {
@@ -269,12 +287,21 @@ function deleteUsers(param) {
 function showModal(param) {
   return new Promise(function(resolve, reject) {
     var $modal = $dom.find('#template-user-modal');
+
     if (param && param.data && param.data.username) {
       // put mode
       $modal.find('.btn-user-put').show();
       $modal.find('.btn-user-post').hide();
       $modal.find('[name=_id]').val(param.data._id);
       $modal.find('[name=username]').prop('disabled', true).val(param.data.username);
+      $.each($modal.find('[name=roles]').find('option'), function(index, option) {
+        $.each(param.data.roles, function(index2, role) {
+          if ($(option).val() == role._id) {
+            $(option).attr('selected', 'selected');
+          }
+        });
+      });
+
     } else {
       // post mode
       $modal.find('.btn-user-put').hide();
@@ -292,7 +319,27 @@ function initModal(param) {
     var $modal = $dom.find('#template-user-modal');
     $modal.find('input').val('');
     $modal.find('.alert').remove();
-    resolve(param);
+
+    var $roles = $modal.find('[name=roles]');
+
+    Promise.resolve()
+      .then(getRoles)
+      .then(function(json) {
+        $roles.empty();
+        $.each(json, function(index, role) {
+          var option = $('<option></option>');
+          option
+            .attr('value', role._id)
+            .addClass('list-group-item')
+            .text(role.name)
+          ;
+          $roles.append(option);
+        });
+      })
+      .then(function() {
+        resolve(param);
+      })
+    ;
   });
 }
 

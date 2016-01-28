@@ -1,7 +1,7 @@
 div.container.contents#template-menu(style="display: none;")
   h2 Menu
-
   div.row
+    if user.is('admin')
     div(class="col-sm-6 col-md-4")
       div.card
         img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
@@ -25,3 +25,6 @@ div.container.contents#template-menu(style="display: none;")
           h4.card-title Card title
           p.card-text some text here...
           a(class="btn btn-primary btn-start") Button
+
+if user.is('admin')
+include user

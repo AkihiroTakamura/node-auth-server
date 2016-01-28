@@ -10,7 +10,11 @@ var UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  roles: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Role'
+  }]
 });
 
 // Execute before each user.save() call
@@ -38,6 +42,17 @@ UserSchema.methods.verifyPassword = function(password, callback) {
     if (err) return callback(err);
     callback(null, isMatch);
   });
+}
+
+// role check
+UserSchema.methods.is = function(rolename) {
+  var user = this;
+  if (!user.roles || !user.roles.length) return false;
+
+  for (i = 0; i < user.roles.length; i++) {
+    if (user.roles[i].name && user.roles[i].name == rolename) return true;
+  }
+  return false;
 }
 
 

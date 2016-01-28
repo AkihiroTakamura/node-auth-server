@@ -17,7 +17,8 @@ exports.postUser = function(req, res) {
 
     var user = new User({
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
+      roles: req.body.roles
     });
 
     user.save(function(err) {
@@ -38,16 +39,15 @@ exports.putUser = function(req, res) {
     return res.status(400).send({message: '_id required'});
   }
 
-  if (!req.body.password) {
-    return res.status(400).send({message: 'password required'});
-  }
-
   User.findById(req.body._id, 'id username', function(err, user) {
     if (err) return res.status(500).send(err);
 
     if (!user) return res.status(400).send({message: 'user not found'});
 
-    user.password = req.body.password;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+    user.roles = req.body.roles;
 
     user.save(function(err) {
       if (err) return res.status(500).send(err);
@@ -62,14 +62,19 @@ exports.putUser = function(req, res) {
 }
 
 exports.getUsers = function(req, res) {
+
+  var whereoption = req.user.is('admin') ? {} : {username: req.user.username};
+
   User.find(
-//    {username: req.user.username},
-    {},
-    {username: 1},
-    function(err, users) {
+    whereoption,
+    {username: 1, roles: 2}
+  )
+  .populate('roles')
+  .exec(function(err, users) {
       if (err) return res.status(500).send(err);
       res.json(users);
   });
+
 }
 
 exports.deleteUser = function(req, res) {
@@ -81,7 +86,8 @@ exports.deleteUser = function(req, res) {
       return res.status(400).send({message: 'do not delete myself'});
     }
 
-//TODO: admin権限のみにする
+    // validate role
+    if (!req.user.is('admin')) return res.status(400).send({message: 'you do not have a permission'});
 
     user.remove(function(err, user) {
       if (err) return res.status(500).send(err);
@@ -91,6 +97,7 @@ exports.deleteUser = function(req, res) {
         data: user
       });
     });
-  });
 
+
+  });
 }

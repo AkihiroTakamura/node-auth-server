@@ -1,3 +1,4 @@
+var logger = require('../util/logger');
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
@@ -98,9 +99,14 @@ passport.serializeUser(function(user, callback) {
 });
 
 passport.deserializeUser(function(id, callback) {
-  User.findById(id, function(err, user) {
-    user.password = undefined;
-    callback(err, err ? null : user);
+  User.findOne({_id: id})
+    .populate('roles')
+    .exec(function(err, user) {
+      if (err) return callback(err);
+      if (!user || user == null) return callback(new Error('user not found from session'));
+
+      user.password = undefined;
+      callback(null, user);
   });
 });
 

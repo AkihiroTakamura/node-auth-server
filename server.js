@@ -15,6 +15,7 @@ var path               = require('path');
 var logger             = require('./util/logger');
 var siteController    = require('./controllers/site');
 var userController    = require('./controllers/user');
+var roleController    = require('./controllers/role');
 var authController    = require('./controllers/auth');
 var clientController   = require('./controllers/client');
 var oauth2Controller   = require('./controllers/oauth2');
@@ -120,8 +121,10 @@ localApiRouter.route('/users')
   .post(authController.isSessionAuthenticated, userController.postUser)
   .put(authController.isSessionAuthenticated, userController.putUser)
   .delete(authController.isSessionAuthenticated, userController.deleteUser)
-//  .get(userController.getUsers);
   .get(authController.isSessionAuthenticated, userController.getUsers);
+
+localApiRouter.route('/roles')
+  .get(authController.isSessionAuthenticated, roleController.getRoles);
 
 app.use('/local/api', localApiRouter);
 

@@ -38,5 +38,13 @@
       ],
       "replaceConsole": true
     }
+  },
+  "application": {
+    "init": {
+      "admin": {
+        "username": "admin",
+        "password": "admin"
+      }
+    }
   }
 }

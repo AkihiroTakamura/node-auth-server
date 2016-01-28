@@ -19,7 +19,9 @@
             .form-group
               label(for='input-password') password
               input#input-password.form-control(name='password', type='password')
-
+            .form-group
+              label roles
+              select.list-group.checked-list-box(name='roles', multiple, style='width: 100%')
 
         .modal-footer
           button.btn.btn-default(data-dismiss='modal') Close
