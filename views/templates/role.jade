@@ -1,0 +1,22 @@
+#template-role.container.contents(style="display: none;")
+  h1 roles list
+  button.btn.btn-primary.btn-role-add add
+  .rolelist
+
+  #template-role-modal.modal.fade(role='dialog')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', area-label='close')
+            span(area-hidden='true')
+          h4.modal-title Modal title
+        .modal-body
+          form.template-role-form
+            input#input-id(name='_id', type='hidden')
+            .form-group
+              label(for='input-name') name
+              input#input-name.form-control(name='name', type='text', placeholder='role name')
+
+        .modal-footer
+          button.btn.btn-default(data-dismiss='modal') Close
+          button.btn.btn-primary.btn-role-post Save changes

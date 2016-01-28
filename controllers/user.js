@@ -1,7 +1,7 @@
 var User = require('../models/user');
 var logger = require('../util/logger');
 
-exports.postUser = function(req, res) {
+exports.post = function(req, res) {
 
   if (!req.body.username) {
     return res.status(400).send({message: 'username required'});
@@ -33,7 +33,7 @@ exports.postUser = function(req, res) {
 
 }
 
-exports.putUser = function(req, res) {
+exports.put = function(req, res) {
 
   if (!req.body._id) {
     return res.status(400).send({message: '_id required'});
@@ -61,7 +61,7 @@ exports.putUser = function(req, res) {
 
 }
 
-exports.getUsers = function(req, res) {
+exports.get = function(req, res) {
 
   var whereoption = req.user.is('admin') ? {} : {username: req.user.username};
 
@@ -77,7 +77,7 @@ exports.getUsers = function(req, res) {
 
 }
 
-exports.deleteUser = function(req, res) {
+exports.delete = function(req, res) {
   User.findById(req.body._id, 'id username', function(err, user) {
     if (err) return res.status(500).send(err);
 

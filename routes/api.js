@@ -7,11 +7,11 @@ var clientController   = require('../controllers/client');
 var oauth2Controller   = require('../controllers/oauth2');
 
 router.route('/users')
-  .post(userController.postUser)
-  .get(authController.isBearerAuthentiacted, userController.getUsers);
+  .post(authController.isBearerAuthentiacted, userController.post)
+  .get(authController.isBearerAuthentiacted, userController.get);
 
 router.route('/clients')
-  .post(clientController.postClients)
+  .post(authController.isBearerAuthentiacted, clientController.postClients)
   .get(authController.isBearerAuthentiacted, clientController.getClients);
 
 // http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080&scope=read write
