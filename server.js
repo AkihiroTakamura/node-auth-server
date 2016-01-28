@@ -13,12 +13,10 @@ var flash              = require('connect-flash');
 var i18n               = require('i18n');
 var path               = require('path');
 var logger             = require('./util/logger');
-var siteController    = require('./controllers/site');
-var userController    = require('./controllers/user');
-var roleController    = require('./controllers/role');
-var authController    = require('./controllers/auth');
-var clientController   = require('./controllers/client');
-var oauth2Controller   = require('./controllers/oauth2');
+
+var routes             = require('./routes/routes');
+var routes_api         = require('./routes/api');
+var routes_local       = require('./routes/local');
 
 // =======================
 // configuration
@@ -73,60 +71,9 @@ app.use(i18n.init);
 // =======================
 // routes
 // =======================
-
-// root routes
-var router = express.Router();
-
-router.route('/')
-  .get(siteController.index);
-
-router.route('/login')
-  .get(siteController.loginForm)
-  .post(siteController.login);
-
-router.route('/logout')
-  .get(siteController.logout);
-
-router.route('/profile')
-  .get(authController.isUserAuthentiacted, siteController.profile);
-
-app.use('/', router);
-
-// api routes
-var apiRouter = express.Router();
-
-apiRouter.route('/users')
-  .post(userController.postUser)
-  .get(authController.isBearerAuthentiacted, userController.getUsers);
-
-apiRouter.route('/clients')
-  .post(clientController.postClients)
-  .get(authController.isBearerAuthentiacted, clientController.getClients);
-
-// http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080&scope=read write
-apiRouter.route('/oauth2/authorize')
-  //.ユーザ認証はoauth2Controller内で実施する
-  .get(oauth2Controller.authorization)
-  .post(oauth2Controller.decision);
-
-apiRouter.route('/oauth2/token')
-  .post(authController.isClientAuthenticated, oauth2Controller.token);
-
-app.use('/api', apiRouter);
-
-// local api routes
-var localApiRouter = express.Router();
-
-localApiRouter.route('/users')
-  .post(authController.isSessionAuthenticated, userController.postUser)
-  .put(authController.isSessionAuthenticated, userController.putUser)
-  .delete(authController.isSessionAuthenticated, userController.deleteUser)
-  .get(authController.isSessionAuthenticated, userController.getUsers);
-
-localApiRouter.route('/roles')
-  .get(authController.isSessionAuthenticated, roleController.getRoles);
-
-app.use('/local/api', localApiRouter);
+app.use('/', routes);
+app.use('/api', routes_api);
+app.use('/local/api', routes_local);
 
 // =======================
 // error handler
@@ -135,7 +82,6 @@ app.use(function(err, req, res, next) {
   logger.system.fatal(err);
   res.status(500).send('something wrong');
 });
-
 
 // =======================
 // start the server
