@@ -9,10 +9,12 @@ var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
 var nodemon = require('gulp-nodemon');
 var livereload = require('gulp-livereload');
+var concat = require('gulp-concat');
 
 gulp.task("sass", function() {
   gulp.src("./clientsrc/sass/**/*scss")
     .pipe(plumber())
+    .pipe(concat('style.scss'))
     .pipe(sass())
     .pipe(autoprefixer())
     .pipe(gulp.dest("./public/css"))
@@ -66,7 +68,7 @@ gulp.task('debugserver', function() {
 
 gulp.task('watch', function() {
   gulp.watch(["./clientsrc/js/**/*.js"], ["js"]);
-  gulp.watch(["./clientsrc/sass/**/*.scss"], ["sass"]);
+  gulp.watch(["./clientsrc/sass/**/*.scss"], ["sass", "js"]); // jsでcssをrequireしているのでjsも実行する
   gulp.watch(["./public/**/*.*", "./views/**/*.*"], function(e) {
     livereload.changed(e);
   });
