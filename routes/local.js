@@ -4,6 +4,7 @@ var router = express.Router();
 var authController    = require('../controllers/auth');
 var userController    = require('../controllers/user');
 var roleController    = require('../controllers/role');
+var clientController  = require('../controllers/client');
 
 router.route('/users')
   .post(authController.isSessionAuthenticated, userController.post)
@@ -16,5 +17,11 @@ router.route('/roles')
 //  .put(authController.isSessionAuthenticated, roleController.put)
   .delete(authController.isSessionAuthenticated, roleController.delete)
   .get(authController.isSessionAuthenticated, roleController.get);
+
+router.route('/clients')
+  .post(authController.isSessionAuthenticated, clientController.post)
+  .put(authController.isSessionAuthenticated, clientController.put)
+  .delete(authController.isSessionAuthenticated, clientController.delete)
+  .get(authController.isSessionAuthenticated, clientController.get);
 
 module.exports = router;

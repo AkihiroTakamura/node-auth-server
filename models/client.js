@@ -1,13 +1,16 @@
 var mongoose = require('mongoose');
 
 var ClientSchema = new mongoose.Schema({
-  name: {type: String, unique: true, required: true},
-  id: {type: String, required: true},
-  secret: {type: String, required: true},
+  id: {type: String, required: true, unique: true},
   userId: {type: String, required: true},
-  domain: {type: String, required: true}
-});
+  secret: {type: String, required: true},
+  name: {type: String, required: true},
+  domain: {type: String, required: true},
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 
-//TODO: encrypt client secret
+});
 
 module.exports = mongoose.model('Client', ClientSchema);

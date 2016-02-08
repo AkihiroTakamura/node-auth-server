@@ -11,8 +11,10 @@ router.route('/users')
   .get(authController.isBearerAuthentiacted, userController.get);
 
 router.route('/clients')
-  .post(authController.isBearerAuthentiacted, clientController.postClients)
-  .get(authController.isBearerAuthentiacted, clientController.getClients);
+  .post(authController.isBearerAuthentiacted, clientController.post)
+  // // .put(authController.isBearerAuthentiacted, clientController.put)
+  // .delete(authController.isBearerAuthentiacted, clientController.delete)
+  .get(authController.isBearerAuthentiacted, clientController.get);
 
 // http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080&scope=read write
 router.route('/oauth2/authorize')

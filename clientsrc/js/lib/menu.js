@@ -2,6 +2,7 @@ var $ = require('jquery');
 var config = require('../config');
 var user = require("./user");
 var role = require("./role");
+var client = require("./client");
 
 var $dom = $('#template-menu');
 
@@ -67,6 +68,10 @@ function onClickStart(event) {
     case 'role':
       hide()
         .then(role.init);
+      break;
+    case 'client':
+      hide()
+        .then(client.init);
       break;
     default:
       break;

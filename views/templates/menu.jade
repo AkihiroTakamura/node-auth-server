@@ -15,18 +15,23 @@ div.container.contents#template-menu(style="display: none;")
           div.card
             img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
             div.card-block
-              h4.card-title Manage Applications
-              p.card-text some text here...
-              a(class="btn btn-primary btn-start", data-kind="client") start
-
-        div(class="col-sm-6 col-md-4")
-          div.card
-            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
-            div.card-block
               h4.card-title Manage Roles
               p.card-text some text here...
               a(class="btn btn-primary btn-start", data-kind="role") Button
 
+      if user
+        div(class="col-sm-6 col-md-4")
+          div.card
+            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
+            div.card-block
+              h4.card-title Manage Applications
+              p.card-text some text here...
+              a(class="btn btn-primary btn-start", data-kind="client") start
+
+
 if user && user.is('admin')
   include user
   include role
+
+if user
+  include client

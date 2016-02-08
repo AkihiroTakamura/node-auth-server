@@ -1,0 +1,29 @@
+#template-client.container.contents(style="display: none;")
+  h1 Application list
+  button.btn.btn-primary.btn-client-add add
+  .clientlist
+
+  #template-client-modal.modal.fade(client='dialog')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', area-label='close')
+            span(area-hidden='true')
+          h4.modal-title Modal title
+        .modal-body
+          form.template-client-form
+            input#input-id(name='_id', type='hidden')
+            .form-group
+              label(for='input-name') Application name(only for management)
+              input#input-name.form-control(name='name', type='text', placeholder='application name')
+            .form-group
+              label(for='input-name') Application id
+              input#input-name.form-control(name='id', type='text', placeholder='application id')
+            .form-group
+              label(for='input-name') domain(e.g. callback host name)
+              input#input-name.form-control(name='domain', type='text', placeholder='trial.com')
+
+        .modal-footer
+          button.btn.btn-default(data-dismiss='modal') Close
+          button.btn.btn-primary.btn-client-post Save changes
+          button.btn.btn-primary.btn-client-put Save changes

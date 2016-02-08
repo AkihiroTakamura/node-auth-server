@@ -14,6 +14,10 @@ var UserSchema = new mongoose.Schema({
   roles: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role'
+  }],
+  clients: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Client'
   }]
 });
 
