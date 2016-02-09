@@ -1,5 +1,5 @@
 #template-user.container.contents(style="display: none;")
-  h1 user list
+  h1!= __('menu.manage.user.title')
   button.btn.btn-primary.btn-user-add add
   .userlist
 
@@ -9,18 +9,18 @@
         .modal-header
           button.close(type='button', data-dismiss='modal', area-label='close')
             span(area-hidden='true')
-          h4.modal-title Modal title
+          h4.modal-title!= __('dsp.modal.title')
         .modal-body
           form.template-user-form
             input#input-id(name='_id', type='hidden')
             .form-group
-              label(for='input-username') username
+              label(for='input-username')!= __('dsp.control.username')
               input#input-username.form-control(name='username', type='text', placeholder='username')
             .form-group
-              label(for='input-password') password
+              label(for='input-password')!= __('dsp.control.username')
               input#input-password.form-control(name='password', type='password')
             .form-group
-              label roles
+              label!= __('dsp.control.role')
               select.list-group.checked-list-box(name='roles', multiple, style='width: 100%')
 
         .modal-footer

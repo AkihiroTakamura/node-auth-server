@@ -1,31 +1,31 @@
 div.container.contents#template-menu(style="display: none;")
   if user
-    h2 Menu
+    h2!= __('menu.title')
     div.row
       if user && user.is('admin')
         div(class="col-sm-6 col-md-4")
           div.card
             img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
             div.card-block
-              h4.card-title Manage Users
-              p.card-text some text here...
+              h4.card-title!= __('menu.manage.user.title')
+              p.card-text!= __('menu.manage.user.detail')
               a(class="btn btn-primary btn-start", data-kind="user") start
 
         div(class="col-sm-6 col-md-4")
           div.card
             img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
             div.card-block
-              h4.card-title Manage Roles
-              p.card-text some text here...
-              a(class="btn btn-primary btn-start", data-kind="role") Button
+              h4.card-title!= __('menu.manage.role.title')
+              p.card-text!= __('menu.manage.role.detail')
+              a(class="btn btn-primary btn-start", data-kind="role") start
 
       if user
         div(class="col-sm-6 col-md-4")
           div.card
             img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
             div.card-block
-              h4.card-title Manage Applications
-              p.card-text some text here...
+              h4.card-title!= __('menu.manage.client.title')
+              p.card-text!= __('menu.manage.client.detail')
               a(class="btn btn-primary btn-start", data-kind="client") start
 
 

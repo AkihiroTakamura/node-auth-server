@@ -1,5 +1,5 @@
 #template-role.container.contents(style="display: none;")
-  h1 roles list
+  h1!= __('menu.manage.role.title')
   button.btn.btn-primary.btn-role-add add
   .rolelist
 
@@ -14,7 +14,7 @@
           form.template-role-form
             input#input-id(name='_id', type='hidden')
             .form-group
-              label(for='input-name') name
+              label(for='input-name')!= __('dsp.control.name.role')
               input#input-name.form-control(name='name', type='text', placeholder='role name')
 
         .modal-footer

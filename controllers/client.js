@@ -5,13 +5,13 @@ var uid = require('../util/uid').uid;
 
 exports.post = function(req, res) {
 
-  if (!req.body.name) return res.status(400).send({message: 'name required'});
-  if (!req.body.id) return res.status(400).send({message: 'id required'});
-  if (!req.body.domain) return res.status(400).send({message: 'domain required'});
+  if (!req.body.name) return res.status(400).send({message: res.__('validate.require.name')});
+  if (!req.body.id) return res.status(400).send({message: res.__('validate.require.id')});
+  if (!req.body.domain) return res.status(400).send({message: res.__('validate.require.domain')});
 
   Client.count({id: req.body.id}, function(err, count) {
     if (err) return res.status(500).send(err);
-    if (count > 0) return res.status(400).send({message: 'client already exists'});
+    if (count > 0) return res.status(400).send({message: res.__('validate.exist.already')});
 
     var client = new Client();
 
@@ -41,7 +41,7 @@ exports.post = function(req, res) {
           user.save(function(err) {
             if (err) return res.status(500).send(err);
             res.json({
-              message: 'OAuth2 Client added',
+              message: res.__('dsp.success'),
               data: client
             });
           });
@@ -56,18 +56,18 @@ exports.post = function(req, res) {
 
 exports.put = function(req, res) {
 
-  if (!req.body._id) return res.status(400).send({message: '_id required'});
-  if (!req.body.id) return res.status(400).send({message: 'id required'});
-  if (!req.body.domain) return res.status(400).send({message: 'domain required'});
+  if (!req.body._id) return res.status(400).send({message: res.__('validate.require._id')});
+  if (!req.body.id) return res.status(400).send({message: res.__('validate.require.id')});
+  if (!req.body.domain) return res.status(400).send({message: res.__('validate.require.domain')});
 
   Client.findById(req.body._id, function(err, client) {
     if (err) return res.status(500).send(err);
-    if (!client) return res.status(400).send({message: 'client not found'});
+    if (!client) return res.status(400).send({message: res.__('validate.notfound.client')});
 
     Client.count({id: req.body.id}, function(err, count) {
       if (err) return res.status(500).send(err);
       if (req.body.id != client.id && count > 0) {
-        return res.status(400).send({message: 'client already exists'});
+        return res.status(400).send({message: res.__('validate.exist.already')});
       }
 
       if (req.body.id) {
@@ -80,7 +80,7 @@ exports.put = function(req, res) {
       client.save(function(err) {
         if (err) return res.status(500).send(err);
         res.json({
-          message: 'Client Updated',
+          message: res.__('dsp.success'),
           data: client
         });
       });
@@ -133,7 +133,7 @@ exports.delete = function(req, res) {
             if (err) return res.status(500).send(err);
 
             res.json({
-              message: 'client deleted.',
+              message: res.__('dsp.success'),
               data: client
             });
           });

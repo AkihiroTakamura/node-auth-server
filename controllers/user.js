@@ -4,16 +4,16 @@ var logger = require('../util/logger');
 exports.post = function(req, res) {
 
   if (!req.body.username) {
-    return res.status(400).send({message: 'username required'});
+    return res.status(400).send({message: res.__('validate.require.name')});
   }
   if (!req.body.password) {
-    return res.status(400).send({message: 'password required'});
+    return res.status(400).send({message: res.__('validate.require.password')});
   }
 
   User.count({username: req.body.username}, function(err, count) {
     if (err) return res.status(500).send(err);
 
-    if (count > 0) return res.status(400).send({message: 'user already exists'});
+    if (count > 0) return res.status(400).send({message: res.__('validate.exist.already')});
 
     var user = new User({
       username: req.body.username,
@@ -25,7 +25,7 @@ exports.post = function(req, res) {
       if (err) return res.status(500).send(err);
 
       res.json({
-        message: 'new user added',
+        message: res.__('dsp.success'),
         data: user
       });
     });
@@ -36,13 +36,13 @@ exports.post = function(req, res) {
 exports.put = function(req, res) {
 
   if (!req.body._id) {
-    return res.status(400).send({message: '_id required'});
+    return res.status(400).send({message: res.__('validate.requires._id')});
   }
 
   User.findById(req.body._id, 'id username', function(err, user) {
     if (err) return res.status(500).send(err);
 
-    if (!user) return res.status(400).send({message: 'user not found'});
+    if (!user) return res.status(400).send({message: res.__('validate.notfound.user')});
 
     if (req.body.password) {
       user.password = req.body.password;
@@ -53,7 +53,7 @@ exports.put = function(req, res) {
       if (err) return res.status(500).send(err);
 
       res.json({
-        message: 'user updated',
+        message: res.__('dsp.success'),
         data: user
       });
     });
@@ -83,17 +83,17 @@ exports.delete = function(req, res) {
 
     // validate for do not delete myself
     if (user && req.user.id && user._id == req.user.id) {
-      return res.status(400).send({message: 'do not delete myself'});
+      return res.status(400).send({message: res.__('validate.cantdeleteme')});
     }
 
     // validate role
-    if (!req.user.is('admin')) return res.status(400).send({message: 'you do not have a permission'});
+    if (!req.user.is('admin')) return res.status(400).send({message: res.__('validate.permission.nothave')});
 
     user.remove(function(err, user) {
       if (err) return res.status(500).send(err);
 
       res.json({
-        message: 'user deleted.',
+        message: res.__('dsp.success'),
         data: user
       });
     });

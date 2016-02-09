@@ -43,11 +43,111 @@ $ gulp
 
 
 # Functions
-* id/pass等によるユーザ認証
-  * basic認証/form認証
-* clientid/clientsecretによるアプリケーション認証
-  * OAuth2.0 grant code flowを利用
-* 要認証APIからprofile情報の提供
+* User Authentification by id/pass
+  * basic authenticate/form authenticate
+* Application Authorization by clientid/clientsecret
+  * OAuth2.0 grant code flow
+* Management page for User/Role/Client
+
+
+# Tutorial
+
+## first setting by Management view
+* http://localhost:8080/
+* Default User
+  * username: admin
+  * password: admin
+
+> default user is defined config/*.json
+
+![Kobito.G0NnGF.png](https://qiita-image-store.s3.amazonaws.com/0/60056/9c4ab2d1-3214-c746-c069-59d0460a7da9.png "Kobito.G0NnGF.png")
+
+## regist client
+
+* for regist oauth2 client, select 'Manage Client' from Menu first.
+
+![Kobito.jWpQA6.png](https://qiita-image-store.s3.amazonaws.com/0/60056/ef6d14f5-9fe4-baf0-1421-1a8639dcea42.png "Kobito.jWpQA6.png")
+
+* click add button
+
+![Kobito.BkD1wk.png](https://qiita-image-store.s3.amazonaws.com/0/60056/ac869c5a-5615-3e90-e976-0676b179a5b1.png "Kobito.BkD1wk.png")
+
+* regist client.
+  * we suppose set your hostname which  callback after authorization to domain(redirect url)
+
+![Kobito.nyxfJc.png](https://qiita-image-store.s3.amazonaws.com/0/60056/8deeda95-f864-97ef-fb93-3c67efc6c040.png "Kobito.nyxfJc.png")
+
+* after client registed, application secret is shown. please note this for oauth connection.
+
+![Kobito.qYLYnv.png](https://qiita-image-store.s3.amazonaws.com/0/60056/08525f1b-6ac3-28b4-cae3-fb94ed4f1e4b.png "Kobito.qYLYnv.png")
+
+
+## Get Oauth Code
+* After registed client, you can get Access Token by web api.
+
+* first, you have to get oauth2 code.
+* open browser and input following url.
+
+```
+http://localhost:8080/api/oauth2/authorize?client_id=example&response_type=code&redirect_uri=http://localhost:8080&scope=admin
+```
+
+* authorization page opened, click 'aoorove and continue'
+
+![Kobito.IWYdUv.png](https://qiita-image-store.s3.amazonaws.com/0/60056/72901875-e52f-37a4-33ff-4162b6412593.png "Kobito.IWYdUv.png")
+
+* see url bar in your browser.
+* url includes oauth code like http://localhost:8080/code=mf7IOpFpY8kb6g5B
+* note the code
+
+
+## Exchange code for accessToken
+
+* please open postman.
+
+* url: /api/oauth2/token
+* method: POST
+* header
+  * Authorization: Basic
+    * username: example
+    * password:CTyIEQXhe3TEAOwhUlAyxZd4f1ZFB3jm
+
+> you have to set clientid and client secret
+
+* body
+  * code: mf7IOpFpY8kb6g5B
+
+
+  > set OAuthCode - you noted a little while ago
+
+  * grant_type: authorization_code
+  * redirect_uri: localhost
+
+![Kobito.zfPcd9.png](https://qiita-image-store.s3.amazonaws.com/0/60056/695bfbc3-94b9-931e-b221-442681cec8bc.png "Kobito.zfPcd9.png")
+
+![Kobito.2jlufH.png](https://qiita-image-store.s3.amazonaws.com/0/60056/d1a5ca94-db4f-74f8-2ec1-f7a31f578327.png "Kobito.2jlufH.png")
+
+* if ok, return access token by json
+
+![Kobito.x8Ivht.png](https://qiita-image-store.s3.amazonaws.com/0/60056/fddd7ea4-58f7-a08d-43e3-ee247adb8c6c.png "Kobito.x8Ivht.png")
+
+
+
+> please note that, OAuth Code is One-Time useage.
+> if you try again, go back browser and re get Oauth code.
+
+
+## Get Profile Information by accessToken
+* url: /api/users/
+* method: GET
+* header
+  * Authorization: Bearer <accesstoken>
+
+![Kobito.QTfaQm.png](https://qiita-image-store.s3.amazonaws.com/0/60056/68546dbd-abd6-a4a0-8e61-860fd67307b5.png "Kobito.QTfaQm.png")
+
+
+
+
 
 # APIs
 
@@ -55,58 +155,22 @@ $ gulp
 * url: /api/users
 * method: POST
 * header
-  * none
+  * Authorization: Bearer <accesstoken>
 * body
-  * username: ユーザid
-  * password: ユーザパスワード
-
-
-![Kobito.R660VF.png](https://qiita-image-store.s3.amazonaws.com/0/60056/ffca25c6-56e7-aa38-f983-fc19e7f5a0a0.png "Kobito.R660VF.png")
+  * username: user id
+  * password: user password
+  * roles: user roles(Array)
 
 ## add client
 * url: /api/clients
 * method: POST
 * header
-  * Authorization: Basic userid:password
+  * Authorization: Bearer <accesstoken>
 * body
   * name: client(application) name
   * id: client(application) id
   * secret: client(application) password
   * domain: client(application) domain e.g)hostname
-
-![Kobito.DbRnho.png](https://qiita-image-store.s3.amazonaws.com/0/60056/472bd078-19e7-7d97-2b26-e2308d5c07dc.png "Kobito.DbRnho.png")
-
-![Kobito.r5qlJD.png](https://qiita-image-store.s3.amazonaws.com/0/60056/71d60236-a411-e551-c6d0-f120d7f5b19f.png "Kobito.r5qlJD.png")
-
-
-## get OAuth code
-* ブラウザより
-  * http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080&scope=read write
-
-* 登録したuserid/passwordを入力、redirectされるcodeをメモ
-
-## get Access Token and Refresh Token
-* url: /api/oauth2/token
-* method: POST
-* header
-  * Authorization: Basic clientid:clientsecret
-* body
-  * code: 取得したOAuth code
-  * grant_type: authorization_code
-  * redirect_uri: client登録時に指定したredirect_uri
-
-![Kobito.P3f8Fz.png](https://qiita-image-store.s3.amazonaws.com/0/60056/22f03cf3-bb4b-238a-de65-56937508b9c3.png "Kobito.P3f8Fz.png")
-
-![Kobito.vzYo7K.png](https://qiita-image-store.s3.amazonaws.com/0/60056/3530d64a-4fdf-b0ba-fb1c-1e1c8d409f81.png "Kobito.vzYo7K.png")
-
-
-## execute secure api
-* url: /api/users/
-* method: POST
-* header
-  * Authorization: Bearer 取得したaccesstoken
-
-![Kobito.nyeua4.png](https://qiita-image-store.s3.amazonaws.com/0/60056/42f9bf52-316f-4452-8ba1-afed5b2b5a1c.png "Kobito.nyeua4.png")
 
 # refresh token
 * url: /api/oauth2/token
@@ -115,7 +179,7 @@ $ gulp
   * Authorization: Basic clientid:clientsecret
 * body
   * grant_type: refresh_token
-  * refresh_token: accessTokenと一緒に取得したrefreshToken
+  * refresh_token: refresh token
 
 ![Kobito.ydlc18.png](https://qiita-image-store.s3.amazonaws.com/0/60056/015ee593-74f4-1f0c-28ee-b7f967abd23a.png "Kobito.ydlc18.png")
 
@@ -125,10 +189,10 @@ $ gulp
 * ~~clientsecretのencrypt~~
 * ~~deny押した時の挙動~~
 * ~~accessTokenの有効期限とrefreshToken~~
-* userのログアウト
-* userの権限(admin権限は全ユーザ・クライアント見れる)
+* ~~userのログアウト~~
+* ~~userの権限(admin権限は全ユーザ・クライアント見れる)~~
 * user認証の共有api
-* user認可ありのアプリ一覧、認可の解除機能
+* ~~user認可ありのアプリ一覧、認可の解除機能~~
 * 通常ログイン時のprofile等、メニュー画面
-
+* accesstoken状態、session状態等
 

@@ -2,7 +2,26 @@
 	"app": {
 		"name": "ユーザ認証＆認可アプリケーション"
 	},
+	"menu": {
+		"title": "Menu",
+		"manage": {
+			"user": {
+				"title": "ユーザ管理",
+				"detail": "ログインユーザのid/pass/権限の操作"
+			},
+			"role": {
+				"title": "ロール管理",
+				"detail": "ロールの操作"
+			},
+			"client": {
+				"title": "認可アプリケーション管理",
+				"detail": "oauth2認可アプリケーションの操作"
+			}
+		}
+	},
 	"dsp": {
+		"success": "正常に実行しました",
+		"notlogined": "ログインしていません",
 		"hello": "こんにちは",
 		"user": {
 			"title": "さん"
@@ -12,7 +31,17 @@
 			"logout": "ログアウト",
 			"username": "ユーザID",
 			"password": "パスワード",
-			"authorize": "許可して続行"
+			"authorize": "許可して続行",
+			"role": "ロール",
+			"name": {
+				"role": "ロール名",
+				"client": "アプリケーション名"
+			},
+			"clientid": "アプリケーションID",
+			"domain": "ドメイン(認証後コールバック先のホスト名等)"
+		},
+		"modal": {
+			"title": "操作"
 		},
 		"login": "ログイン",
 		"msg": {
@@ -28,6 +57,41 @@
 			"password": {
 				"notshare": "このパスワードはアプリケーションには通知されません"
 			}
+		}
+	},
+	"validate": {
+		"require": {
+			"name": "名前は省略できません",
+			"password": "パスワードは省略できません",
+			"id": "IDは省略できません",
+			"_id": "_idは省略できません",
+			"domain": "ドメインは省略できません"
+		},
+		"permission": {
+			"nothave": "この操作を行う権限がありません"
+		},
+		"exist": {
+			"already": "すでに登録されています"
+		},
+		"notfound": {
+			"client": "登録済のclientが見つかりません",
+			"user": "ユーザが見つかりません"
+		},
+		"invalid": {
+			"password": "パスワードに誤りがあります",
+			"accesstoken": "アクセストークンが不正、もしくは有効期限が切れています"
+		},
+		"oauth": {
+			"notfound": {
+				"client": "指定されたclient idに対応するclientが見つからないか登録されていません",
+				"redirecturi": "指定されたredirect uriは登録されていません"
+			}
+		},
+		"cantdeleteme": "自分自身は削除することができません"
+	},
+	"exeption": {
+		"deserialize": {
+			"user": "ユーザ情報がセッション情報から復元できませんでした"
 		}
 	}
 }

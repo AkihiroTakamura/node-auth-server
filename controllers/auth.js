@@ -1,4 +1,5 @@
 var logger = require('../util/logger');
+var i18n = require('i18n');
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
@@ -40,12 +41,12 @@ passport.use(new LocalStrategy({
     User.findOne({username: username}, function(err, user) {
       if (err) return callback(err);
 
-      if (!user) return callback(null, false, {message: 'user not found'});
+      if (!user) return callback(null, false, {message: i18n.__('validate.notfound.user')});
 
       user.verifyPassword(password, function(err, isMatch) {
         if (err) return callback(err);
 
-        if (!isMatch) return callback(null, false, {message: 'invalid password'});
+        if (!isMatch) return callback(null, false, {message: i18n.__('validate.invalid.password')});
 
         //TODO: Add other checks
         return callback(null, user);
@@ -103,7 +104,7 @@ passport.deserializeUser(function(id, callback) {
     .populate('roles')
     .exec(function(err, user) {
       if (err) return callback(err);
-      if (!user || user == null) return callback(new Error('user not found from session'));
+      if (!user || user == null) return callback(new Error(i18n.__('exception.deserialize.user')));
 
       user.password = undefined;
       callback(null, user);
@@ -114,7 +115,7 @@ exports.isUserAuthentiacted = passport.authenticate('local', {session: true});
 exports.isClientAuthenticated = passport.authenticate('client-basic', {session: false});
 
 exports.isSessionAuthenticated = function(req, res, callback) {
-  if (!req.user) return res.status(401).json({message: 'not logined'});
+  if (!req.user) return res.status(401).json({message: i18n.__('dsp.notlogined')});
   callback();
 }
 
@@ -122,7 +123,7 @@ exports.isBearerAuthentiacted = function(req, res, callback) {
   passport.authenticate('bearer', {session: false}, function(err, user, info) {
     if (err) return callback(err);
 
-    if (!user) return res.status(401).json({message: "Access token invalid or expired"})
+    if (!user) return res.status(401).json({message: i18n.__('validate.invalid.accesstoken')})
 
     req.logIn(user, function(err) {
       if (err) return callback(err);

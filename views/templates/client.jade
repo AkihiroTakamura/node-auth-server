@@ -1,5 +1,5 @@
 #template-client.container.contents(style="display: none;")
-  h1 Application list
+  h1!= __('menu.manage.client.title')
   button.btn.btn-primary.btn-client-add add
   .clientlist
 
@@ -9,18 +9,18 @@
         .modal-header
           button.close(type='button', data-dismiss='modal', area-label='close')
             span(area-hidden='true')
-          h4.modal-title Modal title
+          h4.modal-title!= __('dsp.modal.title')
         .modal-body
           form.template-client-form
             input#input-id(name='_id', type='hidden')
             .form-group
-              label(for='input-name') Application name(only for management)
+              label(for='input-name')!= __('dsp.control.name.client')
               input#input-name.form-control(name='name', type='text', placeholder='application name')
             .form-group
-              label(for='input-name') Application id
+              label(for='input-name')!= __('dsp.control.clientid')
               input#input-name.form-control(name='id', type='text', placeholder='application id')
             .form-group
-              label(for='input-name') domain(e.g. callback host name)
+              label(for='input-name')!= __('dsp.control.domain')
               input#input-name.form-control(name='domain', type='text', placeholder='trial.com')
 
         .modal-footer

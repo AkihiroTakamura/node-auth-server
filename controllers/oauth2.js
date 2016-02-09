@@ -1,3 +1,5 @@
+var logger = require('../util/logger');
+var i18n = require('i18n');
 var passport = require('passport');
 var url = require('url');
 var oauth2orize = require('oauth2orize');
@@ -40,7 +42,7 @@ function(client, redirectUri, user, ares, callback) {
     scope: ares.scope
   });
 
-  console.log("* Get grant code client[", client ,"] code[", code.code ,"] ares[", ares ,"] user[", user ,"]");
+  logger.system.info("* Get grant code client[", client ,"] code[", code.code ,"] ares[", ares ,"] user[", user ,"]");
 
   code.save(function(err) {
     if (err) return callback(err);
@@ -51,7 +53,7 @@ function(client, redirectUri, user, ares, callback) {
 
 // Exchange authorization codes for access token
 server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, callback) {
-  console.log("* Exchange access token client[", client ,"] code[", code ,"] redirectUri[", redirectUri,"]");
+  logger.system.info("* Exchange access token client[", client ,"] code[", code ,"] redirectUri[", redirectUri,"]");
 
   Code.findOne({code: code}, function (err, authCode) {
     if (err) return callback(err);
@@ -75,7 +77,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
         scope: authCode.scope
       });
 
-      console.log("* Get access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
+      logger.system.info("* Get access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
 
       token.save(function(err) {
         if (err) return callback(err);
@@ -90,12 +92,12 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
 
 // Exchange refresh token for access token
 server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken, scope, callback) {
-  console.log("* Exchange refresh token");
+  logger.system.info("* Exchange refresh token");
 
   Token.findOne({refreshtoken: refreshtoken}, function (err, token) {
     if (err) return callback(err);
 
-    console.log("- refresh token valid");
+    logger.system.info("- refresh token valid");
 
     // access token update
     token.accesstoken = uid(256);
@@ -103,7 +105,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken,
 
     token.save(function(err) {
       if (err) return callback(err);
-      console.log("- token refreshed");
+      logger.system.info("- token refreshed");
       callback(null, token, {expires_in: config.token.expiresIn});
     });
 
@@ -121,18 +123,18 @@ exports.authorization = [
     Client.findOne({id: clientId}, function(err, client) {
       if (err) return callback(err);
 
-      if (!client) return callback(new Error("There is no client with the client_id you supplied"));
+      if (!client) return callback(new Error(i18n.__('validate.oauth.notfound.client')));
 
       // validate redirectUri -> only host name
       var match = false;
       var uri = url.parse(redirectUri || '');
-      if (uri.host == client.domain || (uri.protocol == client.domain && uri.protocol != 'http' && uri.protocol != 'https')) {
+      if (uri.hostname == client.domain || (uri.protocol == client.domain && uri.protocol != 'http' && uri.protocol != 'https')) {
         match = true;
       }
       if (match && redirectUri && redirectUri.length > 0) {
         return callback(null, client, redirectUri);
       } else {
-        return callback(new Error("You must supply a redirect_uri that is a domain or url scheme owned by your client app."));
+        return callback(new Error(i18n.__('validate.oauth.notfound.redirecturi')));
       }
 
     });

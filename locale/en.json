@@ -1,18 +1,97 @@
 {
-  "app": {
-    name: "User Authorization and Authentification Application"
-  },
-  "msg": {
-    "hello": "hello",
-    "user": {
-      "title": "."
-    },
-    "msg": {
-      "require": {
-        "permission": " requires permission to",
-        "login": "Sign in below to allow this app to connect with your account.",
-        "logined": "Click <em>Authorize</em> to allow this app to connect with your account."
-      }
-    }
-  }
+	"app": {
+		"name": "AUAA - Application for User Authentification and Authorization"
+	},
+	"menu": {
+		"title": "Menu",
+		"manage": {
+			"user": {
+				"title": "Manage User",
+				"detail": "id/pass/role"
+			},
+			"role": {
+				"title": "Manage Role",
+				"detail": "crud role"
+			},
+			"client": {
+				"title": "Manage Client",
+				"detail": "regist oauth2 client"
+			}
+		}
+	},
+	"dsp": {
+		"success": "suceeded!",
+		"notlogined": "not logined",
+		"hello": "Hellog",
+		"user": {
+			"title": "."
+		},
+		"control": {
+			"login": "Sign in",
+			"logout": "Sign Out",
+			"username": "username",
+			"password": "password",
+			"authorize": "approve and continue",
+			"role": "role",
+			"name": {
+				"role": "role name",
+				"client": "client name"
+			},
+			"clientid": "client id",
+			"domain": "domain e.g(www.example.com)"
+		},
+		"modal": {
+			"title": "Controle"
+		},
+		"login": "Sign in ",
+		"msg": {
+			"require": {
+				"permission": "use following permission",
+				"login": "Sign in and Authorize",
+				"logined": "Authorize"
+			},
+			"application": {
+				"connect": "needs your approval."
+			},
+			"sinedin": "Signed in: ",
+			"password": {
+				"notshare": "password will not be shared to application"
+			}
+		}
+	},
+	"validate": {
+		"require": {
+			"name": "name is required",
+			"password": "password is required",
+			"id": "id is required",
+			"_id": "_id is required",
+			"domain": "domain is required"
+		},
+		"permission": {
+			"nothave": "you don't have enough permission for this operation"
+		},
+		"exist": {
+			"already": "already registered"
+		},
+		"notfound": {
+			"client": "client was not found",
+			"user": "user was not found"
+		},
+		"invalid": {
+			"password": "invalid password",
+			"accesstoken": "accesstoken is invalid of expired"
+		},
+		"oauth": {
+			"notfound": {
+				"client": "There is no client with the client_id you supplied",
+				"redirecturi": "You must supply a redirect_uri that is a domain or url scheme owned by your client app."
+			}
+		},
+		"cantdeleteme": "can't delete your self"
+	},
+	"exeption": {
+		"deserialize": {
+			"user": "could not deseriarize user information from session"
+		}
+	}
 }

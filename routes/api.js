@@ -12,13 +12,13 @@ router.route('/users')
 
 router.route('/clients')
   .post(authController.isBearerAuthentiacted, clientController.post)
-  // // .put(authController.isBearerAuthentiacted, clientController.put)
-  // .delete(authController.isBearerAuthentiacted, clientController.delete)
+  .put(authController.isBearerAuthentiacted, clientController.put)
+  .delete(authController.isBearerAuthentiacted, clientController.delete)
   .get(authController.isBearerAuthentiacted, clientController.get);
 
 // http://localhost:8080/api/oauth2/authorize?client_id=clientid&response_type=code&redirect_uri=http://localhost:8080&scope=read write
 router.route('/oauth2/authorize')
-  //.ユーザ認証はoauth2Controller内で実施する
+  //.user authentication is done inside oauth2Controller
   .get(oauth2Controller.authorization)
   .post(oauth2Controller.decision);
 
