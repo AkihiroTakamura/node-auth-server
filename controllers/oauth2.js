@@ -83,10 +83,10 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
         if (err) return callback(err);
 
         var extra_info = {
-          refreshtoken: token.refreshtoken,
-          clientId: token.clientId,
-          userId: token.userId,
-          expirationDate: token.expirationDate,
+          refresh_token: token.refreshtoken,
+          client_id: token.clientId,
+          user_id: token.userId,
+          expiration_date: token.expirationDate,
           scope: token.scope,
           expires_in: config.token.expiresIn
         };
@@ -118,10 +118,10 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken,
       logger.system.info("- token refreshed");
 
       var extra_info = {
-        refreshtoken: token.refreshtoken,
-        clientId: token.clientId,
-        userId: token.userId,
-        expirationDate: token.expirationDate,
+        refresh_token: token.refreshtoken,
+        client_id: token.clientId,
+        user_id: token.userId,
+        expiration_date: token.expirationDate,
         scope: token.scope,
         expires_in: config.token.expiresIn
       };
