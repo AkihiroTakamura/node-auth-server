@@ -81,7 +81,17 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
 
       token.save(function(err) {
         if (err) return callback(err);
-        callback(null, token, {expires_in: config.token.expiresIn});
+
+        var extra_info = {
+          refreshtoken: token.refreshtoken,
+          clientId: token.clientId,
+          userId: token.userId,
+          expirationDate: token.expirationDate,
+          scope: token.scope,
+          expires_in: config.token.expiresIn
+        };
+
+        callback(null, token.accesstoken, extra_info);
       });
 
     });
@@ -106,7 +116,17 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken,
     token.save(function(err) {
       if (err) return callback(err);
       logger.system.info("- token refreshed");
-      callback(null, token, {expires_in: config.token.expiresIn});
+
+      var extra_info = {
+        refreshtoken: token.refreshtoken,
+        clientId: token.clientId,
+        userId: token.userId,
+        expirationDate: token.expirationDate,
+        scope: token.scope,
+        expires_in: config.token.expiresIn
+      };
+
+      callback(null, token.accesstoken, extra_info);
     });
 
   });
