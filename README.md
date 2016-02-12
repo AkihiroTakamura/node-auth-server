@@ -107,29 +107,24 @@ http://localhost:8080/api/oauth2/authorize?client_id=example&response_type=code&
 
 * url: /api/oauth2/token
 * method: POST
-* header
-  * Authorization: Basic
-    * username: example
-    * password:CTyIEQXhe3TEAOwhUlAyxZd4f1ZFB3jm
-
-> you have to set clientid and client secret
-
+* header: none
 * body
   * code: mf7IOpFpY8kb6g5B
-
 
   > set OAuthCode - you noted a little while ago
 
   * grant_type: authorization_code
-  * redirect_uri: localhost
+  * client_id: sampleapp
+  * client_secret: xxxxx
 
-![Kobito.zfPcd9.png](https://qiita-image-store.s3.amazonaws.com/0/60056/695bfbc3-94b9-931e-b221-442681cec8bc.png "Kobito.zfPcd9.png")
+  > set client id and secret to request body
 
-![Kobito.2jlufH.png](https://qiita-image-store.s3.amazonaws.com/0/60056/d1a5ca94-db4f-74f8-2ec1-f7a31f578327.png "Kobito.2jlufH.png")
+![Kobito.QABSyq.png](https://qiita-image-store.s3.amazonaws.com/0/60056/06713b79-e198-1020-f0b8-15920f24c590.png "Kobito.QABSyq.png")
+
 
 * if ok, return access token by json
 
-![Kobito.x8Ivht.png](https://qiita-image-store.s3.amazonaws.com/0/60056/fddd7ea4-58f7-a08d-43e3-ee247adb8c6c.png "Kobito.x8Ivht.png")
+![Kobito.FnvIZH.png](https://qiita-image-store.s3.amazonaws.com/0/60056/df70a5bc-7022-4e2b-fc62-e1f7026a69aa.png "Kobito.FnvIZH.png")
 
 
 
