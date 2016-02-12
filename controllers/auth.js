@@ -4,6 +4,7 @@ var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
+var ClientPasswordStarategy = require('passport-oauth2-client-password').Strategy;
 var User = require('../models/user');
 var Client = require('../models/client');
 var Token = require('../models/token');
@@ -71,6 +72,21 @@ passport.use('client-basic', new BasicStrategy(
 ));
 
 // =======================
+// Oauth2 Client-Password Authentification
+// =======================
+passport.use('client-password', new ClientPasswordStarategy(
+  function(clientId, clientSecret, callback) {
+    Client.findOne({id: clientId}, function(err, client) {
+      if (err) return callback(err);
+
+      if (!client || client.secret !== clientSecret) return callback(null, false);
+
+      return callback(null, client);
+    });
+  }
+));
+
+// =======================
 // Oauth2 Code Flow
 // =======================
 passport.use(new BearerStrategy(
@@ -113,6 +129,7 @@ passport.deserializeUser(function(id, callback) {
 
 exports.isUserAuthentiacted = passport.authenticate('local', {session: true});
 exports.isClientAuthenticated = passport.authenticate('client-basic', {session: false});
+exports.isClientPasswordAuthenticated = passport.authenticate('client-password', {session: false});
 
 exports.isSessionAuthenticated = function(req, res, callback) {
   if (!req.user) return res.status(401).json({message: i18n.__('dsp.notlogined')});
