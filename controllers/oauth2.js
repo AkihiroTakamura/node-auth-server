@@ -61,8 +61,6 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
     // validation
     if (authCode === undefined || authCode === null) return callback(null, false);
 
-    if (client._id.toString() !== authCode.clientId) return callback(null, false);
-
     // Delete auth code now thai is has been used
     authCode.remove(function(err) {
       if (err) return callback(err);

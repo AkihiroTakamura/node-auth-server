@@ -4,6 +4,7 @@ var router = express.Router();
 var userController    = require('../controllers/user');
 var authController    = require('../controllers/auth');
 var clientController   = require('../controllers/client');
+var profileController   = require('../controllers/profile');
 var oauth2Controller   = require('../controllers/oauth2');
 
 router.route('/users')
@@ -23,6 +24,11 @@ router.route('/oauth2/authorize')
   .post(oauth2Controller.decision);
 
 router.route('/oauth2/token')
-  .post(authController.isClientPasswordAuthenticated, oauth2Controller.token);
+//  .post(authController.isClientPasswordAuthenticated, oauth2Controller.token);
+  .post(oauth2Controller.token);
+
+router.route('/profile')
+  .get(authController.isBearerAuthentiacted, profileController.get);
+
 
 module.exports = router;
