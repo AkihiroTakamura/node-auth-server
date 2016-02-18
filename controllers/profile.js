@@ -12,9 +12,17 @@ exports.get = function(req, res) {
     {_id: 1, username: 2, roles: 3}
   )
   .populate('roles')
-  .exec(function(err, users) {
+  .exec(function(err, user) {
       if (err) return res.status(500).send(err);
-      res.json(users);
+
+      var json = {};
+      json.username = user.username;
+      json.authorities = [];
+      for (var i = 0; i < user.roles.length; i++) {
+        json.authorities.push(user.roles[i].name);
+      };
+
+      res.json(json);
   });
 
 }
