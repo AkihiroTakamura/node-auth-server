@@ -53,7 +53,7 @@ $ gulp
 # Tutorial
 
 ## first setting by Management view
-* http://localhost:8080/
+* http://localhost:9999/
 * Default User
   * username: admin
   * password: admin
@@ -89,7 +89,7 @@ $ gulp
 * open browser and input following url.
 
 ```
-http://localhost:8080/api/oauth2/authorize?client_id=example&response_type=code&redirect_uri=http://localhost:8080&scope=admin
+http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&redirect_uri=http://localhost:9999&scope=admin
 ```
 
 * authorization page opened, click 'aoorove and continue'
@@ -97,7 +97,7 @@ http://localhost:8080/api/oauth2/authorize?client_id=example&response_type=code&
 ![Kobito.IWYdUv.png](https://qiita-image-store.s3.amazonaws.com/0/60056/72901875-e52f-37a4-33ff-4162b6412593.png "Kobito.IWYdUv.png")
 
 * see url bar in your browser.
-* url includes oauth code like http://localhost:8080/code=mf7IOpFpY8kb6g5B
+* url includes oauth code like http://localhost:9999/code=mf7IOpFpY8kb6g5B
 * note the code
 
 
@@ -186,8 +186,12 @@ http://localhost:8080/api/oauth2/authorize?client_id=example&response_type=code&
 * ~~accessTokenの有効期限とrefreshToken~~
 * ~~userのログアウト~~
 * ~~userの権限(admin権限は全ユーザ・クライアント見れる)~~
-* user認証の共有api
+* ~~user認証の共有api~~
 * ~~user認可ありのアプリ一覧、認可の解除機能~~
 * 通常ログイン時のprofile等、メニュー画面
 * accesstoken状態、session状態等
+* 同一role/userによる再authの場合、スルーしてcode返却
+* apiでusername/password認証(web以外などcode flowできないケース対応)
+  * clientid/secretの認証とともに実施
+
 
