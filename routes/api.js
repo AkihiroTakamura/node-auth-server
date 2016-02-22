@@ -24,8 +24,7 @@ router.route('/oauth2/authorize')
   .post(oauth2Controller.decision);
 
 router.route('/oauth2/token')
-//  .post(authController.isClientPasswordAuthenticated, oauth2Controller.token);
-  .post(oauth2Controller.token);
+ .post(authController.isClientAuthenticated, oauth2Controller.token);
 
 router.route('/profile')
   .get(authController.isBearerAuthentiacted, profileController.get);

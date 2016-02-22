@@ -16,14 +16,26 @@ var Token = require('../models/token');
 passport.use(new BasicStrategy(
   function(username, password, callback) {
     User.findOne({username: username}, function(err, user) {
-      if (err) return callback(err);
+      if (err) {
+        logger.error.error(" error : user find : [", err ,"]");
+        return callback(err);
+      }
 
-      if (!user) return callback(null, false);
+      if (!user) {
+        logger.system.info(" can't find user from database : username: [", username ,"]");
+        return callback(null, false, {message: i18n.__('validate.notfound.user')});
+      }
 
       user.verifyPassword(password, function(err, isMatch) {
-        if (err) return callback(err);
+        if (err) {
+          logger.error.error(" error : user verifyPassword : [", err ,"]");
+          return callback(err);
+        }
 
-        if (!isMatch) return callback(null, false);
+        if (!isMatch) {
+          logger.system.info(" password verify failed : password: [", password ,"]");
+          return callback(null, false, {message: i18n.__('validate.invalid.password')});
+        }
 
         return callback(null, user);
       });
@@ -40,14 +52,26 @@ passport.use(new LocalStrategy({
   },
   function(username, password, callback) {
     User.findOne({username: username}, function(err, user) {
-      if (err) return callback(err);
+      if (err) {
+        logger.error.error(" error : user find : [", err ,"]");
+        return callback(err);
+      }
 
-      if (!user) return callback(null, false, {message: i18n.__('validate.notfound.user')});
+      if (!user) {
+        logger.system.info(" can't find user from database : username: [", username ,"]");
+        return callback(null, false, {message: i18n.__('validate.notfound.user')});
+      }
 
       user.verifyPassword(password, function(err, isMatch) {
-        if (err) return callback(err);
+        if (err) {
+          logger.error.error(" error : user verifyPassword : [", err ,"]");
+          return callback(err);
+        }
 
-        if (!isMatch) return callback(null, false, {message: i18n.__('validate.invalid.password')});
+        if (!isMatch) {
+          logger.system.info(" password verify failed : password: [", password ,"]");
+          return callback(null, false, {message: i18n.__('validate.invalid.password')});
+        }
 
         //TODO: Add other checks
         return callback(null, user);
@@ -60,11 +84,17 @@ passport.use(new LocalStrategy({
 // Oauth2 Basic Authentification
 // =======================
 passport.use('client-basic', new BasicStrategy(
-  function(username, password, callback) {
-    Client.findOne({id: username}, function(err, client) {
-      if (err) return callback(err);
+  function(clientId, clientSecret, callback) {
+    Client.findOne({id: clientId}, function(err, client) {
+      if (err) {
+        logger.error.error(" error : client-basic : [", err ,"]");
+        return callback(err);
+      }
 
-      if (!client || client.secret !== password) return callback(null, false);
+      if (!client || client.secret !== clientSecret) {
+        logger.system.info(" client_id and client_secret verify failed : client_id: [", clientId ,"] client_secret: [", clientSecret ,"]");
+        return callback(null, false);
+      }
 
       return callback(null, client);
     });
@@ -77,9 +107,15 @@ passport.use('client-basic', new BasicStrategy(
 passport.use('client-password', new ClientPasswordStarategy(
   function(clientId, clientSecret, callback) {
     Client.findOne({id: clientId}, function(err, client) {
-      if (err) return callback(err);
+      if (err) {
+        logger.error.error(" error : client-password : [", err ,"]");
+        return callback(err);
+      }
 
-      if (!client || client.secret !== clientSecret) return callback(null, false);
+      if (!client || client.secret !== clientSecret) {
+        logger.system.info(" client_id and client_secret verify failed : client_id: [", clientId ,"] client_secret: [", clientSecret ,"]");
+        return callback(null, false);
+      }
 
       return callback(null, client);
     });
@@ -92,17 +128,32 @@ passport.use('client-password', new ClientPasswordStarategy(
 passport.use(new BearerStrategy(
   function(accesstoken, callback) {
     Token.findOne({accesstoken: accesstoken}, function(err, token) {
-      if (err) return callback(err);
+      if (err) {
+        logger.error.error(" error : bearer passport : [", err ,"]");
+        return callback(err);
+      }
 
-      if (!token) return callback(null, false);
+      if (!token) {
+        logger.system.info(" token not found from database : accesstoken: [", accesstoken ,"]");
+        return callback(null, false);
+      }
 
       // validate token expired
-      if (!token.active) return callback(null, false);
+      if (!token.active) {
+        logger.system.info(" token inActive : accesstoken: [", accesstoken ,"]");
+        return callback(null, false);
+      }
 
       User.findOne({ _id: token.userId}, function (err, user) {
-        if (err) return callback(err);
+        if (err) {
+          logger.error.error(" error : bearer passport : user find : [", err ,"]");
+          return callback(err);
+        }
 
-        if (!user) return callback(null, false);
+        if (!user) {
+          logger.system.info(" user not found by accesstoken : accesstoken: [", accesstoken ,"]");
+          return callback(null, false);
+        }
 
         //TODO: set scope
         callback(null, user, {scope: '*'});
@@ -129,7 +180,7 @@ passport.deserializeUser(function(id, callback) {
 
 exports.isUserAuthentiacted = passport.authenticate('local', {session: true});
 exports.isClientAuthenticated = passport.authenticate('client-basic', {session: false});
-exports.isClientPasswordAuthenticated = passport.authenticate('client-password', {session: false});
+exports.isClientPasswordAuthenticated = passport.authenticate(['client-password'], {session: false});
 
 exports.isSessionAuthenticated = function(req, res, callback) {
   if (!req.user) return res.status(401).json({message: i18n.__('dsp.notlogined')});
