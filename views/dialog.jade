@@ -20,6 +20,11 @@ block content
               input(type='hidden', name='auth_url', value=currentURL)
               input(type='hidden', name='scope', value=scope.join(','))
 
+              if errors
+                each message in errors
+                  .alert.alert-warning
+                    p= message
+
               fieldset
                 div(class="row")
                   div(class="center-block text-center")
