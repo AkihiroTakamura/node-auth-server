@@ -83,8 +83,8 @@
 		},
 		"oauth": {
 			"notfound": {
-				"client": "There is no client with the client_id you supplied",
-				"redirecturi": "You must supply a redirect_uri that is a domain or url scheme owned by your client app."
+				"client": "There is no client with the client_id you supplied client id : %s",
+				"redirecturi": "You must supply a redirect_uri that is a domain or url scheme owned by your client app. redirectUri: %s"
 			}
 		},
 		"cantdeleteme": "can't delete your self"

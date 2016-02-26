@@ -8,6 +8,7 @@ var server = oauth2orize.createServer();
 var Client = require('../models/client');
 var Token = require('../models/token');
 var Code = require('../models/code');
+var User = require('../models/user');
 
 var uid = require('../util/uid').uid;
 var config = require('config');
@@ -33,13 +34,13 @@ server.deserializeClient(function(id, callback) {
 server.grant(oauth2orize.grant.code({
   scopeSeparator: [' ', ',']
 },
-function(client, redirectUri, user, ares, callback) {
+function(client, redirectUri, user, ares, req, callback) {
   var code = new Code({
     code: uid(16),
     clientId: client._id,
     redirectUri: redirectUri,
     userId: user._id,
-    scope: ares.scope
+    scope: req.scope
   });
 
   logger.system.info("* Get grant code client[", client ,"] code[", code.code ,"] ares[", ares ,"] user[", user ,"]");
@@ -65,35 +66,73 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
     authCode.remove(function(err) {
       if (err) return callback(err);
 
-      // create and send AccessToken
-      var token = new Token({
-        accesstoken: uid(256),
-        refreshtoken: uid(256),
-        clientId: authCode.clientId,
-        userId: authCode.userId,
-        expirationDate: new Date(new Date().getTime() + (config.token.expiresIn * 1000)),
-        scope: authCode.scope
-      });
+      Token.findOne(
+        {
+          clientId: authCode.clientId,
+          userId: authCode.userId,
+          scope: authCode.scope
+        }, function (err, token) {
+          if (err) return callback(err);
 
-      logger.system.info("* Get access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
+          // if exist same token -> turn use token
+          if (token) {
+            token.accesstoken = uid(256);
+            token.expirationDate = new Date(new Date().getTime() + (config.token.expiresIn * 1000));
+            logger.system.info("* Turn use access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
 
-      token.save(function(err) {
-        if (err) return callback(err);
+            token.save(function(err) {
+              if (err) return callback(err);
+              var extra_info = {
+                refresh_token: token.refreshtoken,
+                client_id: token.clientId,
+                user_id: token.userId,
+                expiration_date: token.expirationDate,
+                scope: token.scope,
+                expires_in: config.token.expiresIn
+              };
+              return callback(null, token.accesstoken, extra_info);
+            });
+          } else {
+            // create and send AccessToken
+            var token = new Token({
+              accesstoken: uid(256),
+              refreshtoken: uid(256),
+              clientId: authCode.clientId,
+              userId: authCode.userId,
+              expirationDate: new Date(new Date().getTime() + (config.token.expiresIn * 1000)),
+              scope: authCode.scope
+            });
 
-        var extra_info = {
-          refresh_token: token.refreshtoken,
-          client_id: token.clientId,
-          user_id: token.userId,
-          expiration_date: token.expirationDate,
-          scope: token.scope,
-          expires_in: config.token.expiresIn
-        };
+            logger.system.info("* Create access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
 
-        callback(null, token.accesstoken, extra_info);
-      });
+            token.save(function(err) {
+              if (err) return callback(err);
+
+              // relation token to User
+              User.findById(authCode.userId, function(err, user) {
+                if (err) return callback(err);
+
+                user.tokens.push(token);
+                user.save(function(err) {
+                  if (err) return callback(err);
+
+                  var extra_info = {
+                    refresh_token: token.refreshtoken,
+                    client_id: token.clientId,
+                    user_id: token.userId,
+                    expiration_date: token.expirationDate,
+                    scope: token.scope,
+                    expires_in: config.token.expiresIn
+                  };
+
+                  callback(null, token.accesstoken, extra_info);
+                });
+              });
+            });
+          };
+        });
 
     });
-
   });
 
 }));
@@ -136,34 +175,70 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken,
 // =======================
 // User authorization endpoint
 exports.authorization = [
-  // OAuth Client認証 -> clietid, redirectUriのチェック
-  server.authorization(function(clientId, redirectUri, callback) {
-    Client.findOne({id: clientId}, function(err, client) {
-      if (err) return callback(err);
-
-      if (!client) return callback(new Error(i18n.__('validate.oauth.notfound.client')));
-
-      // validate redirectUri -> only host name
-      var match = false;
-      var uri = url.parse(redirectUri || '');
-      if (uri.hostname == client.domain || (uri.protocol == client.domain && uri.protocol != 'http' && uri.protocol != 'https')) {
-        match = true;
-      }
-      if (match && redirectUri && redirectUri.length > 0) {
-        return callback(null, client, redirectUri);
-      } else {
-        return callback(new Error(i18n.__('validate.oauth.notfound.redirecturi')));
-      }
-
-    });
-  }),
+  //  user authorization
   function(req, res, next) {
-    // ユーザ認証、セッションある場合req.userにセットされる
-    // ここではユーザ未認証でもそのまま進める
     passport.authenticate('local', {session: true}, function(err, user, info) {
+      if (err) return next(err);
+
+      // not logined, but go next
       return next();
     })(req, res, next);
   },
+  server.authorization(
+    // authorization validate
+    function (clientId, redirectUri, scope, type, done) {
+      Client.findOne({id: clientId}, function(err, client) {
+        if (err) return done(err);
+        if (!client) {
+          logger.system.info(i18n.__('validate.oauth.notfound.client', clientId));
+          return done(null, false);
+        }
+
+        // validate redirectUri -> only host name
+        var match = false;
+        var uri = url.parse(redirectUri || '');
+        if (uri.hostname == client.domain || (uri.protocol == client.domain && uri.protocol != 'http' && uri.protocol != 'https')) {
+          match = true;
+        }
+        if (match && redirectUri && redirectUri.length > 0) {
+          return done(null, client, redirectUri);
+        } else {
+          logger.system.info(i18n.__('validate.oauth.notfound.redirecturi', redirectUri));
+          return done(null, false);
+        }
+      });
+    },
+    // authorization immediate
+    function(client, user, scope, type, req, done) {
+      logger.system.debug('client: ', client);
+      logger.system.debug('user: ', user);
+      logger.system.debug('scope: ', scope);
+      logger.system.debug('type: ', type);
+      logger.system.debug('req: ', req);
+
+      // not login -> go to dialog
+      if (!user) return done(null, false);
+
+      // scope is diffrent from issued token and request scope -> go to dialog
+      // client is different from issued token and request client -> go to dialog
+      // token is expired -> go to dialog
+      var allowed = false;
+      for (var i = 0; i < user.tokens.length; i++) {
+        if (user.tokens[i].scope == scope &&
+            user.tokens[i].clientId == client._id &&
+            user.tokens[i].active
+        ) {
+          allowed = true;
+          break;
+        }
+      }
+      if (!allowed) return done(null, false);
+
+      // already access allowed -> skip dialog (immediate mode)
+      return done(null, true);
+
+    }
+  ),
   function(req, res) {
     res.render('dialog', {
       transaction_id: req.oauth2.transactionID,
@@ -176,14 +251,15 @@ exports.authorization = [
       map: config.scope.map
     });
   }
-]
+];
 
 // User decision endpoint
 exports.decision = [
   function(req, res, callback) {
+    // when logined -> go next
     if (req.user) return callback();
 
-    // 送信されたid/passのvalidateの為、passport.authenticateを実行
+    // when not logined ->  id/pass authorization
     passport.authenticate('local', {session: true}, function(err, user, info) {
       if (err) return callback(err);
 
@@ -194,8 +270,8 @@ exports.decision = [
         return;
       }
 
-      // validate ok なら自力でログイン
-      // これをしないとserver.dicisionにuser情報が渡らなかった
+      // when valid ->  login by myself.
+      // for receive user object to server.dicision method
       req.logIn(user, function(err) {
         if (err) return callback(err);
         return callback();
@@ -204,7 +280,6 @@ exports.decision = [
     })(req, res, callback);
 
   },
-  // passport.authenticate('local', {session: true}),
   server.decision(function(req, callback) {
     callback(null, {scope: req.oauth2.req.scope});
   })

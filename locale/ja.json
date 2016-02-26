@@ -83,8 +83,8 @@
 		},
 		"oauth": {
 			"notfound": {
-				"client": "指定されたclient idに対応するclientが見つからないか登録されていません",
-				"redirecturi": "指定されたredirect uriは登録されていません"
+				"client": "指定されたclient idに対応するclientが見つからないか登録されていません client id: %s",
+				"redirecturi": "指定されたredirect uriは登録されていません redirect uri: %s"
 			}
 		},
 		"cantdeleteme": "自分自身は削除することができません"

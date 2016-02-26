@@ -190,7 +190,7 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 * ~~user認可ありのアプリ一覧、認可の解除機能~~
 * 通常ログイン時のprofile等、メニュー画面
 * accesstoken状態、session状態等
-* 同一role/userによる再authの場合、スルーしてcode返却
+* ~~~同一role/userによる再authの場合、スルーしてcode返却~~~
 * apiでusername/password認証(web以外などcode flowできないケース対応)
   * clientid/secretの認証とともに実施
 

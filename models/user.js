@@ -18,6 +18,10 @@ var UserSchema = new mongoose.Schema({
   clients: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Client'
+  }],
+  tokens: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Token'
   }]
 });
 

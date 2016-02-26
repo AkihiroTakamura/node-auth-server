@@ -169,6 +169,7 @@ passport.serializeUser(function(user, callback) {
 passport.deserializeUser(function(id, callback) {
   User.findOne({_id: id})
     .populate('roles')
+    .populate('tokens')
     .exec(function(err, user) {
       if (err) return callback(err);
       if (!user || user == null) return callback(new Error(i18n.__('exception.deserialize.user')));
