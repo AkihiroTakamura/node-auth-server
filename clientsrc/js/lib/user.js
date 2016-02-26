@@ -61,6 +61,10 @@ function eventBind() {
     $dom.find('#template-user-modal').on('hidden.bs.modal', function(e) {
     });
 
+    $dom.find('#template-token-modal').on('hide.bs.modal', function(e) {
+      $dom.find('[data-toggle="popover"]').popover('hide');
+    });
+
     $dom.on('click', '.btn-user-post', function(e) {
       var data = $dom.find('.template-user-form').serialize();
       Promise.resolve(data)
@@ -110,6 +114,15 @@ function eventBind() {
         .catch(function() {
           // cancel
         });
+    });
+
+    // check token button click event
+    $dom.on('click', '.btn-token', function(e) {
+      var data = JSON.parse($(e.target).closest('tr').attr('data-json'));
+      Promise.resolve({tokens: data.tokens})
+        .then(initTokenModal)
+        .then(showTokenModal)
+      ;
     });
 
     resolve();
@@ -176,7 +189,11 @@ function setUserTableRow(json) {
           $('<span></span>').html('&nbsp'),
           $('<button></button>')
             .addClass('btn btn-primary btn-delete')
-            .text('delete')
+            .text('delete'),
+          $('<span></span>').html('&nbsp'),
+          $('<button></button>')
+            .addClass('btn btn-primary btn-token')
+            .text('check token')
         ]))
       ;
 
@@ -342,6 +359,72 @@ function initModal(param) {
     ;
   });
 }
+
+function showTokenModal(param) {
+  return new Promise(function(resolve, reject) {
+    var $modal = $dom.find('#template-token-modal');
+    $modal.modal({});
+    resolve(param);
+  });
+}
+
+function initTokenModal(param) {
+  return new Promise(function(resolve, reject) {
+    var $modal = $dom.find('#template-token-modal');
+    $modal.find('.alert').remove();
+    $modal.find('.modal-body').empty();
+
+    Promise.resolve(param)
+      .then(function(param) {
+        var $list = $('<div></div>')
+        $list.addClass('list-group');
+
+        $.each(param.tokens, function(index, token) {
+          var $head = $('<a></a>');
+          $head
+            .addClass('list-group-item active')
+            .text('id:' + token._id)
+          ;
+          $list.append($head);
+
+          var $detail = $('<a></a>');
+          $detail
+            .addClass('list-group-item text ellipsis');
+
+          $detail.text('scope: ' + token.scope);
+          $list.append($detail.clone());
+          $detail.text('expirationDate: ' + token.expirationDate);
+          $list.append($detail.clone());
+          $detail
+            .text('accesstoken: ' + token.accesstoken)
+            .attr('tabindex', '0')
+            .attr('data-toggle', 'popover')
+            .attr('title', 'accesstoken')
+            .attr('data-content', token.accesstoken)
+          ;
+          $list.append($detail.clone());
+          $detail
+            .text('refreshtoken: ' + token.refreshtoken)
+            .attr('tabindex', '0')
+            .attr('data-toggle', 'popover')
+            .attr('title', 'refreshtoken')
+            .attr('data-content', token.refreshtoken)
+          ;
+          $list.append($detail.clone());
+
+        });
+
+        $modal.find('.modal-body').append($list);
+        $modal.find('[data-toggle="popover"]').popover();
+      })
+      .then(function() {
+        resolve(param);
+      })
+    ;
+  });
+}
+
+
 
 function hideModal(param) {
   return new Promise(function(resolve, reject) {

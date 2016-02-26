@@ -1,0 +1,8 @@
+.text {
+  // overflow時に３点リーダにする
+  &.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

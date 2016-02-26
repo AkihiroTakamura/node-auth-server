@@ -67,9 +67,11 @@ exports.get = function(req, res) {
 
   User.find(
     whereoption,
-    {username: 1, roles: 2}
+    {username: 1, roles: 2, clients: 3, tokens: 4}
   )
   .populate('roles')
+  .populate('clients')
+  .populate('tokens')
   .exec(function(err, users) {
       if (err) return res.status(500).send(err);
       res.json(users);

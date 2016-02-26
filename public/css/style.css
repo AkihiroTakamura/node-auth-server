@@ -1,3 +1,6 @@
+.popover-content {
+  word-break: break-all; }
+
 .login .panel-heading {
   padding: 5px 15px; }
 
@@ -11,3 +14,8 @@
   margin: 0 auto 10px;
   display: block;
   border-radius: 50%; }
+
+.text.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; }

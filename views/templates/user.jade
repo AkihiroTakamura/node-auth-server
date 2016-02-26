@@ -27,3 +27,15 @@
           button.btn.btn-default(data-dismiss='modal') Close
           button.btn.btn-primary.btn-user-post Save changes
           button.btn.btn-primary.btn-user-put Save changes
+
+  #template-token-modal.modal.fade(role='dialog')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', area-label='close')
+            span(area-hidden='true')
+          h4.modal-title!= __('dsp.modal.title')
+        .modal-body
+
+        .modal-footer
+          button.btn.btn-default(data-dismiss='modal') Close
