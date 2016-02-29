@@ -65,73 +65,17 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
     authCode.remove(function(err) {
       if (err) return callback(err);
 
-      Token.findOne(
-        {
-          clientId: authCode.clientId,
-          userId: authCode.userId,
-          scope: authCode.scope
-        }, function (err, token) {
-          if (err) return callback(new errorHandler.DatabaseQueryException(err));
-
-          // if exist same token -> turn use token
-          if (token) {
-            token.accesstoken = uid(256);
-            token.expirationDate = new Date(new Date().getTime() + (config.token.expiresIn * 1000));
-            logger.system.info("* Turn use access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
-
-            token.save(function(err) {
-              if (err) return callback(new errorHandler.DatabaseQueryException(err));
-              var extra_info = {
-                refresh_token: token.refreshtoken,
-                client_id: token.clientId,
-                user_id: token.userId,
-                expiration_date: token.expirationDate,
-                scope: token.scope,
-                expires_in: config.token.expiresIn
-              };
-              return callback(null, token.accesstoken, extra_info);
-            });
-          } else {
-            // create and send AccessToken
-            var token = new Token({
-              accesstoken: uid(256),
-              refreshtoken: uid(256),
-              clientId: authCode.clientId,
-              userId: authCode.userId,
-              expirationDate: new Date(new Date().getTime() + (config.token.expiresIn * 1000)),
-              scope: authCode.scope
-            });
-
-            logger.system.info("* Create access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
-
-            token.save(function(err) {
-              if (err) return callback(new errorHandler.DatabaseQueryException(err));
-
-              // relation token to User
-              User.findById(authCode.userId, function(err, user) {
-                if (err) return callback(new errorHandler.DatabaseQueryException(err));
-
-                user.tokens.push(token);
-                user.save(function(err) {
-                  if (err) return callback(new errorHandler.DatabaseQueryException(err));
-
-                  var extra_info = {
-                    refresh_token: token.refreshtoken,
-                    client_id: token.clientId,
-                    user_id: token.userId,
-                    expiration_date: token.expirationDate,
-                    scope: token.scope,
-                    expires_in: config.token.expiresIn
-                  };
-
-                  callback(null, token.accesstoken, extra_info);
-                });
-              });
-            });
-          };
-        });
+      issueToken({
+        clientId: authCode.clientId,
+        userId: authCode.userId,
+        scope: authCode.scope
+      }, function(err, accesstoken, extra_info, token) {
+        if (err) return callback(err);
+        callback(null, accesstoken, extra_info);
+      });
 
     });
+
   });
 
 }));
@@ -168,6 +112,111 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken,
   });
 
 }));
+
+// Exchange username/password to access token
+// Premise: oauth client authorization / username/password authorization is finished
+server.exchange(oauth2orize.exchange.password(function(client, username, password, scope, callback) {
+  logger.system.info("* Exchange password-token");
+  logger.system.debug('client:', client);
+  logger.system.debug('username:', username);
+  logger.system.debug('password:', password);
+  logger.system.debug('scope:', scope);
+
+  User.findOne({username: username}, function(err, user) {
+    if (err) return callback(new errorHandler.DatabaseQueryException(err));
+    if (!user) return callback(new Error('user is not found. username: ', username));
+
+    issueToken({
+      clientId: client._id,
+      userId: user._id,
+      scope: scope
+    }, function(err, accesstoken, extra_info, token) {
+      if (err) return callback(err);
+      callback(null, token);
+    });
+
+  });
+
+}));
+
+
+function issueToken(option, callback) {
+  logger.system.debug("- issue token option:", option);
+
+  Token.findOne(
+    {
+      clientId: option.clientId,
+      userId: option.userId,
+      scope: option.scope
+    }, function (err, token) {
+      if (err) return callback(new errorHandler.DatabaseQueryException(err));
+
+      // if exist same token -> turn use token
+      if (token) {
+        token.accesstoken = uid(256);
+        token.expirationDate = new Date(new Date().getTime() + (config.token.expiresIn * 1000));
+        logger.system.info("* Turn use access token accesstoken[", token.accesstoken ,"] scope[", token.scope,"]");
+
+        token.save(function(err) {
+          if (err) return callback(new errorHandler.DatabaseQueryException(err));
+          var extra_info = {
+            refresh_token: token.refreshtoken,
+            client_id: token.clientId,
+            user_id: token.userId,
+            expiration_date: token.expirationDate,
+            scope: token.scope,
+            expires_in: config.token.expiresIn
+          };
+          return callback(null, token.accesstoken, extra_info, token);
+        });
+      } else {
+        // create and send AccessToken
+        var token = new Token({
+          accesstoken: uid(256),
+          refreshtoken: uid(256),
+          clientId: option.clientId,
+          userId: option.userId,
+          expirationDate: new Date(new Date().getTime() + (config.token.expiresIn * 1000)),
+          scope: option.scope
+        });
+
+        logger.system.info("* Create access token accesstoken[", token.accesstoken ,"] scope[", token.scope,"]");
+
+        token.save(function(err) {
+          if (err) return callback(new errorHandler.DatabaseQueryException(err));
+
+          // relation token to User
+          User.findById(option.userId, function(err, user) {
+            if (err) return callback(new errorHandler.DatabaseQueryException(err));
+
+            user.tokens.push(token);
+            user.save(function(err) {
+              if (err) return callback(new errorHandler.DatabaseQueryException(err));
+
+              var extra_info = {
+                refresh_token: token.refreshtoken,
+                client_id: token.clientId,
+                user_id: token.userId,
+                expiration_date: token.expirationDate,
+                scope: token.scope,
+                expires_in: config.token.expiresIn
+              };
+
+              callback(null, token.accesstoken, extra_info, token);
+            });
+          });
+        });
+      };
+  });
+}
+
+
+
+
+
+
+
+
 
 // =======================
 // Endpoints

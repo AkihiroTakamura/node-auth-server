@@ -23,8 +23,20 @@ router.route('/oauth2/authorize')
   .get(oauth2Controller.authorization)
   .post(oauth2Controller.decision);
 
+// echange authorization code to access token
 router.route('/oauth2/token')
- .post(authController.isClientAuthenticated, oauth2Controller.token);
+  .post(
+    authController.isClientAuthenticated,
+    oauth2Controller.token
+  );
+
+// exchange username/password to access token
+router.route('/oauth2/password-token')
+  .post(
+    authController.isClientAuthenticated,
+    authController.isUserAuthentiacted,
+    oauth2Controller.token
+  );
 
 router.route('/profile')
   .get(authController.isBearerAuthentiacted, profileController.get);
