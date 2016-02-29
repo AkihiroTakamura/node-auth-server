@@ -1,3 +1,4 @@
+var errorHandler = require('../util/errorhandler');
 var logger = require('../util/logger');
 var i18n = require('i18n');
 var passport = require('passport');
@@ -24,8 +25,7 @@ server.serializeClient(function(client, callback) {
 // Register deserialization function
 server.deserializeClient(function(id, callback) {
   Client.findOne({_id: id}, function (err, client) {
-    if (err) return callback(err);
-
+    if (err) return callback(new errorHandler.DatabaseQueryException(" error : deserializeClient : client find : [", err ,"]"));
     return callback(null, client);
   });
 });
@@ -46,8 +46,7 @@ function(client, redirectUri, user, ares, req, callback) {
   logger.system.info("* Get grant code client[", client ,"] code[", code.code ,"] ares[", ares ,"] user[", user ,"]");
 
   code.save(function(err) {
-    if (err) return callback(err);
-
+    if (err) return callback(new errorHandler.DatabaseQueryException(err));
     callback(null, code.code);
   });
 }));
@@ -57,7 +56,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
   logger.system.info("* Exchange access token client[", client ,"] code[", code ,"] redirectUri[", redirectUri,"]");
 
   Code.findOne({code: code}, function (err, authCode) {
-    if (err) return callback(err);
+    if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
     // validation
     if (authCode === undefined || authCode === null) return callback(null, false);
@@ -72,7 +71,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
           userId: authCode.userId,
           scope: authCode.scope
         }, function (err, token) {
-          if (err) return callback(err);
+          if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
           // if exist same token -> turn use token
           if (token) {
@@ -81,7 +80,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
             logger.system.info("* Turn use access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
 
             token.save(function(err) {
-              if (err) return callback(err);
+              if (err) return callback(new errorHandler.DatabaseQueryException(err));
               var extra_info = {
                 refresh_token: token.refreshtoken,
                 client_id: token.clientId,
@@ -106,15 +105,15 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
             logger.system.info("* Create access token accesstoken[", token.accesstoken ,"] code[", code ,"] scope[", token.scope,"]");
 
             token.save(function(err) {
-              if (err) return callback(err);
+              if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
               // relation token to User
               User.findById(authCode.userId, function(err, user) {
-                if (err) return callback(err);
+                if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
                 user.tokens.push(token);
                 user.save(function(err) {
-                  if (err) return callback(err);
+                  if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
                   var extra_info = {
                     refresh_token: token.refreshtoken,
@@ -142,7 +141,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken,
   logger.system.info("* Exchange refresh token");
 
   Token.findOne({refreshtoken: refreshtoken}, function (err, token) {
-    if (err) return callback(err);
+    if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
     logger.system.info("- refresh token valid");
 
@@ -151,7 +150,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshtoken,
     token.expirationDate = new Date(new Date().getTime() + (config.token.expiresIn * 1000));
 
     token.save(function(err) {
-      if (err) return callback(err);
+      if (err) return callback(new errorHandler.DatabaseQueryException(err));
       logger.system.info("- token refreshed");
 
       var extra_info = {
@@ -188,7 +187,7 @@ exports.authorization = [
     // authorization validate
     function (clientId, redirectUri, scope, type, done) {
       Client.findOne({id: clientId}, function(err, client) {
-        if (err) return done(err);
+        if (err) return done(new errorHandler.DatabaseQueryException(err));
         if (!client) {
           logger.system.info(i18n.__('validate.oauth.notfound.client', clientId));
           return done(null, false);

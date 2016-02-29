@@ -1,3 +1,4 @@
+var errorHandler = require('../util/errorhandler');
 var logger = require('../util/logger');
 var i18n = require('i18n');
 var passport = require('passport');
@@ -16,10 +17,7 @@ var Token = require('../models/token');
 passport.use(new BasicStrategy(
   function(username, password, callback) {
     User.findOne({username: username}, function(err, user) {
-      if (err) {
-        logger.error.error(" error : user find : [", err ,"]");
-        return callback(err);
-      }
+      if (err) return callback(new errorHandler.DatabaseQueryException(" error : user find : [", err ,"]"));
 
       if (!user) {
         logger.system.info(" can't find user from database : username: [", username ,"]");
@@ -27,10 +25,7 @@ passport.use(new BasicStrategy(
       }
 
       user.verifyPassword(password, function(err, isMatch) {
-        if (err) {
-          logger.error.error(" error : user verifyPassword : [", err ,"]");
-          return callback(err);
-        }
+        if (err) return callback(new errorHandler.DatabaseQueryException(" error : user verifyPassword : [", err ,"]"));
 
         if (!isMatch) {
           logger.system.info(" password verify failed : password: [", password ,"]");
@@ -52,10 +47,7 @@ passport.use(new LocalStrategy({
   },
   function(username, password, callback) {
     User.findOne({username: username}, function(err, user) {
-      if (err) {
-        logger.error.error(" error : user find : [", err ,"]");
-        return callback(err);
-      }
+      if (err) return callback(new errorHandler.DatabaseQueryException(" error : user find : [", err ,"]"));
 
       if (!user) {
         logger.system.info(" can't find user from database : username: [", username ,"]");
@@ -63,10 +55,7 @@ passport.use(new LocalStrategy({
       }
 
       user.verifyPassword(password, function(err, isMatch) {
-        if (err) {
-          logger.error.error(" error : user verifyPassword : [", err ,"]");
-          return callback(err);
-        }
+        if (err) return callback(new errorHandler.DatabaseQueryException(" error : user verifyPassword : [", err ,"]"));
 
         if (!isMatch) {
           logger.system.info(" password verify failed : password: [", password ,"]");
@@ -86,10 +75,7 @@ passport.use(new LocalStrategy({
 passport.use('client-basic', new BasicStrategy(
   function(clientId, clientSecret, callback) {
     Client.findOne({id: clientId}, function(err, client) {
-      if (err) {
-        logger.error.error(" error : client-basic : [", err ,"]");
-        return callback(err);
-      }
+      if (err) return callback(new errorHandler.DatabaseQueryException(" error : client-basic : [", err ,"]"));
 
       if (!client || client.secret !== clientSecret) {
         logger.system.info(" client_id and client_secret verify failed : client_id: [", clientId ,"] client_secret: [", clientSecret ,"]");
@@ -107,10 +93,7 @@ passport.use('client-basic', new BasicStrategy(
 passport.use('client-password', new ClientPasswordStarategy(
   function(clientId, clientSecret, callback) {
     Client.findOne({id: clientId}, function(err, client) {
-      if (err) {
-        logger.error.error(" error : client-password : [", err ,"]");
-        return callback(err);
-      }
+      if (err) return callback(new errorHandler.DatabaseQueryException(" error : client-password : [", err ,"]"));
 
       if (!client || client.secret !== clientSecret) {
         logger.system.info(" client_id and client_secret verify failed : client_id: [", clientId ,"] client_secret: [", clientSecret ,"]");
@@ -128,10 +111,7 @@ passport.use('client-password', new ClientPasswordStarategy(
 passport.use(new BearerStrategy(
   function(accesstoken, callback) {
     Token.findOne({accesstoken: accesstoken}, function(err, token) {
-      if (err) {
-        logger.error.error(" error : bearer passport : [", err ,"]");
-        return callback(err);
-      }
+      if (err) return callback(new errorHandler.DatabaseQueryException(" error : bearer passport : [", err ,"]"));
 
       if (!token) {
         logger.system.info(" token not found from database : accesstoken: [", accesstoken ,"]");
@@ -145,10 +125,7 @@ passport.use(new BearerStrategy(
       }
 
       User.findOne({ _id: token.userId}, function (err, user) {
-        if (err) {
-          logger.error.error(" error : bearer passport : user find : [", err ,"]");
-          return callback(err);
-        }
+        if (err) return callback(new errorHandler.DatabaseQueryException(" error : bearer passport : user find : [", err ,"]"));
 
         if (!user) {
           logger.system.info(" user not found by accesstoken : accesstoken: [", accesstoken ,"]");
@@ -171,7 +148,8 @@ passport.deserializeUser(function(id, callback) {
     .populate('roles')
     .populate('tokens')
     .exec(function(err, user) {
-      if (err) return callback(err);
+      if (err) return callback(new errorHandler.DatabaseQueryException(" error : deserializeUser : user find : [", err ,"]"));
+
       if (!user || user == null) return callback(new Error(i18n.__('exception.deserialize.user')));
 
       user.password = undefined;
@@ -184,7 +162,9 @@ exports.isClientAuthenticated = passport.authenticate('client-basic', {session: 
 exports.isClientPasswordAuthenticated = passport.authenticate(['client-password'], {session: false});
 
 exports.isSessionAuthenticated = function(req, res, callback) {
-  if (!req.user) return res.status(401).json({message: i18n.__('dsp.notlogined')});
+  if (!req.user) {
+    callback(new errorHandler.UnAuthorizedException(i18n.__('dsp.notlogined')));
+  }
   callback();
 }
 
@@ -192,7 +172,7 @@ exports.isBearerAuthentiacted = function(req, res, callback) {
   passport.authenticate('bearer', {session: false}, function(err, user, info) {
     if (err) return callback(err);
 
-    if (!user) return res.status(401).json({message: i18n.__('validate.invalid.accesstoken')})
+    if (!user) return res.status(401).json(i18n.__('validate.invalid.accesstoken'));
 
     req.logIn(user, function(err) {
       if (err) return callback(err);

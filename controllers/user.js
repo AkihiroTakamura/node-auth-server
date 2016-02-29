@@ -1,19 +1,15 @@
 var User = require('../models/user');
 var logger = require('../util/logger');
+var errorHandler = require('../util/errorhandler');
 
 exports.post = function(req, res) {
 
-  if (!req.body.username) {
-    return res.status(400).send({message: res.__('validate.require.name')});
-  }
-  if (!req.body.password) {
-    return res.status(400).send({message: res.__('validate.require.password')});
-  }
+  if (!req.body.username) throw new errorHandler.ParameterInvalidException(res.__('validate.require.name'));
+  if (!req.body.password) throw new errorHandler.ParameterInvalidException(res.__('validate.require.password'));
 
   User.count({username: req.body.username}, function(err, count) {
-    if (err) return res.status(500).send(err);
-
-    if (count > 0) return res.status(400).send({message: res.__('validate.exist.already')});
+    if (err) throw new errorHandler.DatabaseQueryException(err);
+    if (count > 0) throw new errorHandler.ParameterInvalidException(res.__('validate.exist.already'));
 
     var user = new User({
       username: req.body.username,
@@ -22,7 +18,7 @@ exports.post = function(req, res) {
     });
 
     user.save(function(err) {
-      if (err) return res.status(500).send(err);
+      if (err) throw new errorHandler.DatabaseQueryException(err);
 
       res.json({
         message: res.__('dsp.success'),
@@ -35,14 +31,11 @@ exports.post = function(req, res) {
 
 exports.put = function(req, res) {
 
-  if (!req.body._id) {
-    return res.status(400).send({message: res.__('validate.requires._id')});
-  }
+  if (!req.body._id) throw new errorHandler.ParameterInvalidException(res.__('validate.require._id'));
 
   User.findById(req.body._id, 'id username', function(err, user) {
-    if (err) return res.status(500).send(err);
-
-    if (!user) return res.status(400).send({message: res.__('validate.notfound.user')});
+    if (err) throw new errorHandler.DatabaseQueryException(err);
+    if (!user) throw new errorHandler.ParameterInvalidException(res.__('validate.notfound.user'));
 
     if (req.body.password) {
       user.password = req.body.password;
@@ -50,7 +43,7 @@ exports.put = function(req, res) {
     user.roles = req.body.roles;
 
     user.save(function(err) {
-      if (err) return res.status(500).send(err);
+      if (err) throw new errorHandler.DatabaseQueryException(err);
 
       res.json({
         message: res.__('dsp.success'),
@@ -73,26 +66,26 @@ exports.get = function(req, res) {
   .populate('clients')
   .populate('tokens')
   .exec(function(err, users) {
-      if (err) return res.status(500).send(err);
-      res.json(users);
+    if (err) throw new errorHandler.DatabaseQueryException(err);
+    res.json(users);
   });
 
 }
 
 exports.delete = function(req, res) {
   User.findById(req.body._id, 'id username', function(err, user) {
-    if (err) return res.status(500).send(err);
+    if (err) throw new errorHandler.DatabaseQueryException(err);
 
     // validate for do not delete myself
     if (user && req.user.id && user._id == req.user.id) {
-      return res.status(400).send({message: res.__('validate.cantdeleteme')});
+      throw new errorHandler.ParameterInvalidException(res.__('validate.cantdeleteme'));
     }
 
     // validate role
-    if (!req.user.is('admin')) return res.status(400).send({message: res.__('validate.permission.nothave')});
+    if (!req.user.is('admin')) throw new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave'));
 
     user.remove(function(err, user) {
-      if (err) return res.status(500).send(err);
+      if (err) throw new errorHandler.DatabaseQueryException(err);
 
       res.json({
         message: res.__('dsp.success'),

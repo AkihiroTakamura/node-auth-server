@@ -2,16 +2,17 @@ var Client = require('../models/client');
 var User = require('../models/user');
 var logger = require('../util/logger');
 var uid = require('../util/uid').uid;
+var errorHandler = require('../util/errorhandler');
 
 exports.post = function(req, res) {
 
-  if (!req.body.name) return res.status(400).send({message: res.__('validate.require.name')});
-  if (!req.body.id) return res.status(400).send({message: res.__('validate.require.id')});
-  if (!req.body.domain) return res.status(400).send({message: res.__('validate.require.domain')});
+  if (!req.body.name) throw new errorHandler.ParameterInvalidException(res.__('validate.require.name'));
+  if (!req.body.id) throw new errorHandler.ParameterInvalidException(res.__('validate.require.id'));
+  if (!req.body.domain) throw new errorHandler.ParameterInvalidException(res.__('validate.require.domain'));
 
   Client.count({id: req.body.id}, function(err, count) {
-    if (err) return res.status(500).send(err);
-    if (count > 0) return res.status(400).send({message: res.__('validate.exist.already')});
+    if (err) throw new errorHandler.DatabaseQueryException(err);
+    if (count > 0) throw new errorHandler.ParameterInvalidException(res.__('validate.exist.already'));
 
     var client = new Client();
 
@@ -23,28 +24,28 @@ exports.post = function(req, res) {
     client.user = req.user._id;
 
     client.save(function(err) {
-      if (err) return res.status(500).send(err);
+      if (err) throw new errorHandler.DatabaseQueryException(err);
 
       User.findOne(
         {_id: req.user._id}
       )
       .populate('clients')
       .exec(function(err, user) {
-        if (err) return res.status(500).send(err);
+        if (err) throw new errorHandler.DatabaseQueryException(err);
 
-          if (user.clients && user.clients instanceof Array) {
-            user.clients.push(client._id);
-          } else {
-            user.clients = [client._id];
-          };
+        if (user.clients && user.clients instanceof Array) {
+          user.clients.push(client._id);
+        } else {
+          user.clients = [client._id];
+        };
 
-          user.save(function(err) {
-            if (err) return res.status(500).send(err);
-            res.json({
-              message: res.__('dsp.success'),
-              data: client
-            });
+        user.save(function(err) {
+          if (err) throw new errorHandler.DatabaseQueryException(err);
+          res.json({
+            message: res.__('dsp.success'),
+            data: client
           });
+        });
 
       });
 
@@ -56,18 +57,18 @@ exports.post = function(req, res) {
 
 exports.put = function(req, res) {
 
-  if (!req.body._id) return res.status(400).send({message: res.__('validate.require._id')});
-  if (!req.body.id) return res.status(400).send({message: res.__('validate.require.id')});
-  if (!req.body.domain) return res.status(400).send({message: res.__('validate.require.domain')});
+  if (!req.body._id) throw new errorHandler.ParameterInvalidException(res.__('validate.require._id'));
+  if (!req.body.id) throw new errorHandler.ParameterInvalidException(res.__('validate.require.id'));
+  if (!req.body.domain) throw new errorHandler.ParameterInvalidException(res.__('validate.require.domain'));
 
   Client.findById(req.body._id, function(err, client) {
-    if (err) return res.status(500).send(err);
-    if (!client) return res.status(400).send({message: res.__('validate.notfound.client')});
+    if (err) throw new errorHandler.DatabaseQueryException(err);
+    if (!client) throw new errorHandler.ParameterInvalidException(res.__('validate.notfound.client'));
 
     Client.count({id: req.body.id}, function(err, count) {
-      if (err) return res.status(500).send(err);
+      if (err) throw new errorHandler.DatabaseQueryException(err);
       if (req.body.id != client.id && count > 0) {
-        return res.status(400).send({message: res.__('validate.exist.already')});
+        throw new errorHandler.ParameterInvalidException(res.__('validate.exist.already'));
       }
 
       if (req.body.id) {
@@ -78,7 +79,7 @@ exports.put = function(req, res) {
       }
 
       client.save(function(err) {
-        if (err) return res.status(500).send(err);
+        if (err) throw new errorHandler.DatabaseQueryException(err);
         res.json({
           message: res.__('dsp.success'),
           data: client
@@ -102,7 +103,7 @@ exports.get = function(req, res) {
       select: '-password -clients -roles'
     })
     .exec(function(err, clients) {
-      if (err) res.status(500).send(err);
+      if (err) throw new errorHandler.DatabaseQueryException(err);
       res.json(clients);
     })
   ;
@@ -110,35 +111,35 @@ exports.get = function(req, res) {
 
 exports.delete = function(req, res) {
   Client.findById(req.body._id, function(err, client) {
-    if (err) return res.status(500).send(err);
+    if (err) throw new errorHandler.DatabaseQueryException(err);
 
     User.findOne(
       {_id: req.user._id}
     )
     .populate('clients')
     .exec(function(err, user) {
-      if (err) return res.status(500).send(err);
+      if (err) throw new errorHandler.DatabaseQueryException(err);
 
-        if (user.clients && user.clients instanceof Array) {
-          var target = client._id;
-          user.clients = user.clients.filter(function(v) {
-            return v._id.id != target.id;
-          });
-        };
-
-        user.save(function(err) {
-          if (err) return res.status(500).send(err);
-
-          client.remove(function(err, client) {
-            if (err) return res.status(500).send(err);
-
-            res.json({
-              message: res.__('dsp.success'),
-              data: client
-            });
-          });
-
+      if (user.clients && user.clients instanceof Array) {
+        var target = client._id;
+        user.clients = user.clients.filter(function(v) {
+          return v._id.id != target.id;
         });
+      };
+
+      user.save(function(err) {
+        if (err) throw new errorHandler.DatabaseQueryException(err);
+
+        client.remove(function(err, client) {
+          if (err) throw new errorHandler.DatabaseQueryException(err);
+
+          res.json({
+            message: res.__('dsp.success'),
+            data: client
+          });
+        });
+
+      });
 
     });
 

@@ -1,9 +1,11 @@
 var User = require('../models/user');
+var i18n = require('i18n');
 var logger = require('../util/logger');
+var errorHandler = require('../util/errorhandler');
 
 exports.get = function(req, res) {
 
-  if (!req.user) return res.status(401).json({message: i18n.__('dsp.notlogined')});
+  if (!req.user) throw new errorHandler.UnAuthorizedException(i18n.__('dsp.notlogined'));
 
   var whereoption =  {username: req.user.username};
 
@@ -13,7 +15,7 @@ exports.get = function(req, res) {
   )
   .populate('roles')
   .exec(function(err, user) {
-      if (err) return res.status(500).send(err);
+      if (err) throw new errorHandler.DatabaseQueryException(err);
 
       var json = {};
       json.username = user.username;

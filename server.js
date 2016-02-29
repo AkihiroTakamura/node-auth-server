@@ -5,6 +5,7 @@ var express           = require('express');
 var app               = express();
 var bodyParser        = require('body-parser');
 var session            = require('express-session');
+var errorHandler       = require('./util/errorhandler');
 var mongoose          = require('mongoose');
 var MongoStore         = require('connect-mongo')(session);
 var passport          = require('passport');
@@ -79,8 +80,7 @@ app.use('/local/api', routes_local);
 // error handler
 // =======================
 app.use(function(err, req, res, next) {
-  logger.system.fatal(err);
-  res.status(500).send('something wrong');
+  return errorHandler.doError(err, req, res, next);
 });
 
 // =======================
