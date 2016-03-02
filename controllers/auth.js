@@ -172,7 +172,7 @@ exports.isBearerAuthentiacted = function(req, res, callback) {
   passport.authenticate('bearer', {session: false}, function(err, user, info) {
     if (err) return callback(err);
 
-    if (!user) return res.status(401).json(i18n.__('validate.invalid.accesstoken'));
+    if (!user) return callback(new errorHandler.AuthenticationException(i18n.__('validate.invalid.accesstoken')));
 
     req.logIn(user, function(err) {
       if (err) return callback(err);

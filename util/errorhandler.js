@@ -1,5 +1,12 @@
 var logger = require('./logger');
 
+var AuthenticationException = function(message) {
+  this.name = 'authenticationException';
+  this.message = message;
+}
+AuthenticationException.prototype = new Error();
+AuthenticationException.prototype.constructor = AuthenticationException;
+
 var UnAuthorizedException = function(message) {
   this.name = 'unauthorizederror';
   this.message = message;
@@ -33,6 +40,11 @@ function doError(err, req, res, next) {
       message: err.message
     };
 
+    if (err instanceof AuthenticationException) {
+      logger.error.debug('common baby');
+      logger.error.debug(message);
+      return res.status(401).send(message);
+    };
     if (err instanceof UnAuthorizedException) {
       logger.error.debug(message);
       return res.status(401).send(message);
@@ -56,6 +68,7 @@ function doError(err, req, res, next) {
 }
 
 module.exports = {
+  AuthenticationException: AuthenticationException,
   UnAuthorizedException: UnAuthorizedException,
   DatabaseQueryException:DatabaseQueryException,
   ParameterInvalidException:ParameterInvalidException,
