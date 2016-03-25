@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var server = require('gulp-express');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 var uglify = require('gulp-uglify');
@@ -34,6 +35,12 @@ gulp.task('js', function() {
   .pipe(uglify())
   .pipe(sourcemaps.write("./"))
   .pipe(gulp.dest("./public/js/")); // 生成先の指定
+});
+
+gulp.task('server', function() {
+  var options = {};
+  var livereload = false;
+  server.run(['server.js'], options, livereload);
 });
 
 gulp.task('debugserver', function() {
@@ -75,9 +82,9 @@ gulp.task('watch', function() {
 });
 
 gulp.task("default", [
-  'debugserver',
   'sass',
   'js',
+  'debugserver',
   'watch'
 ]);
 
@@ -85,3 +92,11 @@ gulp.task("build", [
   'sass',
   'js'
 ]);
+
+gulp.task("run", [
+  'sass',
+  'js',
+  'server'
+]);
+
+

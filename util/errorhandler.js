@@ -41,7 +41,6 @@ function doError(err, req, res, next) {
     };
 
     if (err instanceof AuthenticationException) {
-      logger.error.debug('common baby');
       logger.error.debug(message);
       return res.status(401).send(message);
     };

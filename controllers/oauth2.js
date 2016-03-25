@@ -287,6 +287,7 @@ exports.authorization = [
 
     }
   ),
+  //TODO: immediate ok でもrenderしちゃってる
   function(req, res) {
     res.render('dialog', {
       transaction_id: req.oauth2.transactionID,

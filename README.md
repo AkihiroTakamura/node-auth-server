@@ -12,7 +12,7 @@
 
 # Getting Stated
 
-## install mongoDB
+## install mongoDB(mac)
 
 ```
 # install
@@ -23,6 +23,28 @@ $ ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
 $ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
 
 ```
+
+## install mongoDB(Linux with yum)
+
+* make repository file
+
+```/etc/yum.repos.d/mongodb.repo
+[mongodb]
+name=MongoDB Repository
+baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
+gpgcheck=0
+enabled=1
+```
+
+* install and run
+
+```
+sudo yum install -y mongodb-org
+sudo chkconfig mongod on
+sudo service mongod start
+
+```
+
 
 ## install global node modules
 
@@ -101,7 +123,7 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 * note the code
 
 
-## Exchange code for accessToken
+## Exchange Oauth code to accessToken
 
 * please open postman.
 
@@ -141,7 +163,39 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 ![Kobito.QTfaQm.png](https://qiita-image-store.s3.amazonaws.com/0/60056/68546dbd-abd6-a4a0-8e61-860fd67307b5.png "Kobito.QTfaQm.png")
 
 
+# Grant Types
+## authorization_code
+* see Tutorial
 
+
+## password
+> Exchange username/password to AccessToken
+
+* url: /api/oauth2/password-token
+* method: POST
+* header
+  * Authorization: Basic clientid:clientsecret
+* body
+  * grant_type: password
+  * username: user id
+  * password: user password
+  * scope: scopes
+
+
+![Kobito.pZ7Mjj.png](https://qiita-image-store.s3.amazonaws.com/0/60056/83754b14-42ab-4a90-b7cc-301d24259078.png "Kobito.pZ7Mjj.png")
+
+![Kobito.M1l2ge.png](https://qiita-image-store.s3.amazonaws.com/0/60056/0c11acb4-c4d6-a932-96b8-7a1b9def7d4d.png "Kobito.M1l2ge.png")
+
+## refresh token
+* url: /api/oauth2/token
+* method: POST
+* header
+  * Authorization: Basic clientid:clientsecret
+* body
+  * grant_type: refresh_token
+  * refresh_token: refresh token
+
+![Kobito.ydlc18.png](https://qiita-image-store.s3.amazonaws.com/0/60056/015ee593-74f4-1f0c-28ee-b7f967abd23a.png "Kobito.ydlc18.png")
 
 
 # APIs
@@ -167,17 +221,6 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
   * secret: client(application) password
   * domain: client(application) domain e.g)hostname
 
-# refresh token
-* url: /api/oauth2/token
-* method: POST
-* header
-  * Authorization: Basic clientid:clientsecret
-* body
-  * grant_type: refresh_token
-  * refresh_token: refresh token
-
-![Kobito.ydlc18.png](https://qiita-image-store.s3.amazonaws.com/0/60056/015ee593-74f4-1f0c-28ee-b7f967abd23a.png "Kobito.ydlc18.png")
-
 
 # TODO
 * ~~redirect_uriのvalidation~~
@@ -188,10 +231,10 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 * ~~userの権限(admin権限は全ユーザ・クライアント見れる)~~
 * ~~user認証の共有api~~
 * ~~user認可ありのアプリ一覧、認可の解除機能~~
-* 通常ログイン時のprofile等、メニュー画面
-* accesstoken状態、session状態等
-* ~~~同一role/userによる再authの場合、スルーしてcode返却~~~
-* apiでusername/password認証(web以外などcode flowできないケース対応)
-  * clientid/secretの認証とともに実施
+* ~~通常ログイン時のprofile等、メニュー画面~~
+* ~~accesstoken状態、session状態等~~
+* ~~同一role/userによる再authの場合、スルーしてcode返却~~
+* ~~apiでusername/password認証(web以外などcode flowできないケース対応)~~
+  * ~~clientid/secretの認証とともに実施~~
 
 
