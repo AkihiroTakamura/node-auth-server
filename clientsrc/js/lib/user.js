@@ -149,6 +149,7 @@ function setUserTable() {
             $('<tr></tr>')
               .append($('<th></th>').text('id'))
               .append($('<th></th>').text('username'))
+              .append($('<th></th>').text('fullName'))
               .append($('<th></th>').text('roles'))
               .append($('<th></th>').text('action'))
           )
@@ -181,6 +182,7 @@ function setUserTableRow(json) {
         .attr('data-json', JSON.stringify(user))
         .append($('<td></td>').text(user._id))
         .append($('<td></td>').text(user.username))
+        .append($('<td></td>').text(user.fullName))
         .append($('<td></td>').text(user.roles.map(function(elem){ return elem.name}).join(',')))
         .append($('<td></td>').append([
           $('<button></button>')
@@ -311,6 +313,9 @@ function showModal(param) {
       $modal.find('.btn-user-post').hide();
       $modal.find('[name=_id]').val(param.data._id);
       $modal.find('[name=username]').prop('disabled', true).val(param.data.username);
+      $modal.find('[name=fullName]').val(param.data.fullName);
+      $modal.find('[name=email]').val(param.data.email);
+      $modal.find('[name=phone]').val(param.data.phone);
       $.each($modal.find('[name=roles]').find('option'), function(index, option) {
         $.each(param.data.roles, function(index2, role) {
           if ($(option).val() == role._id) {

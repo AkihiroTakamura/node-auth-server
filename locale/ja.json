@@ -26,10 +26,12 @@
 		"user": {
 			"title": "さん"
 		},
+		"require": "(必須)",
 		"control": {
 			"login": "ログイン",
 			"logout": "ログアウト",
 			"username": "ユーザID",
+			"userFullName": "ユーザ名",
 			"password": "パスワード",
 			"authorize": "許可して続行",
 			"role": "ロール",
@@ -39,7 +41,10 @@
 				"client": "アプリケーション名"
 			},
 			"clientid": "アプリケーションID",
-			"domain": "ドメイン(認証後コールバック先のホスト名等)"
+			"domain": "ドメイン(認証後コールバック先のホスト名等)",
+			"email": "Eメールアドレス",
+			"phone": "電話番号",
+			"fullName": "名称"
 		},
 		"modal": {
 			"title": "操作"

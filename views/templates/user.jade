@@ -14,14 +14,23 @@
           form.template-user-form
             input#input-id(name='_id', type='hidden')
             .form-group
-              label(for='input-username')!= __('dsp.control.username')
-              input#input-username.form-control(name='username', type='text', placeholder='username')
+              label(for='input-username')!= __('dsp.control.username') + __('dsp.require')
+              input#input-username.form-control(name='username', type='text', placeholder='user id')
+            .form-group
+              label(for='input-fullName')!= __('dsp.control.userFullName') + __('dsp.require')
+              input#input-fullName.form-control(name='fullName', type='text', placeholder='full name')
             .form-group
               label(for='input-password')!= __('dsp.control.password')
               input#input-password.form-control(name='password', type='password')
             .form-group
-              label!= __('dsp.control.role')
+              label!= __('dsp.control.role') + __('dsp.require')
               select.list-group.checked-list-box(name='roles', multiple, style='width: 100%')
+            .form-group
+              label(for='input-email')!= __('dsp.control.email')
+              input#input-email.form-control(name='email', type='text', placeholder='email address')
+            .form-group
+              label(for='input-phone')!= __('dsp.control.phone')
+              input#input-phone.form-control(name='phone', type='text', placeholder='phone number')
 
         .modal-footer
           button.btn.btn-default(data-dismiss='modal') Close

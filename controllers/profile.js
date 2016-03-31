@@ -3,15 +3,25 @@ var i18n = require('i18n');
 var logger = require('../util/logger');
 var errorHandler = require('../util/errorhandler');
 
-exports.get = function(req, res) {
+exports.get = function(req, res, info) {
 
   if (!req.user) throw new errorHandler.UnAuthorizedException(i18n.__('dsp.notlogined'));
+
+  // define select columns from user
+  var columns = {};
+  var columns_id = 0;
+  columns._id = ++columns_id;
+  columns.username = ++columns_id;
+  columns.roles = ++columns_id;
+  columns.fullName = ++columns_id;
+  if (hasScope(req.info.scope, 'email')) columns.email = ++columns_id;
+  if (hasScope(req.info.scope, 'phone')) columns.phone = ++columns_id;
 
   var whereoption =  {username: req.user.username};
 
   User.findOne(
     whereoption,
-    {_id: 1, username: 2, roles: 3}
+    columns
   )
   .populate('roles')
   .exec(function(err, user) {
@@ -23,8 +33,23 @@ exports.get = function(req, res) {
       for (var i = 0; i < user.roles.length; i++) {
         json.authorities.push(user.roles[i].name);
       };
+      json.userinfo = user;
 
       res.json(json);
   });
 
 }
+
+
+// find scope from scope string(expect comma separated)
+function hasScope(scope, target) {
+  if (!scope || !target) return false;
+
+  var scopeArray = scope.split(',');
+
+  for (var i = 0; i < scopeArray.length; i++) {
+    if (scopeArray[i] == target) return true;
+  }
+  return false;
+}
+

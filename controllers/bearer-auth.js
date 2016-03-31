@@ -47,6 +47,9 @@ exports.isBearerAuthentiacted = function(req, res, callback) {
     if (err) return callback(err);
     if (!user) return callback(new errorHandler.AuthenticationException(i18n.__('validate.invalid.accesstoken')));
 
+    // set info to request object
+    req.info = info;
+
     req.logIn(user, function(err) {
       if (err) return callback(err);
       return callback();
@@ -63,6 +66,9 @@ exports.hasScopeIdAndRole = function(req, res, callback) {
     if (!hasScope(info.scope, "id") || !hasScope(info.scope, "role")) {
       return callback(new errorHandler.PermissionDeniedException(i18n.__('validate.invalid.permission', {detail: info.scope})));
     }
+
+    // set info to request object
+    req.info = info;
 
     req.logIn(user, function(err) {
       if (err) return callback(err);

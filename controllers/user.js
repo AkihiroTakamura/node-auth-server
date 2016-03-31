@@ -5,6 +5,7 @@ var errorHandler = require('../util/errorhandler');
 exports.post = function(req, res) {
 
   if (!req.body.username) throw new errorHandler.ParameterInvalidException(res.__('validate.require.name'));
+  if (!req.body.fullName) throw new errorHandler.ParameterInvalidException(res.__('validate.require.fullName'));
   if (!req.body.password) throw new errorHandler.ParameterInvalidException(res.__('validate.require.password'));
 
   User.count({username: req.body.username}, function(err, count) {
@@ -14,7 +15,10 @@ exports.post = function(req, res) {
     var user = new User({
       username: req.body.username,
       password: req.body.password,
-      roles: req.body.roles
+      roles: req.body.roles,
+      fullName: req.body.fullName,
+      email: req.body.email,
+      phone: req.body.phone
     });
 
     user.save(function(err) {
@@ -37,9 +41,11 @@ exports.put = function(req, res) {
     if (err) throw new errorHandler.DatabaseQueryException(err);
     if (!user) throw new errorHandler.ParameterInvalidException(res.__('validate.notfound.user'));
 
-    if (req.body.password) {
-      user.password = req.body.password;
-    }
+    if (req.body.fullName) user.fullName = req.body.fullName;
+    if (req.body.password) user.password = req.body.password;
+    if (req.body.email) user.email = req.body.email;
+    if (req.body.phone) user.phone = req.body.phone;
+
     user.roles = req.body.roles;
 
     user.save(function(err) {
@@ -59,8 +65,7 @@ exports.get = function(req, res) {
   var whereoption = req.user.is('admin') ? {} : {username: req.user.username};
 
   User.find(
-    whereoption,
-    {username: 1, roles: 2, clients: 3, tokens: 4}
+    whereoption
   )
   .populate('roles')
   .populate('clients')
