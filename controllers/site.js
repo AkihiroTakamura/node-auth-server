@@ -56,7 +56,8 @@ function isExistRole() {
 function addDefaultRole() {
   return new Promise(function(resolve, reject) {
     var role = new Role({
-      name: "admin"
+      name: "admin",
+      fullName: "System Administrator"
     });
     role.save(function(err) {
       if (err) reject(err);
