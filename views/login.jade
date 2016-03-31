@@ -1,39 +1,38 @@
 extends layout
 
 block content
-  h2 #{__('dsp.login')}
 
-  div(class="login container" style="margin-top: 40px")
-    div(class="row")
-      div(class="col-sm-6 col-md-4 col-md-offset-4")
-        div(class="panel panel-default")
-          div(class="panel-heading")
-            strong Sign in to continue
-          div(class="panel-body")
-
-            each message in error
-              .alert.alert-warning
-                p= message
-
+  .container.login(style="margin-top: 40px")
+    .row
+      .col-sm-6.col-md-6.col-md-offset-3
+        .card
+          h4.card-header.text-xs-center!=__('dsp.title.auth')
+          .card-block
             form(role="form", action="/login", method="post")
               fieldset
-                div(class="row")
-                  div(class="center-block")
-                    img(class="profile-img", src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120")
-                div(class="row")
-                  div(class="col-sm-12 col-md-10 col-md-offset-1")
-                    div(class="form-group")
-                      div(class="input-group")
-                        span(class="input-group-addon")
-                          i(class="fa fa-user")
-                        input(class="form-control", type="text", name="username", placeholder="Username", autofocus)
-                    div(class="form-group")
-                      div(class="input-group")
-                        span(class="input-group-addon")
-                          i(class="fa fa-unlock-alt")
-                        input(class="form-control", type="password", name="password", placeholder="Password", value="")
-                    div(class="form-group")
-                      input(class="btn btn-lg btn-primary btn-block", type="submit", value="#{__('dsp.control.login')}")
-          div(class="panel-footer")
+                .row
+                  .center-block
+                    i.fa.fa-user.fa-5x(style="width:65px; height:95px; margin:0 auto 10px; display: block;")
+                .row
+                  .col-sm-12.col-md-10.col-md-offset-1
+                    .form-group
+                      .input-group
+                        span.input-group-addon
+                          i.fa.fa-user
+                        input.form-control(type="text", name="username", placeholder="Username", autofocus)
+                    .form-group
+                      .input-group
+                        span.input-group-addon
+                          i.fa.fa-unlock-alt
+                        input.form-control(type="password", name="password", placeholder="Password", value="")
+
+                    each message in error
+                      .alert.alert-warning
+                        p= message
+
+                    .form-group
+                      input.btn.btn-lg.btn-primary.btn-block(type="submit", value="#{__('dsp.control.login')}")
+
+          .card-footer.text-muted
             span Don't have an account!
             a(href="#") SignupHere

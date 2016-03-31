@@ -1,17 +1,13 @@
 extends layout
 
 block content
-  h2 Welcome #{__('app.name')}
 
-  div(class="login container" style="margin-top: 40px")
-
-    div(class="row")
-      div(class="col-sm-6 col-md-6 col-md-offset-3")
-        div.card
-          h4.card-header Authorization
-          div.card-block
-            p.card-text!= '<strong>' + client.name + '</strong>' + '&nbsp' + __('dsp.msg.application.connect')
-            p.card-text!= '<strong>' + client.name + '</strong>' + '&nbsp' + __('dsp.msg.require.permission')
+  .container.login(style="margin-top: 40px")
+    .row
+      .col-sm-6.col-md-6.col-md-offset-3
+        .card
+          h4.card-header.text-xs-center!=__('dsp.title.auth')
+          .card-block
 
             form(role="form", action="/api/oauth2/authorize", method="post")
               input(type='hidden', name='transaction_id', value=transaction_id)
@@ -20,41 +16,48 @@ block content
               input(type='hidden', name='auth_url', value=currentURL)
               input(type='hidden', name='scope', value=scope.join(','))
 
-              if errors
-                each message in errors
-                  .alert.alert-warning
-                    p= message
-
               fieldset
-                div(class="row")
-                  div(class="center-block text-center")
+                .row
+                  .center-block(style="width: 90%; margin-bottom: 20px;")
+                    p.text-xs-center!= '<strong>' + client.name + '</strong>' + '&nbsp' + __('dsp.msg.application.connect')
 
-                    div(class="center-block", style="width: 90%; margin-bottom: 20px;")
-                      ul.list-group
-                        each item in scope
-                          li.list-group-item!= '<strong>' + map[item] + '</strong>'
+                .row
+                  .center-block
+                    i.fa.fa-user.fa-5x(style="width:65px; height:95px; margin:0 auto 10px; display: block;")
 
-                div(class="row")
-                  div(class="col-sm-12 col-md-10 col-md-offset-1")
+                .row
+                  .col-sm-12.col-md-10.col-md-offset-1
                     if user
                       p!= __('dsp.msg.sinedin') + '<strong>' + user.username + '</strong>'
                       a(href='/logout?next=' + encodeURIComponent(currentURL))= 'Not ' + user.username + '?'
                     else
-                      div(class="form-group")
-                        div(class="input-group")
-                          span(class="input-group-addon")
-                            i(class="fa fa-user")
-                          input(class="form-control", type="text", name="username", placeholder="Username", autofocus)
-                      div(class="form-group")
-                        div(class="input-group")
-                          span(class="input-group-addon")
-                            i(class="fa fa-unlock-alt")
-                          input(class="form-control", type="password", name="password", placeholder="Password", value="")
+                      .form-group
+                        .input-group
+                          span.input-group-addon
+                            i.fa.fa-user
+                          input.form-control(type="text", name="username", placeholder="Username", autofocus)
+                      .form-group
+                        .input-group
+                          span.input-group-addon
+                            i.fa.fa-unlock-alt
+                          input.form-control(type="password", name="password", placeholder="Password", value="")
 
-                    div(class="form-group")
-                      input(class="btn btn-lg btn-primary btn-block", type="submit", value="#{__('dsp.control.authorize')}")
+                      if errors
+                        each message in errors
+                          .alert.alert-warning
+                            p= message
 
-          div(class="card-footer text-muted")
-            //- span Don't have an account? &nbsp
-            //- a(href="#") SignupHere
+                    .form-group
+                      input.btn.btn-lg.btn-primary.btn-block(type="submit", value="#{__('dsp.control.authorize')}")
+
+                .row
+                  .center-block(style="width: 75%; margin-bottom: 20px;")
+                    p!=__('dsp.msg.require.scope')
+                    ul.list-group
+                      each item in scope
+                        li.list-group-item!= '<strong>' + item + '</strong>'
+
+          .card-footer.text-muted
+            span Don't have an account? &nbsp
+            a(href="#") SignupHere
 

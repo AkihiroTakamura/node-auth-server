@@ -10,6 +10,7 @@ var Client = require('../models/client');
 var Token = require('../models/token');
 var Code = require('../models/code');
 var User = require('../models/user');
+var Role = require('../models/role');
 
 var uid = require('../util/uid').uid;
 var config = require('config');
@@ -210,14 +211,6 @@ function issueToken(option, callback) {
   });
 }
 
-
-
-
-
-
-
-
-
 // =======================
 // Endpoints
 // =======================
@@ -289,22 +282,23 @@ exports.authorization = [
   ),
   //TODO: immediate ok でもrenderしちゃってる
   function(req, res) {
-    res.render('dialog', {
-      transaction_id: req.oauth2.transactionID,
-      currentURL: req.originalUrl,
-      response_type: req.query.response_type,
-      errors: req.flash('error'),
-      scope: req.oauth2.req.scope,
-      client: req.oauth2.client,
-      user: req.user,
-      map: config.scope.map
-    });
+
+      res.render('dialog', {
+        transaction_id: req.oauth2.transactionID,
+        currentURL: req.originalUrl,
+        response_type: req.query.response_type,
+        errors: req.flash('error'),
+        scope: req.oauth2.req.scope,
+        client: req.oauth2.client,
+        user: req.user
+      });
   }
 ];
 
 // User decision endpoint
 exports.decision = [
   function(req, res, callback) {
+
     // when logined -> go next
     if (req.user) return callback();
 

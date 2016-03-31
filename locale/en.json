@@ -46,7 +46,7 @@
 		"login": "Sign in ",
 		"msg": {
 			"require": {
-				"permission": "use following permission",
+				"permission": "application uses following permission",
 				"login": "Sign in and Authorize",
 				"logined": "Authorize"
 			},

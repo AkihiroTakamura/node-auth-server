@@ -12,13 +12,6 @@
   "token": {
     "expiresIn": 3600
   },
-  "scope": {
-    "map": {
-      "admin": "administrator role",
-      "read": "execute view api",
-      "write": "execute write api"
-    }
-  },
   // log4js see https://github.com/nomiddlename/log4js-node/wiki/Appenders
   "log4js": {
     "level": "ALL",
