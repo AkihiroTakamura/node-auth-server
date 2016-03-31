@@ -14,7 +14,7 @@ router.route('/users')
 
 router.route('/roles')
   .post(authController.isSessionAuthenticated, roleController.post)
-//  .put(authController.isSessionAuthenticated, roleController.put)
+  .put(authController.isSessionAuthenticated, roleController.put)
   .delete(authController.isSessionAuthenticated, roleController.delete)
   .get(authController.isSessionAuthenticated, roleController.get);
 

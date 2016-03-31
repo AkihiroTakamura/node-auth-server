@@ -75,7 +75,11 @@ function eventBind() {
     });
 
     $dom.on('click', '.btn-role-put', function(e) {
+      // for getting serialized data, control abled for a moment
+      $dom.find('[name=name]').prop('disabled', false);
       var data = $dom.find('.template-role-form').serialize();
+      $dom.find('[name=name]').prop('disabled', true);
+
       Promise.resolve(data)
         .then(putData)
         .then(function() {
@@ -136,6 +140,7 @@ function setTable() {
             $('<tr></tr>')
               .append($('<th></th>').text('id'))
               .append($('<th></th>').text('name'))
+              .append($('<th></th>').text('fullName'))
               .append($('<th></th>').text('action'))
           )
       )
@@ -167,6 +172,7 @@ function setTableRow(json) {
         .attr('data-json', JSON.stringify(role))
         .append($('<td></td>').text(role._id))
         .append($('<td></td>').text(role.name))
+        .append($('<td></td>').text(role.fullName))
         .append($('<td></td>').append([
           $('<button></button>')
             .addClass('btn btn-primary btn-edit')
@@ -275,6 +281,7 @@ function showModal(param) {
       $modal.find('.btn-role-post').hide();
       $modal.find('[name=_id]').val(param.data._id);
       $modal.find('[name=name]').prop('disabled', true).val(param.data.name);
+      $modal.find('[name=fullName]').val(param.data.fullName);
 
     } else {
       // post mode

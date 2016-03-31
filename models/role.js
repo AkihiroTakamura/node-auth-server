@@ -5,6 +5,11 @@ var RoleSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true
+  },
+  fullName: {
+    type: String,
+    unique: true,
+    required: true
   }
 });
 

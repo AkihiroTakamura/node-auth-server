@@ -34,7 +34,8 @@
 			"authorize": "許可して続行",
 			"role": "ロール",
 			"name": {
-				"role": "ロール名",
+				"role": "ロールID",
+				"roleFullName": "ロール名",
 				"client": "アプリケーション名"
 			},
 			"clientid": "アプリケーションID",
@@ -44,9 +45,12 @@
 			"title": "操作"
 		},
 		"login": "ログイン",
+		"title": {
+			"auth": "統合認証"
+		},
 		"msg": {
 			"require": {
-				"permission": "が次の権限を使います",
+				"permission": "次の権限を使います",
 				"login": "ログインすると権限の許可となります",
 				"logined": "クリックすると権限の許可となります"
 			},
@@ -62,6 +66,7 @@
 	"validate": {
 		"require": {
 			"name": "名前は省略できません",
+			"fullName": "名前は省略できません",
 			"password": "パスワードは省略できません",
 			"id": "IDは省略できません",
 			"_id": "_idは省略できません",
@@ -75,6 +80,7 @@
 		},
 		"notfound": {
 			"client": "登録済のclientが見つかりません",
+			"role": "登録済のroleが見つかりません",
 			"user": "ユーザが見つかりません"
 		},
 		"invalid": {
