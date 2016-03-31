@@ -85,7 +85,8 @@
 		},
 		"invalid": {
 			"password": "パスワードに誤りがあります",
-			"accesstoken": "アクセストークンが不正、もしくは有効期限が切れています"
+			"accesstoken": "アクセストークンが不正、もしくは有効期限が切れています",
+			"permission": "この操作を行う権限(scope)についてユーザの許可がありません 必要なscope: {{detail}}"
 		},
 		"oauth": {
 			"notfound": {

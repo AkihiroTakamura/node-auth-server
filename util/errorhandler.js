@@ -7,6 +7,13 @@ var AuthenticationException = function(message) {
 AuthenticationException.prototype = new Error();
 AuthenticationException.prototype.constructor = AuthenticationException;
 
+var PermissionDeniedException = function(message) {
+  this.name = 'permissionDeniedException';
+  this.message = message;
+}
+PermissionDeniedException.prototype = new Error();
+PermissionDeniedException.prototype.constructor = PermissionDeniedException;
+
 var UnAuthorizedException = function(message) {
   this.name = 'unauthorizederror';
   this.message = message;
@@ -44,6 +51,10 @@ function doError(err, req, res, next) {
       logger.error.debug(message);
       return res.status(401).send(message);
     };
+    if (err instanceof PermissionDeniedException) {
+      logger.error.debug(message);
+      return res.status(401).send(message);
+    };
     if (err instanceof UnAuthorizedException) {
       logger.error.debug(message);
       return res.status(401).send(message);
@@ -68,6 +79,7 @@ function doError(err, req, res, next) {
 
 module.exports = {
   AuthenticationException: AuthenticationException,
+  PermissionDeniedException: PermissionDeniedException,
   UnAuthorizedException: UnAuthorizedException,
   DatabaseQueryException:DatabaseQueryException,
   ParameterInvalidException:ParameterInvalidException,

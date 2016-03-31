@@ -132,8 +132,7 @@ passport.use(new BearerStrategy(
           return callback(null, false);
         }
 
-        //TODO: set scope
-        callback(null, user, {scope: '*'});
+        callback(null, user, {scope: token.scope});
       });
     });
   }
@@ -171,6 +170,8 @@ exports.isSessionAuthenticated = function(req, res, callback) {
 exports.isBearerAuthentiacted = function(req, res, callback) {
   passport.authenticate('bearer', {session: false}, function(err, user, info) {
     if (err) return callback(err);
+
+logger.system.info("------" + JSON.stringify(info));
 
     if (!user) return callback(new errorHandler.AuthenticationException(i18n.__('validate.invalid.accesstoken')));
 
