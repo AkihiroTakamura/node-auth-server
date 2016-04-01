@@ -3,9 +3,9 @@ var i18n = require('i18n');
 var logger = require('../util/logger');
 var errorHandler = require('../util/errorhandler');
 
-exports.get = function(req, res, info) {
+exports.get = function(req, res, next) {
 
-  if (!req.user) throw new errorHandler.UnAuthorizedException(i18n.__('dsp.notlogined'));
+  if (!req.user) return next(new errorHandler.UnAuthorizedException(i18n.__('dsp.notlogined')));
 
   // define select columns from user
   var columns = {};
@@ -25,7 +25,7 @@ exports.get = function(req, res, info) {
   )
   .populate('roles')
   .exec(function(err, user) {
-      if (err) throw new errorHandler.DatabaseQueryException(err);
+      if (err) return next(new errorHandler.DatabaseQueryException(err));
 
       var json = {};
       json.username = user.username;

@@ -2,14 +2,14 @@ var Role = require('../models/role');
 var logger = require('../util/logger');
 var errorHandler = require('../util/errorhandler');
 
-exports.post = function(req, res) {
+exports.post = function(req, res, next) {
 
-  if (!req.body.name) throw new errorHandler.ParameterInvalidException(res.__('validate.require.name'));
-  if (!req.body.fullName) throw new errorHandler.ParameterInvalidException(res.__('validate.require.fullName'));
+  if (!req.body.name) return next(new errorHandler.ParameterInvalidException(res.__('validate.require.name')));
+  if (!req.body.fullName) return next(new errorHandler.ParameterInvalidException(res.__('validate.require.fullName')));
 
   Role.count({name: req.body.name}, function(err, count) {
-    if (err) throw new errorHandler.DatabaseQueryException(err);
-    if (count > 0) throw new errorHandler.ParameterInvalidException(res.__('validate.exist.already'));
+    if (err) return next(new errorHandler.DatabaseQueryException(err));
+    if (count > 0) return next(new errorHandler.ParameterInvalidException(res.__('validate.exist.already')));
 
     var role = new Role({
       name: req.body.name,
@@ -17,7 +17,7 @@ exports.post = function(req, res) {
     });
 
     role.save(function(err) {
-      if (err) throw new errorHandler.DatabaseQueryException(err);
+      if (err) return next(new errorHandler.DatabaseQueryException(err));
       res.json({
         message: res.__('dsp.success'),
         data: role
@@ -28,27 +28,27 @@ exports.post = function(req, res) {
 
 }
 
-exports.put = function(req, res) {
+exports.put = function(req, res, next) {
 
-  if (!req.body._id) throw new errorHandler.ParameterInvalidException(res.__('validate.require._id'));
-  if (!req.body.name) throw new errorHandler.ParameterInvalidException(res.__('validate.require.name'));
-  if (!req.body.fullName) throw new errorHandler.ParameterInvalidException(res.__('validate.require.fullName'));
+  if (!req.body._id) return next(new errorHandler.ParameterInvalidException(res.__('validate.require._id')));
+  if (!req.body.name) return next(new errorHandler.ParameterInvalidException(res.__('validate.require.name')));
+  if (!req.body.fullName) return next(new errorHandler.ParameterInvalidException(res.__('validate.require.fullName')));
 
   Role.findById(req.body._id, function(err, role) {
-    if (err) throw new errorHandler.DatabaseQueryException(err);
-    if (!role) throw new errorHandler.ParameterInvalidException(res.__('validate.notfound.role'));
+    if (err) return next(new errorHandler.DatabaseQueryException(err));
+    if (!role) return next(new errorHandler.ParameterInvalidException(res.__('validate.notfound.role')));
 
     Role.count({id: req.body.name}, function(err, count) {
-      if (err) throw new errorHandler.DatabaseQueryException(err);
+      if (err) return next(new errorHandler.DatabaseQueryException(err));
       if (req.body.name != role.name && count > 0) {
-        throw new errorHandler.ParameterInvalidException(res.__('validate.exist.already'));
+        return next(new errorHandler.ParameterInvalidException(res.__('validate.exist.already')));
       }
 
       role.name = req.body.name;
       role.fullName = req.body.fullName;
 
       role.save(function(err) {
-        if (err) throw new errorHandler.DatabaseQueryException(err);
+        if (err) return next(new errorHandler.DatabaseQueryException(err));
         res.json({
           message: res.__('dsp.success'),
           data: role
@@ -62,27 +62,26 @@ exports.put = function(req, res) {
 }
 
 
-
-exports.get = function(req, res) {
+exports.get = function(req, res, next) {
   Role.find({},{})
     .exec(function(err, roles) {
-      if (err) throw new errorHandler.DatabaseQueryException(err);
+      if (err) return next(new errorHandler.DatabaseQueryException(err));
       res.json(roles);
     })
   ;
 }
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
   Role.findById(req.body._id, 'id name', function(err, role) {
-    if (err) throw new errorHandler.DatabaseQueryException(err);
+    if (err) return next(new errorHandler.DatabaseQueryException(err));
 
     // validate role
-    if (!req.role.is('admin')) throw new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave'));
+    if (!req.role.is('admin')) return next(new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave')));
 
     //TODO: validate users exist has target role
 
     role.remove(function(err, role) {
-      if (err) throw new errorHandler.DatabaseQueryException(err);
+      if (err) return next(new errorHandler.DatabaseQueryException(err));
       res.json({
         message: res.__('dsp.success'),
         data: role
