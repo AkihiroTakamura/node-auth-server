@@ -49,6 +49,8 @@ block content
 
                     .form-group
                       input.btn.btn-lg.btn-primary.btn-block(type="submit", value="#{__('dsp.control.authorize')}")
+                      if !user
+                        span.btn.btn-sm.btn-info.btn-block.btn-changePassword!=__('dsp.control.changePassword')
 
                 .row
                   .center-block(style="width: 75%; margin-bottom: 20px;")
@@ -60,4 +62,6 @@ block content
           .card-footer.text-muted
             span Don't have an account? &nbsp
             a(href="#") SignupHere
+
+    include templates/changePassword
 

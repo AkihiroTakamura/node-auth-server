@@ -44,10 +44,14 @@
 			"domain": "ドメイン(認証後コールバック先のホスト名等)",
 			"email": "Eメールアドレス",
 			"phone": "電話番号",
-			"fullName": "名称"
+			"fullName": "名称",
+			"changePassword": "パスワード変更",
+			"newPassword": "新しいパスワード",
+			"newPasswordAgain": "新しいパスワード（確認）"
 		},
 		"modal": {
-			"title": "操作"
+			"title": "操作",
+			"changePassword": "パスワード変更"
 		},
 		"login": "ログイン",
 		"title": {
@@ -73,6 +77,8 @@
 			"name": "名前は省略できません",
 			"fullName": "名前は省略できません",
 			"password": "パスワードは省略できません",
+			"newPassword": "新しいパスワードは省略できません",
+			"newPasswordAgain": "新しいパスワード（確認）は省略できません",
 			"id": "IDは省略できません",
 			"_id": "_idは省略できません",
 			"domain": "ドメインは省略できません"
@@ -90,8 +96,10 @@
 		},
 		"invalid": {
 			"password": "パスワードに誤りがあります",
+			"samePassword": "同じパスワードは使用できません",
 			"accesstoken": "アクセストークンが不正、もしくは有効期限が切れています",
-			"permission": "この操作を行う権限(scope)についてユーザの許可がありません 必要なscope: {{detail}}"
+			"permission": "この操作を行う権限(scope)についてユーザの許可がありません 必要なscope: {{detail}}",
+			"newPasswordAgain": "新しいパスワードと確認用パスワードの内容が違います"
 		},
 		"oauth": {
 			"notfound": {

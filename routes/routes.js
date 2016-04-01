@@ -3,6 +3,7 @@ var router = express.Router();
 
 var siteController    = require('../controllers/site');
 var authController    = require('../controllers/auth');
+var changePasswordController    = require('../controllers/changePassword');
 
 router.route('/')
   .get(siteController.index);
@@ -16,5 +17,8 @@ router.route('/logout')
 
 router.route('/profile')
   .get(authController.isUserAuthentiacted, siteController.profile);
+
+router.route('/changePassword')
+  .put(changePasswordController.put)
 
 module.exports = router;

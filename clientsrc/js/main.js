@@ -24,6 +24,7 @@ var config = require('./config');
 var error = require('./error');
 var navbar = require('./lib/navbar');
 var menu = require('./lib/menu');
+var changePassword = require('./lib/changePassword');
 
 // =======================
 // jQuery setting
@@ -55,9 +56,45 @@ window.onerror = function(msg, file, line, column, err){
 // =======================
 domready(function() {
   $("body").fadeIn(config.fadeInterval, function() {
+
     Promise.resolve()
-      .then(navbar.init)
-      .then(menu.init)
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          if ($('body').find('nav').length != 0) {
+            Promise.resolve()
+              .then(navbar.init)
+              .then(resolve)
+            ;
+            return;
+          }
+          resolve();
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          if ($('body').find('#template-menu').length != 0) {
+            Promise.resolve()
+              .then(menu.init)
+              .then(resolve)
+            ;
+            return;
+          }
+          resolve();
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          if ($('body').find('#template-changePassword-modal').length != 0) {
+            Promise.resolve()
+              .then(changePassword.init)
+              .then(resolve)
+            ;
+            return;
+          }
+          resolve();
+        });
+      })
     ;
+
   });
 })
