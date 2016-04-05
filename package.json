@@ -48,6 +48,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-jshint": "^2.0.0",
     "gulp-livereload": "^3.8.1",
+    "gulp-node-inspector": "^0.1.0",
     "gulp-nodemon": "^2.0.6",
     "gulp-plumber": "^1.0.1",
     "gulp-sass": "^2.1.1",

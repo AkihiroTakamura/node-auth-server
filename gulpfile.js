@@ -11,6 +11,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var nodemon = require('gulp-nodemon');
 var livereload = require('gulp-livereload');
 var concat = require('gulp-concat');
+var nodeInspector = require('gulp-node-inspector');
 
 gulp.task("sass", function() {
   gulp.src("./clientsrc/sass/**/*scss")
@@ -43,32 +44,30 @@ gulp.task('server', function() {
   server.run(['server.js'], options, livereload);
 });
 
-gulp.task('debugserver', function() {
+gulp.task('inspect', function() {
+  gulp.src([]).pipe(nodeInspector({
+      debugPort: 5858,
+      webHost: 'localhost',
+      webPort: '3002',
+      preload: false
+  }));
+});
+
+gulp.task('debugserver', ['inspect'],  function() {
   livereload.listen();
 
   nodemon({
-    exec: 'node-inspector --web-port 3002 & node --debug',
     script: './server.js',
     ext: 'js, json',
-    ignore: [   // nodemon ignore directory
+    exec: 'node --debug',
+    ignore: [
       'views',
       'public',
       'clientsrc'
     ],
     env: {
       'NODE_ENV': 'development'
-    },
-    stdout: false
-  }).on('readable', function() {
-    this.stdout.on('data', function(chunk) {
-      if (/^application\ started/.test(chunk)) {
-        livereload.reload();
-      }
-      process.stdout.write(chunk);
-    });
-    this.stderr.on('data', function(chunk) {
-      process.stderr.write(chunk);
-    });
+    }
   });
 
 });
