@@ -1,8 +1,10 @@
 var $ = require('jquery');
 var config = require('../config');
+var error = require('../error');
 var user = require("./user");
 var role = require("./role");
 var client = require("./client");
+var setting = require("./setting");
 
 var $dom = $('#template-menu');
 
@@ -63,15 +65,27 @@ function onClickStart(event) {
   switch($(this).data('kind')) {
     case 'user':
       hide()
-        .then(user.init);
+        .then(user.init)
+        .catch(error.show)
+      ;
       break;
     case 'role':
       hide()
-        .then(role.init);
+        .then(role.init)
+        .catch(error.show)
+      ;
       break;
     case 'client':
       hide()
-        .then(client.init);
+        .then(client.init)
+        .catch(error.show)
+      ;
+      break;
+    case 'setting':
+      hide()
+        .then(setting.init)
+        .catch(error.show)
+      ;
       break;
     default:
       break;

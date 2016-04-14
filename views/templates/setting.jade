@@ -1,0 +1,66 @@
+#template-setting.container.contents(style="display: none;")
+  h1!= __('menu.manage.setting.title')
+
+  #accordion.col-md-8(role='tablist', aria-multiselectable='true')
+    .panel.panel-default
+      #password-header.panel-heading(role='tab')
+        h4.panel-titile
+          a(data-toggle='collapse', data-parent='#accordion', href='#password-body', aria-expanded='false', aria-controls='password-body')!=__('dsp.title.setting.password')
+      #password-body.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='password-header')
+        form
+          input#input-id(name='_id', type='hidden')
+          fieldset.form-group
+            label(for='input-minLength')!= __('dsp.control.setting.password.minLength.title')
+            input#input-minLength.form-control(name='minLength', type='number' style='max-width: 100px;')
+            small.text-muted!= __('dsp.control.setting.password.minLength.small')
+          fieldset.form-group
+            label(for='input-maxLength')!= __('dsp.control.setting.password.maxLength.title')
+            input#input-maxLength.form-control(name='maxLength', type='number' style='max-width: 100px;')
+            small.text-muted!= __('dsp.control.setting.password.maxLength.small')
+          fieldset.form-group
+            label(for='input-enabledLockout', style='display: block;')!= __('dsp.control.setting.password.enabledLockout.title')
+            input#input-enabledLockout.form-control(name='enabledLockout', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.enabledLockout.small')
+          fieldset.form-group
+            label(for='input-lockoutCount')!= __('dsp.control.setting.password.lockoutCount.title')
+            input#input-lockoutCount.form-control(name='lockoutCount', type='number' style='max-width: 100px;')
+            small.text-muted!= __('dsp.control.setting.password.lockoutCount.small')
+          fieldset.form-group
+            label(for='input-mustIncludeUpperCase', style='display: block;')!= __('dsp.control.setting.password.mustIncludeUpperCase.title')
+            input#input-mustIncludeUpperCase.form-control(name='mustIncludeUpperCase', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.mustIncludeUpperCase.small')
+          fieldset.form-group
+            label(for='input-mustIncludeLowerCase', style='display: block;')!= __('dsp.control.setting.password.mustIncludeLowerCase.title')
+            input#input-mustIncludeLowerCase.form-control(name='mustIncludeLowerCase', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.mustIncludeLowerCase.small')
+          fieldset.form-group
+            label(for='input-mustIncludeSymbolCase', style='display: block;')!= __('dsp.control.setting.password.mustIncludeSymbolCase.title')
+            input#input-mustIncludeSymbolCase.form-control(name='mustIncludeSymbolCase', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.mustIncludeSymbolCase.small')
+          fieldset.form-group
+            label(for='input-mustIncludeNumberCase', style='display: block;')!= __('dsp.control.setting.password.mustIncludeNumberCase.title')
+            input#input-mustIncludeNumberCase.form-control(name='mustIncludeNumberCase', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.mustIncludeNumberCase.small')
+          fieldset.form-group
+            label(for='input-mustExcludeId', style='display: block;')!= __('dsp.control.setting.password.mustExcludeId.title')
+            input#input-mustExcludeId.form-control(name='mustExcludeId', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.mustExcludeId.small')
+          fieldset.form-group
+            label(for='input-disabledReuse', style='display: block;')!= __('dsp.control.setting.password.disabledReuse.title')
+            input#input-disabledReuse.form-control(name='disabledReuse', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.disabledReuse.small')
+          fieldset.form-group
+            label(for='input-reuseExpireCount')!= __('dsp.control.setting.password.reuseExpireCount.title')
+            input#input-reuseExpireCount.form-control(name='reuseExpireCount', type='number' style='max-width: 100px;')
+            small.text-muted!= __('dsp.control.setting.password.reuseExpireCount.small')
+          fieldset.form-group
+            label(for='input-expireDateCount')!= __('dsp.control.setting.password.expireDateCount.title')
+            input#input-expireDateCount.form-control(name='expireDateCount', type='number' style='max-width: 100px;')
+            small.text-muted!= __('dsp.control.setting.password.expireDateCount.small')
+
+    .panel.panel-default
+      #system-header.panel-heading(role='tab')
+        h4.panel-titile
+          a(data-toggle='collapse', data-parent='#accordion', href='#system-body', aria-expanded='false', aria-controls='system-body')!=__('dsp.title.setting.system')
+      #system-body.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='system-header')
+        p add some settings here

@@ -42,6 +42,12 @@ var AjaxException = function(xhr) {
 AjaxException.prototype = new Error();
 AjaxException.prototype.constructor = AjaxException;
 
+var UnexpectedDataException = function(message) {
+  this.name = 'unexpectedDataException';
+  this.message = message;
+}
+UnexpectedDataException.prototype = new Error();
+UnexpectedDataException.prototype.constructor = UnexpectedDataException;
 
 var UnAuthorizedException = function(message) {
   this.name = 'unauthorizederror';
@@ -61,6 +67,9 @@ function show(err) {
     if (err instanceof AjaxException) {
       return notice.error(err.message);
     };
+    if (err instanceof UnexpectedDataException) {
+      return notice.error(err.message);
+    };
     if (err instanceof Error){
       return notice.error(err.message);
     };
@@ -71,5 +80,6 @@ module.exports = {
   UnAuthorizedException: UnAuthorizedException,
   AjaxValidateException: AjaxValidateException,
   AjaxException: AjaxException,
+  UnexpectedDataException: UnexpectedDataException,
   show: show
 }

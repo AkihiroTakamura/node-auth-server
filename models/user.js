@@ -23,6 +23,15 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  passwordExpiredDate: {
+    type: Date,
+    required: false
+  },
+  isLock: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   roles: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role'

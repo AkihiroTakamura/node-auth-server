@@ -7,7 +7,7 @@
 		"manage": {
 			"user": {
 				"title": "ユーザ管理",
-				"detail": "ログインユーザのid/pass/権限の操作"
+				"detail": "id/pass/権限の操作"
 			},
 			"role": {
 				"title": "ロール管理",
@@ -15,7 +15,11 @@
 			},
 			"client": {
 				"title": "認可アプリケーション管理",
-				"detail": "oauth2認可アプリケーションの操作"
+				"detail": "oauth2認可の操作"
+			},
+			"setting": {
+				"title": "環境設定",
+				"detail": "その他の設定項目"
 			}
 		}
 	},
@@ -47,7 +51,63 @@
 			"fullName": "名称",
 			"changePassword": "パスワード変更",
 			"newPassword": "新しいパスワード",
-			"newPasswordAgain": "新しいパスワード（確認）"
+			"newPasswordAgain": "新しいパスワード（確認）",
+			"setting": {
+				"password": {
+					"minLength": {
+						"title": "パスワード最小桁数",
+						"small": "パスワードの最小桁数を数値で設定します"
+					},
+					"maxLength": {
+						"title": "パスワード最大桁数",
+						"small": "パスワードの最大桁数を数値で設定します"
+					},
+					"enabledLockout": {
+						"title": "パスワード間違え時ロック",
+						"small": "パスワードを間違えた場合にアカウントをロックする場合ONにします"
+					},
+					"lockoutCount": {
+						"title": "パスワード最大試行回数",
+						"small": "設定した回数を超えてパスワードを間違えるとアカウントロックします。パスワード間違え時ロックがONの場合にのみ有効です"
+					},
+					"mustIncludeUpperCase": {
+						"title": "パスワードは大文字を含む必要がある",
+						"small": "ONにするとこのチェックが有効になります"
+					},
+					"mustIncludeLowerCase": {
+						"title": "パスワードは小文字を含む必要がある",
+						"small": "ONにするとこのチェックが有効になります"
+					},
+					"mustIncludeSymbolCase": {
+						"title": "パスワードは記号を含む必要がある",
+						"small": "ONにするとこのチェックが有効になります"
+					},
+					"mustIncludeNumberCase": {
+						"title": "パスワードは数字を含む必要がある",
+						"small": "ONにするとこのチェックが有効になります"
+					},
+					"mustExcludeId": {
+						"title": "パスワードにIDを含むことを許可しない",
+						"small": "ONにするとこのチェックが有効になります"
+					},
+					"disabledReuse": {
+						"title": "パスワードの再利用を許可しない",
+						"small": "ONにすると過去に使用したパスワードのもう一度使うことを制限します"
+					},
+					"reuseExpireCount": {
+						"title": "パスワード再利用を許可する過去世代数",
+						"small": "設定した回数分前のパスワードは再利用可能になります。パスワードの再利用を許可している場合のみ有効になります"
+					},
+					"expireDateCount": {
+						"title": "パスワード有効期間（日）",
+						"small": "パスワードの有効期間を日数で指定します"
+					},
+					"disabledMultipleUpdateSameday": {
+						"title": "同日に複数回のパスワード変更を許可しない",
+						"small": "ONにすると同じ日に何度もパスワード変更することを制限します"
+					}
+				}
+			}
 		},
 		"modal": {
 			"title": "操作",
@@ -55,7 +115,11 @@
 		},
 		"login": "ログイン",
 		"title": {
-			"auth": "統合認証"
+			"auth": "統合認証",
+			"setting": {
+				"password": "パスワード要件設定",
+				"system": "システム環境設定"
+			}
 		},
 		"msg": {
 			"require": {
@@ -92,14 +156,19 @@
 		"notfound": {
 			"client": "登録済のclientが見つかりません",
 			"role": "登録済のroleが見つかりません",
-			"user": "ユーザが見つかりません"
+			"user": "ユーザが見つかりません",
+			"setting": "設定情報が見つかりません"
 		},
 		"invalid": {
 			"password": "パスワードに誤りがあります",
 			"samePassword": "同じパスワードは使用できません",
 			"accesstoken": "アクセストークンが不正、もしくは有効期限が切れています",
 			"permission": "この操作を行う権限(scope)についてユーザの許可がありません 必要なscope: {{detail}}",
-			"newPasswordAgain": "新しいパスワードと確認用パスワードの内容が違います"
+			"newPasswordAgain": "新しいパスワードと確認用パスワードの内容が違います",
+			"compare": "大小関係に誤りがあります",
+			"type": {
+				"int": "数字形式ではありません"
+			}
 		},
 		"oauth": {
 			"notfound": {

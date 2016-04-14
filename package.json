@@ -13,6 +13,7 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.2",
     "bootstrap": "^4.0.0-alpha.2",
+    "bootstrap-switch": "^3.3.2",
     "config": "^1.19.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^1.1.0",
@@ -38,10 +39,12 @@
     "passport-oauth2-client-password": "^0.1.2",
     "path": "^0.12.7",
     "tether": "^1.1.1",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "validator": "^5.2.0"
   },
   "devDependencies": {
     "browserify": "^13.0.0",
+    "browserify-css": "^0.9.1",
     "cssify": "^1.0.2",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",

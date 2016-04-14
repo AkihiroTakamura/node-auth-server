@@ -5,6 +5,7 @@ var authController    = require('../controllers/auth');
 var userController    = require('../controllers/user');
 var roleController    = require('../controllers/role');
 var clientController  = require('../controllers/client');
+var settingController  = require('../controllers/setting');
 
 router.route('/users')
   .post(authController.isSessionAuthenticated, userController.post)
@@ -23,5 +24,9 @@ router.route('/clients')
   .put(authController.isSessionAuthenticated, clientController.put)
   .delete(authController.isSessionAuthenticated, clientController.delete)
   .get(authController.isSessionAuthenticated, clientController.get);
+
+router.route('/setting')
+  .put(authController.isSessionAuthenticated, settingController.put)
+  .get(authController.isSessionAuthenticated, settingController.get);
 
 module.exports = router;

@@ -8,6 +8,7 @@ var clientController   = require('../controllers/client');
 var roleController   = require('../controllers/role');
 var profileController   = require('../controllers/profile');
 var oauth2Controller   = require('../controllers/oauth2');
+var settingController  = require('../controllers/setting');
 
 // =======================
 // OAuth2.0
@@ -59,6 +60,10 @@ router.route('/clients')
   .put(authController.isClientPasswordAuthenticated, clientController.put)
   .delete(authController.isClientPasswordAuthenticated, clientController.delete)
   .get(authController.isClientPasswordAuthenticated, clientController.get);
+
+router.route('/setting')
+  .put(authController.isSessionAuthenticated, settingController.put)
+  .get(authController.isSessionAuthenticated, settingController.get);
 
 
 module.exports = router;

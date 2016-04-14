@@ -3,13 +3,25 @@ var passport = require('passport');
 var config = require('config');
 var User = require('../models/user');
 var Role = require('../models/role');
+var Setting = require('../models/setting');
 
 exports.index = function(req, res) {
   Promise.resolve()
-    .then(isExistRole)
-    .then(addDefaultRole)
-    .then(isExistUser)
-    .then(addDefaultUser)
+    .then(function() {
+      Promise.resolve()
+        .then(isExistSetting)
+        .then(addDefaultSetting)
+    })
+    .then(function() {
+      Promise.resolve()
+        .then(isExistRole)
+        .then(addDefaultRole)
+    })
+    .then(function() {
+      Promise.resolve()
+      .then(isExistUser)
+      .then(addDefaultUser)
+    })
     .then(function() {
       res.render('index', {user: req.user, error: req.flash('error')});
     })
@@ -93,6 +105,30 @@ function addDefaultUser() {
         resolve();
       });
 
+    });
+
+  });
+}
+
+function isExistSetting() {
+  return new Promise(function(resolve, reject) {
+    Setting.count({}, function(err, count) {
+      if (err) reject(err);
+      if (count > 0) reject();
+      resolve();
+    });
+  });
+}
+
+function addDefaultSetting() {
+  return new Promise(function(resolve, reject) {
+
+    var setting = new Setting({
+    });
+
+    setting.save(function(err) {
+      if (err) reject(err);
+      resolve();
     });
 
   });

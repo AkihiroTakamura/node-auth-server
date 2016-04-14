@@ -4,6 +4,7 @@
 $ = jQuery = require('jquery');
 window.Tether = require('tether');
 var bootstrap = require('bootstrap');
+var bootstrapSwitch = require('bootstrap-switch');
 var domready = require('domready');
 var noty = require('noty');
 $.noty.defaults.layout = 'topRight';

@@ -12,6 +12,7 @@ var nodemon = require('gulp-nodemon');
 var livereload = require('gulp-livereload');
 var concat = require('gulp-concat');
 var nodeInspector = require('gulp-node-inspector');
+var browserifyCss = require('browserify-css');
 
 gulp.task("sass", function() {
   gulp.src("./clientsrc/sass/**/*scss")
@@ -26,8 +27,23 @@ gulp.task('js', function() {
   browserify({
     entries: ["./clientsrc/js/main.js"], // ビルド対象のファイル
     debug: true, // sourcemapを出力、chromeでのdebug可能にする
-    transform: ['cssify']
   })
+  .transform(browserifyCss)
+  .bundle()
+  .on('error', console.error.bind(console)) // js compileエラーでもwatchを止めない
+  .pipe(source("app.js")) // ビルド後のファイル名
+  .pipe(buffer())
+  .pipe(sourcemaps.init({loadMaps: true}))
+  .pipe(sourcemaps.write("./"))
+  .pipe(gulp.dest("./public/js/")); // 生成先の指定
+});
+
+gulp.task('js-release', function() {
+  browserify({
+    entries: ["./clientsrc/js/main.js"], // ビルド対象のファイル
+    debug: true, // sourcemapを出力、chromeでのdebug可能にする
+  })
+  .transform(browserifyCss)
   .bundle()
   .on('error', console.error.bind(console)) // js compileエラーでもwatchを止めない
   .pipe(source("app.js")) // ビルド後のファイル名
@@ -44,6 +60,7 @@ gulp.task('server', function() {
   server.run(['server.js'], options, livereload);
 });
 
+// node-inspector -> http://localhost:3002/?ws=localhost:3002&port=5858
 gulp.task('inspect', function() {
   gulp.src([]).pipe(nodeInspector({
       debugPort: 5858,
@@ -89,7 +106,7 @@ gulp.task("default", [
 
 gulp.task("build", [
   'sass',
-  'js'
+  'js-release'
 ]);
 
 gulp.task("run", [
