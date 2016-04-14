@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
+var Setting = require('./setting');
+var moment = require('moment');
 
 var UserSchema = new mongoose.Schema({
   username: {
@@ -25,7 +27,8 @@ var UserSchema = new mongoose.Schema({
   },
   passwordExpiredDate: {
     type: Date,
-    required: false
+    required: false,
+    default: Date.now()
   },
   isLock: {
     type: Boolean,
@@ -53,16 +56,34 @@ UserSchema.pre('save', function(callback) {
   // if the password hasn't changed -> break
   if (!user.isModified('password')) return callback();
 
-  // password encrypt
-  bcrypt.genSalt(5, function(err, salt) {
-    if (err) return callback(err);
+  Setting
+    .find()
+    .exec(function(err, settings) {
+      if (err) return next(new errorHandler.DatabaseQueryException(err));
 
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
-      if (err) return callback(err);
-      user.password = hash;
-      callback();
-    });
-  });
+      var setting = settings[0];
+
+      // set password expired date
+      user.passwordExpiredDate = moment(Date.now()).add(setting.password.expireDateCount, 'days').format();
+
+      // cancel lock status
+      user.isLock = false;
+
+      // password encrypt
+      bcrypt.genSalt(5, function(err, salt) {
+        if (err) return callback(err);
+
+        bcrypt.hash(user.password, salt, null, function(err, hash) {
+          if (err) return callback(err);
+          user.password = hash;
+          callback();
+        });
+      });
+
+    })
+  ;
+
+
 });
 
 // validate password

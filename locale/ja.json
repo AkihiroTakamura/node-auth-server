@@ -153,6 +153,19 @@
 		"exist": {
 			"already": "すでに登録されています"
 		},
+		"password": {
+			"minLength": "パスワードが短すぎます",
+			"maxLength": "パスワードが長すぎます",
+			"mustIncludeUpperCase": "パスワードに半角英大文字を含めてください",
+			"mustIncludeLowerCase": "パスワードに半角英小文字を含めてください",
+			"mustIncludeSymbolCase": "パスワードに半角記号を含めてください",
+			"mustIncludeNumberCase": "パスワードに半角数字を含めてください",
+			"mustExcludeId": "IDが含まれているパスワードは登録できません",
+			"disabledReuse": "このパスワードは既に使用済みの為登録できません",
+			"disabledMultipleUpdateSameday": "本日既にパスワード変更している為、本日の変更はできません",
+			"expired": "パスワード有効期限が切れています。パスワード変更をしてください",
+			"lock": "アカウントがロックされています。パスワード変更をするか管理者へ問い合わせをしてください"
+		},
 		"notfound": {
 			"client": "登録済のclientが見つかりません",
 			"role": "登録済のroleが見つかりません",

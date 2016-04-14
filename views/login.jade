@@ -32,7 +32,10 @@ block content
 
                     .form-group
                       input.btn.btn-lg.btn-primary.btn-block(type="submit", value="#{__('dsp.control.login')}")
+                      span.btn.btn-sm.btn-info.btn-block.btn-changePassword!=__('dsp.control.changePassword')
 
           .card-footer.text-muted
             span Don't have an account!
             a(href="#") SignupHere
+
+    include templates/changePassword

@@ -1,7 +1,9 @@
 var User = require('../models/user');
 var logger = require('../util/logger');
 var errorHandler = require('../util/errorhandler');
+var passwordValidate = require('../util/passwordValidate');
 var i18n = require('i18n');
+var Setting = require('../models/setting');
 
 exports.put = function(req, res, next) {
 
@@ -20,17 +22,20 @@ exports.put = function(req, res, next) {
       if (err) return next(new errorHandler.DatabaseQueryException(" error : user verifyPassword : [", err ,"]"));
       if (!isMatch) return next(new errorHandler.ParameterInvalidException(i18n.__('validate.invalid.password')));
 
-      user.password = req.body.newPassword;
+      passwordValidate.isValid(req.body.username, req.body.newPassword, 'passwordChange', function(err) {
+        if (err) return next(new errorHandler.ParameterInvalidException(err.message));
 
-      //TODO: パスワード要件のvalidate
+        user.password = req.body.newPassword;
 
-      user.save(function(err) {
-        if (err) return next(new errorHandler.DatabaseQueryException(err));
+        user.save(function(err) {
+          if (err) return next(new errorHandler.DatabaseQueryException(err));
 
-        res.json({
-          message: i18n.__('dsp.success'),
-          data: user
+          res.json({
+            message: i18n.__('dsp.success'),
+            data: user
+          });
         });
+
       });
 
     });
