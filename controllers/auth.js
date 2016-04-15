@@ -9,6 +9,7 @@ var ClientPasswordStarategy = require('passport-oauth2-client-password').Strateg
 var User = require('../models/user');
 var Client = require('../models/client');
 var Token = require('../models/token');
+var passwordValidate = require('../util/passwordValidate');
 
 // =======================
 // User Authentification(Basic)
@@ -32,7 +33,12 @@ passport.use(new BasicStrategy(
           return callback(null, false, {message: i18n.__('validate.invalid.password')});
         }
 
-        return callback(null, user);
+        passwordValidate.isValid(username, password, 'login', function(err) {
+          if (err) return callback(null, false, new errorHandler.ParameterInvalidException(err.message));
+
+          return callback(null, user);
+        });
+
       });
     });
   }
@@ -62,8 +68,12 @@ passport.use(new LocalStrategy({
           return callback(null, false, {message: i18n.__('validate.invalid.password')});
         }
 
-        //TODO: Add other checks
-        return callback(null, user);
+        passwordValidate.isValid(username, password, 'login', function(err) {
+          if (err) return callback(null, false, new errorHandler.ParameterInvalidException(err.message));
+
+          return callback(null, user);
+        });
+
       });
     });
   }

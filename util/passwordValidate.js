@@ -223,7 +223,7 @@ function validateMultipleUpdateSameday(param) {
     });
 
     // if recently date that updated password < now -> OK  >= now -> NG
-    if (!moment(param.history.passwordHistory[0].createdAt).isBefore(moment.now, 'day'))
+    if (!moment(param.history.passwordHistory[0].createdAt).isBefore(moment(), 'day'))
       return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.disabledMultipleUpdateSameday')));
 
     resolve(param);
@@ -234,7 +234,7 @@ function validateExpired(param) {
   return new Promise(function(resolve, reject) {
     if (param.setting.password.expireDateCount < 0) return resolve(param);
 
-    if (moment(param.user.passwordExpiredDate).isBefore(moment.now, 'day'))
+    if (moment(param.user.passwordExpiredDate).isBefore(moment(), 'day'))
       return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.expired')));
 
     resolve(param);
