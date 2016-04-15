@@ -3,6 +3,8 @@ var errorHandler = require('../util/errorhandler');
 var i18n = require('i18n');
 var User = require('../models/user');
 var Setting = require('../models/setting');
+var History = require('../models/history');
+var bcrypt = require('bcrypt-nodejs');
 var validator = require('validator');
 var moment = require('moment');
 
@@ -17,6 +19,7 @@ exports.isValid = function(username, password, mode, next) {
   Promise.resolve(param)
     .then(getSetting)
     .then(getUser)
+    .then(getHistory)
     .then(validate)
     .then(function() {
       return next();
@@ -48,6 +51,20 @@ function getUser(param) {
       param.user = user;
       resolve(param);
     });
+  });
+}
+
+function getHistory(param) {
+  return new Promise(function(resolve, reject) {
+    History.findOne({username: param.username}, function(err, history) {
+      if (err) return reject(err);
+      if (!history || (history instanceof Array && history.length == 0)) {
+        param.history = undefined;
+      } else {
+        param.history = history;
+      }
+      resolve(param);
+    })
   });
 }
 
@@ -152,9 +169,44 @@ function validateExludeId(param) {
 function validateReuse(param) {
   return new Promise(function(resolve, reject) {
     if (!param.setting.password.disabledReuse) return resolve(param);
+    if (!param.history) return resolve(param);
 
-    //TODO: implement reuse validate
-    resolve(param);
+    var promises = [];
+
+    // createdAt sort desc
+    param.history.passwordHistory.sort(function(a, b) {
+      if (a.createdAt < b.createdAt) return 1;
+      if (a.createdAt > b.createdAt) return -1;
+      return 0;
+    });
+
+    // filter settings count
+    var targetHistrories = param.history.passwordHistory.filter(function(val, index, array) {
+      return (index < param.setting.password.reuseExpireCount);
+    });
+
+    targetHistrories.map(function(val) {
+      promises.push(passwordCompare(param.password, val.password));
+    });
+
+    Promise.all(promises)
+      .then(function(results) {
+        resolve(param);
+      })
+      .catch(reject)
+    ;
+
+  });
+}
+
+function passwordCompare(input, encryptedPassword) {
+  return new Promise(function(resolve, reject) {
+      bcrypt.compare(input, encryptedPassword, function(err, isMatch) {
+        if (err) return reject(err);
+        if (isMatch)
+          return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.disabledReuse')));
+        resolve(true);
+      });
   });
 }
 

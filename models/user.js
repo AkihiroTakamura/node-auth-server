@@ -66,7 +66,7 @@ UserSchema.pre('save', function(callback) {
       // set password expired date
       user.passwordExpiredDate = moment(Date.now()).add(setting.password.expireDateCount, 'days').format();
 
-      // cancel lock status
+      // release lock status
       user.isLock = false;
 
       // password encrypt
