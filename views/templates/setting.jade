@@ -57,6 +57,10 @@
             label(for='input-expireDateCount')!= __('dsp.control.setting.password.expireDateCount.title')
             input#input-expireDateCount.form-control(name='expireDateCount', type='number' style='max-width: 100px;')
             small.text-muted!= __('dsp.control.setting.password.expireDateCount.small')
+          fieldset.form-group
+            label(for='input-disabledMultipleUpdateSameday', style='display: block;')!= __('dsp.control.setting.password.disabledMultipleUpdateSameday.title')
+            input#input-disabledMultipleUpdateSameday.form-control(name='disabledMultipleUpdateSameday', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.disabledMultipleUpdateSameday.small')
 
     .panel.panel-default
       #system-header.panel-heading(role='tab')

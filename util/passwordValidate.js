@@ -213,8 +213,19 @@ function passwordCompare(input, encryptedPassword) {
 function validateMultipleUpdateSameday(param) {
   return new Promise(function(resolve, reject) {
     if (!param.setting.password.disabledMultipleUpdateSameday) return resolve(param);
+    if (!param.history) return resolve(param);
 
-    //TODO: implement update sameday validate
+    // createdAt sort desc
+    param.history.passwordHistory.sort(function(a, b) {
+      if (a.createdAt < b.createdAt) return 1;
+      if (a.createdAt > b.createdAt) return -1;
+      return 0;
+    });
+
+    // if recently date that updated password < now -> OK  >= now -> NG
+    if (!moment(param.history.passwordHistory[0].createdAt).isBefore(moment.now, 'day'))
+      return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.disabledMultipleUpdateSameday')));
+
     resolve(param);
   });
 }
