@@ -6,43 +6,34 @@ var confirm = require('../confirm');
 var $dom = $('#template-user');
 
 module.exports = {
-  init: init,
   show: show,
-  hide: hide,
-  destroy: destroy
+  hide: hide
 }
 
-function init() {
+function show() {
   return new Promise(function(resolve, reject) {
     Promise.resolve()
       .then(setUserTable)
       .then(refreshUserList)
-      .then(show)
       .then(eventBind)
+      .then(function() {
+        $dom.fadeIn(config.fadeInterval, resolve);
+      })
       .then(resolve)
       .catch(reject)
     ;
   });
 }
 
-function show() {
-  return new Promise(function(resolve, reject) {
-    $dom.fadeIn(config.fadeInterval, resolve);
-  });
-}
-
 function hide() {
   return new Promise(function(resolve, reject) {
-    $dom.fadeOut(config.fadeInterval, resolve);
-  });
-}
-
-function destroy() {
-  return new Promise(function(resolve, reject) {
     Promise.resolve()
-      .then(hide)
-      .then(eventUnbind)
-      .then(resolve);
+      .then(eventUnBind)
+      .then(function() {
+        $dom.fadeOut(config.fadeInterval, resolve);
+      })
+      .then(resolve)
+    ;
   });
 }
 
@@ -132,6 +123,14 @@ function eventBind() {
 function eventUnBind() {
   return new Promise(function(resolve, reject) {
     $dom.off('click', '.btn-user-add');
+    $dom.find('#template-user-modal').off('show.bs.modal');
+    $dom.find('#template-user-modal').off('hidden.bs.modal');
+    $dom.find('#template-token-modal').off('hide.bs.modal');
+    $dom.off('click', '.btn-user-post')
+    $dom.off('click', '.btn-user-put');
+    $dom.off('click', '.btn-edit');
+    $dom.off('click', '.btn-delete');
+    $dom.off('click', '.btn-token');
     resolve();
   });
 }
@@ -428,8 +427,6 @@ function initTokenModal(param) {
     ;
   });
 }
-
-
 
 function hideModal(param) {
   return new Promise(function(resolve, reject) {

@@ -6,43 +6,34 @@ var confirm = require('../confirm');
 var $dom = $('#template-role');
 
 module.exports = {
-  init: init,
   show: show,
-  hide: hide,
-  destroy: destroy
+  hide: hide
 }
 
-function init() {
+function show() {
   return new Promise(function(resolve, reject) {
     Promise.resolve()
       .then(setTable)
       .then(refreshList)
-      .then(show)
       .then(eventBind)
+      .then(function() {
+        $dom.fadeIn(config.fadeInterval, resolve);
+      })
       .then(resolve)
       .catch(reject)
     ;
   });
 }
 
-function show() {
-  return new Promise(function(resolve, reject) {
-    $dom.fadeIn(config.fadeInterval, resolve);
-  });
-}
-
 function hide() {
   return new Promise(function(resolve, reject) {
-    $dom.fadeOut(config.fadeInterval, resolve);
-  });
-}
-
-function destroy() {
-  return new Promise(function(resolve, reject) {
     Promise.resolve()
-      .then(hide)
-      .then(eventUnbind)
-      .then(resolve);
+      .then(eventUnBind)
+      .then(function() {
+        $dom.fadeOut(config.fadeInterval, resolve);
+      })
+      .then(resolve)
+    ;
   });
 }
 
@@ -123,6 +114,12 @@ function eventBind() {
 function eventUnBind() {
   return new Promise(function(resolve, reject) {
     $dom.off('click', '.btn-role-add');
+    $dom.find('#template-role-modal').off('show.bs.modal');
+    $dom.find('#template-role-modal').off('hidden.bs.modal');
+    $dom.off('click', '.btn-role-post');
+    $dom.off('click', '.btn-role-put');
+    $dom.off('click', '.btn-edit');
+    $dom.off('click', '.btn-delete');
     resolve();
   });
 }

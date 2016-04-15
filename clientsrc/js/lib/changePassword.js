@@ -62,6 +62,8 @@ function eventBind() {
 function eventUnBind() {
   return new Promise(function(resolve, reject) {
     $('body').off('click', '.btn-changePassword');
+    $dom.off('show.bs.modal');
+    $dom.off('hidden.bs.modal');
     $dom.off('click', '.btn-changePassword-post');
     resolve();
   });

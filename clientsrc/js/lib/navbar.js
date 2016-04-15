@@ -28,7 +28,7 @@ function eventBind() {
 
 function eventUnBind() {
   return new Promise(function(resolve, reject) {
-    $dom.off('click', '.btn-start');
+    $dom.off('click', '.nav-link');
 
     resolve();
   });
@@ -48,22 +48,7 @@ function onNavLink(e) {
 function home() {
   return new Promise(function(resolve, reject) {
     Promise.resolve()
-      .then(hideContents)
-      .then(showHome)
-      .then(resolve)
-    ;
-  });
-}
-
-function hideContents() {
-  return new Promise(function(resolve, reject) {
-    $('.contents').fadeOut(config.fadeInterval, resolve);
-  });
-}
-
-function showHome() {
-  return new Promise(function(resolve, reject) {
-    Promise.resolve()
+      .then(menu.hideControls)
       .then(menu.show)
       .then(resolve)
     ;

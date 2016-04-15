@@ -75,7 +75,7 @@ domready(function() {
         return new Promise(function(resolve, reject) {
           if ($('body').find('#template-menu').length != 0) {
             Promise.resolve()
-              .then(menu.init)
+              .then(menu.show)
               .then(resolve)
             ;
             return;

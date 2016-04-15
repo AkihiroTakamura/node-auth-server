@@ -5,50 +5,60 @@ var user = require("./user");
 var role = require("./role");
 var client = require("./client");
 var setting = require("./setting");
+var controllers = [user, role, client, setting];
 
 var $dom = $('#template-menu');
 
 module.exports = {
-  init: init,
   show: show,
   hide: hide,
-  destroy: destroy
-}
-
-function init() {
-  return new Promise(function(resolve, reject) {
-    Promise.resolve()
-      .then(eventBind)
-      .then(show)
-      .then(resolve);
-  });
+  hideControls: hideControls
 }
 
 function show() {
   return new Promise(function(resolve, reject) {
-    $dom.fadeIn(config.fadeInterval, resolve);
+    Promise.resolve()
+      .then(hideControls)
+      .then(eventBind)
+      .then(function() {
+        $dom.fadeIn(config.fadeInterval, resolve);
+      })
+      .then(resolve);
   });
 }
 
 function hide() {
   return new Promise(function(resolve, reject) {
-    $dom.fadeOut(config.fadeInterval, resolve);
+    Promise.resolve()
+      .then(eventUnBind)
+      .then(function() {
+        $dom.fadeOut(config.fadeInterval, resolve);
+      })
+      .then(resolve)
+    ;
   });
 }
 
-function destroy() {
+function hideControls() {
   return new Promise(function(resolve, reject) {
-    Promise.resolve()
-      .then(hide)
-      .then(eventUnbind)
-      .then(resolve);
+
+    var promises = [];
+
+    controllers.map(function(controller) {
+      promises.push(controller.hide());
+    });
+
+    Promise.all(promises)
+      .then(resolve)
+      .catch(reject)
+    ;
+
   });
 }
 
 function eventBind() {
   return new Promise(function(resolve, reject) {
     $dom.on('click', '.btn-start', onClickStart);
-
     resolve();
   });
 }
@@ -56,7 +66,6 @@ function eventBind() {
 function eventUnBind() {
   return new Promise(function(resolve, reject) {
     $dom.off('click', '.btn-start');
-
     resolve();
   });
 }
@@ -65,25 +74,25 @@ function onClickStart(event) {
   switch($(this).data('kind')) {
     case 'user':
       hide()
-        .then(user.init)
+        .then(user.show)
         .catch(error.show)
       ;
       break;
     case 'role':
       hide()
-        .then(role.init)
+        .then(role.show)
         .catch(error.show)
       ;
       break;
     case 'client':
       hide()
-        .then(client.init)
+        .then(client.show)
         .catch(error.show)
       ;
       break;
     case 'setting':
       hide()
-        .then(setting.init)
+        .then(setting.show)
         .catch(error.show)
       ;
       break;

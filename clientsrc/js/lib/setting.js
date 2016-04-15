@@ -6,44 +6,35 @@ var confirm = require('../confirm');
 var $dom = $('#template-setting');
 
 module.exports = {
-  init: init,
   show: show,
-  hide: hide,
-  destroy: destroy
+  hide: hide
 }
 
-function init() {
+function show() {
   return new Promise(function(resolve, reject) {
     Promise.resolve()
       .then(styleSetup)
       .then(getData)
       .then(setForm)
-      .then(show)
       .then(eventBind)
+      .then(function() {
+        $dom.fadeIn(config.fadeInterval, resolve);
+      })
       .then(resolve)
       .catch(reject)
     ;
   });
 }
 
-function show() {
-  return new Promise(function(resolve, reject) {
-    $dom.fadeIn(config.fadeInterval, resolve);
-  });
-}
-
 function hide() {
   return new Promise(function(resolve, reject) {
-    $dom.fadeOut(config.fadeInterval, resolve);
-  });
-}
-
-function destroy() {
-  return new Promise(function(resolve, reject) {
     Promise.resolve()
-      .then(hide)
-      .then(eventUnbind)
-      .then(resolve);
+      .then(eventUnBind)
+      .then(function() {
+        $dom.fadeOut(config.fadeInterval, resolve);
+      })
+      .then(resolve)
+    ;
   });
 }
 
@@ -58,6 +49,8 @@ function eventBind() {
 
 function eventUnBind() {
   return new Promise(function(resolve, reject) {
+    $dom.off('change', 'input');
+    $dom.off('switchChange.bootstrapSwitch');
     resolve();
   });
 }
