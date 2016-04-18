@@ -243,10 +243,16 @@ function validateExpired(param) {
 
 function validateLock(param) {
   return new Promise(function(resolve, reject) {
-    if (param.user.isLock)
-      return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.lock')));
+    if (!param.setting.password.enabledLockout) return resolve(param);
+    if (!param.user.isLock) return resolve(param);
 
-    resolve(param);
+    if (param.setting.password.enabledLockoutRelease &&
+        moment()
+          .isAfter(moment(param.user.lastLockoutDate).add(param.setting.password.lockoutReleaseInterval, 's'))
+    ) {
+      return resolve(param);
+    }
+
+    return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.lock')));
   });
 }
-

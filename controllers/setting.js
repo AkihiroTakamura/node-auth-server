@@ -13,6 +13,8 @@ exports.put = function(req, res, next) {
     return next(new errorHandler.ParameterInvalidException(res.__('validate.validate.type.int') + res.__('dsp.control.setting.password.maxLength.title')));
   if (req.body.lockoutCount && !validator.isInt(req.body.lockoutCount))
     return next(new errorHandler.ParameterInvalidException(res.__('validate.validate.type.int') + res.__('dsp.control.setting.password.lockoutCount.title')));
+  if (req.body.lockoutReleaseInterval && !validator.isInt(req.body.lockoutCount))
+    return next(new errorHandler.ParameterInvalidException(res.__('validate.validate.type.int') + res.__('dsp.control.setting.password.lockoutReleaseInterval.title')));
   if (req.body.reuseExpireCount && !validator.isInt(req.body.reuseExpireCount))
     return next(new errorHandler.ParameterInvalidException(res.__('validate.validate.type.int') + res.__('dsp.control.setting.password.reuseExpireCount.title')));
   if (req.body.expireDateCount && !validator.isInt(req.body.expireDateCount))
@@ -36,6 +38,8 @@ exports.put = function(req, res, next) {
     if (req.body.maxLength) setting.password.maxLength = req.body.maxLength;
     setting.password.enabledLockout = (req.body.enabledLockout && req.body.enabledLockout == 'on') ? true : false;
     if (req.body.lockoutCount) setting.password.lockoutCount = req.body.lockoutCount;
+    setting.password.enabledLockoutRelease = (req.body.enabledLockoutRelease && req.body.enabledLockoutRelease == 'on') ? true : false;
+    if (req.body.lockoutReleaseInterval) setting.password.lockoutReleaseInterval = req.body.lockoutReleaseInterval;
     setting.password.mustIncludeUpperCase = (req.body.mustIncludeUpperCase && req.body.mustIncludeUpperCase == 'on') ? true : false;
     setting.password.mustIncludeLowerCase = (req.body.mustIncludeLowerCase && req.body.mustIncludeLowerCase == 'on') ? true : false;
     setting.password.mustIncludeSymbolCase = (req.body.mustIncludeSymbolCase && req.body.mustIncludeSymbolCase == 'on') ? true : false;

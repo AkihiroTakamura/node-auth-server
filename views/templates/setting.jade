@@ -26,6 +26,14 @@
             input#input-lockoutCount.form-control(name='lockoutCount', type='number' style='max-width: 100px;')
             small.text-muted!= __('dsp.control.setting.password.lockoutCount.small')
           fieldset.form-group
+            label(for='input-enabledLockoutRelease', style='display: block;')!= __('dsp.control.setting.password.enabledLockoutRelease.title')
+            input#input-enabledLockoutRelease.form-control(name='enabledLockoutRelease', type='checkbox', style='display: block;')
+            small.text-muted(style='display: block;')!= __('dsp.control.setting.password.enabledLockoutRelease.small')
+          fieldset.form-group
+            label(for='input-lockoutReleaseInterval')!= __('dsp.control.setting.password.lockoutReleaseInterval.title')
+            input#input-lockoutReleaseInterval.form-control(name='lockoutReleaseInterval', type='number' style='max-width: 100px;')
+            small.text-muted!= __('dsp.control.setting.password.lockoutReleaseInterval.small')
+          fieldset.form-group
             label(for='input-mustIncludeUpperCase', style='display: block;')!= __('dsp.control.setting.password.mustIncludeUpperCase.title')
             input#input-mustIncludeUpperCase.form-control(name='mustIncludeUpperCase', type='checkbox', style='display: block;')
             small.text-muted(style='display: block;')!= __('dsp.control.setting.password.mustIncludeUpperCase.small')

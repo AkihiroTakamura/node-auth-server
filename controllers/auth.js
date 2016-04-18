@@ -25,21 +25,22 @@ passport.use(new BasicStrategy(
         return callback(null, false, {message: i18n.__('validate.notfound.user')});
       }
 
-      user.verifyPassword(password, function(err, isMatch) {
-        if (err) return callback(new errorHandler.DatabaseQueryException(" error : user verifyPassword : [", err ,"]"));
+      passwordValidate.isValid(username, password, 'login', function(err) {
+        if (err) return callback(null, false, new errorHandler.ParameterInvalidException(err.message));
 
-        if (!isMatch) {
-          logger.system.info(" password verify failed : password: [", password ,"]");
-          return callback(null, false, {message: i18n.__('validate.invalid.password')});
-        }
+        user.verifyPassword(password, function(err, isMatch) {
+          if (err) return callback(new errorHandler.DatabaseQueryException(" error : user verifyPassword : [", err ,"]"));
 
-        passwordValidate.isValid(username, password, 'login', function(err) {
-          if (err) return callback(null, false, new errorHandler.ParameterInvalidException(err.message));
+          if (!isMatch) {
+            logger.system.info(" password verify failed : password: [", password ,"]");
+            return callback(null, false, {message: i18n.__('validate.invalid.password')});
+          }
 
           return callback(null, user);
         });
 
       });
+
     });
   }
 ));
@@ -60,21 +61,22 @@ passport.use(new LocalStrategy({
         return callback(null, false, {message: i18n.__('validate.notfound.user')});
       }
 
-      user.verifyPassword(password, function(err, isMatch) {
-        if (err) return callback(new errorHandler.DatabaseQueryException(" error : user verifyPassword : [", err ,"]"));
+      passwordValidate.isValid(username, password, 'login', function(err) {
+        if (err) return callback(null, false, new errorHandler.ParameterInvalidException(err.message));
 
-        if (!isMatch) {
-          logger.system.info(" password verify failed : password: [", password ,"]");
-          return callback(null, false, {message: i18n.__('validate.invalid.password')});
-        }
+        user.verifyPassword(password, function(err, isMatch) {
+          if (err) return callback(new errorHandler.DatabaseQueryException(" error : user verifyPassword : [", err ,"]"));
 
-        passwordValidate.isValid(username, password, 'login', function(err) {
-          if (err) return callback(null, false, new errorHandler.ParameterInvalidException(err.message));
+          if (!isMatch) {
+            logger.system.info(" password verify failed : password: [", password ,"]");
+            return callback(null, false, {message: i18n.__('validate.invalid.password')});
+          }
 
           return callback(null, user);
         });
 
       });
+
     });
   }
 ));

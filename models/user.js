@@ -30,10 +30,19 @@ var UserSchema = new mongoose.Schema({
     required: false,
     default: Date.now()
   },
+  passwordInvalidCount: {
+    type: Number,
+    required: false,
+    default: 0
+  },
   isLock: {
     type: Boolean,
     required: true,
     default: false
+  },
+  lastLockoutDate: {
+    type: Date,
+    required: false
   },
   roles: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -66,8 +75,10 @@ UserSchema.pre('save', function(callback) {
       // set password expired date
       user.passwordExpiredDate = moment(Date.now()).add(setting.password.expireDateCount, 'days').format();
 
-      // release lock status
+      // release lockout status
       user.isLock = false;
+      user.passwordInvalidCount = 0;
+      user.lastLockoutDate = undefined;
 
       // password encrypt
       bcrypt.genSalt(5, function(err, salt) {
@@ -83,14 +94,47 @@ UserSchema.pre('save', function(callback) {
     })
   ;
 
-
 });
 
 // validate password
 UserSchema.methods.verifyPassword = function(password, callback) {
+  var user = this;
+
   bcrypt.compare(password, this.password, function(err, isMatch) {
     if (err) return callback(err);
-    callback(null, isMatch);
+
+    if (isMatch) {
+      // when password valid
+      // release lockout status
+      user.isLock = false;
+      user.passwordInvalidCount = 0;
+      user.lastLockoutDate = undefined;
+      user.save(function(usererr) {
+        if (usererr) return next(new errorHandler.DatabaseQueryException(err));
+        return callback(null, true);
+      });
+    } else {
+      // when password invalid
+      Setting
+        .find()
+        .exec(function(err, settings) {
+          if (err) return next(new errorHandler.DatabaseQueryException(err));
+
+          user.passwordInvalidCount += 1;
+          if (user.passwordInvalidCount >= settings[0].password.lockoutCount) {
+            user.isLock = true;
+            user.lastLockoutDate = Date.now();
+          }
+
+          user.save(function(usererr) {
+            if (usererr) return next(new errorHandler.DatabaseQueryException(err));
+            return callback(null, false);
+          })
+        }
+      );
+
+    }
+
   });
 }
 

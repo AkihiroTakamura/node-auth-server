@@ -15,6 +15,12 @@ var SettingSchema = new mongoose.Schema({
     // enabledLockoutがtrueの時有効
     lockoutCount: {type: Number, default: 5},
 
+    // パスワード間違えによるアカウントロックを時間で解除するか
+    enabledLockoutRelease: {type: Boolean, default: true},
+
+    // パスワード間違えロックアウト自動解除までの時間（秒）
+    lockoutReleaseInterval: {type: Number, default: 300},
+
     // パスワードに半角英大文字を含むことを強制
     mustIncludeUpperCase: {type: Boolean, default: true},
 
