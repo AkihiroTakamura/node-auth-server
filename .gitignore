@@ -2,3 +2,4 @@ node_modules
 .DS_Store
 public/css/style.css
 public/js/app.*
+!.gitkeep
