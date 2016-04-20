@@ -38,10 +38,6 @@ ParameterInvalidException.prototype.constructor = ParameterInvalidException;
 function doError(err, req, res, next) {
   return new Promise(function(resolve, reject) {
 
-    if (process.env.NODE_ENV !== 'development') {
-      return res.status(500).send('something wrong');
-    }
-
     var message = {
       name: err.name,
       message: err.message
