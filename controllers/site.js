@@ -23,11 +23,11 @@ exports.index = function(req, res) {
       .then(addDefaultUser)
     })
     .then(function() {
-      res.render('index', {user: req.user, error: req.flash('error')});
+      res.render('index', {user: req.user, config: config, error: req.flash('error')});
     })
     .catch(function(err) {
       if (err) req.flash('error', err.message);
-      res.render('index', {user: req.user, error: req.flash('error')});
+      res.render('index', {user: req.user, config: config, error: req.flash('error')});
     })
   ;
 }
@@ -68,8 +68,8 @@ function isExistRole() {
 function addDefaultRole() {
   return new Promise(function(resolve, reject) {
     var role = new Role({
-      name: "admin",
-      fullName: "System Administrator"
+      name: config.application.init.admin.role,
+      fullName: config.application.init.admin.roleFullName
     });
     role.save(function(err) {
       if (err) reject(err);
@@ -90,7 +90,7 @@ function isExistUser() {
 
 function addDefaultUser() {
   return new Promise(function(resolve, reject) {
-    Role.findOne({name: 'admin'}, function(err, role) {
+    Role.findOne({name: config.application.init.admin.role}, function(err, role) {
       if (err) reject(err);
       if (!role) reject(new Error('admin role not found'));
 

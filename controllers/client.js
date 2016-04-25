@@ -1,5 +1,6 @@
 var Client = require('../models/client');
 var User = require('../models/user');
+var config = require('config');
 var logger = require('../util/logger');
 var uid = require('../util/uid').uid;
 var errorHandler = require('../util/errorhandler');
@@ -94,7 +95,7 @@ exports.put = function(req, res, next) {
 
 exports.get = function(req, res, next) {
 
-  var whereoption = req.user.is('admin') ? {} : {userId: req.user.id};
+  var whereoption = req.user.is(config.application.init.admin.role) ? {} : {userId: req.user.id};
 
   Client
     .find(whereoption)

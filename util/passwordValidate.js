@@ -1,5 +1,6 @@
 var logger = require('../util/logger');
 var errorHandler = require('../util/errorhandler');
+var config = require('config');
 var i18n = require('i18n');
 var User = require('../models/user');
 var Setting = require('../models/setting');
@@ -44,13 +45,16 @@ function getSetting(param) {
 
 function getUser(param) {
   return new Promise(function(resolve, reject) {
-    User.findOne({username: param.username}, function(err, user) {
-      if (err) return reject(err);
-      if (!user) return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.notfound.user')));
+    User.findOne({username: param.username})
+      .populate('roles')
+      .exec(function(err, user) {
+        if (err) return reject(err);
+        if (!user) return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.notfound.user')));
 
-      param.user = user;
-      resolve(param);
-    });
+        param.user = user;
+        resolve(param);
+      }
+    );
   });
 }
 
@@ -234,6 +238,9 @@ function validateExpired(param) {
   return new Promise(function(resolve, reject) {
     if (param.setting.password.expireDateCount < 0) return resolve(param);
 
+    // ignore admin's password expired
+    if (param.user.is(config.application.init.admin.role)) return resolve(param);
+
     if (moment(param.user.passwordExpiredDate).isBefore(moment(), 'day'))
       return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.expired')));
 
@@ -245,6 +252,9 @@ function validateLock(param) {
   return new Promise(function(resolve, reject) {
     if (!param.setting.password.enabledLockout) return resolve(param);
     if (!param.user.isLock) return resolve(param);
+
+    // ignore admin's account lock
+    if (param.user.is(config.application.init.admin.role)) return resolve(param);
 
     if (param.setting.password.enabledLockoutRelease &&
         moment()

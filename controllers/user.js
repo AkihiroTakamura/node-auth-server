@@ -1,6 +1,7 @@
 var User = require('../models/user');
 var logger = require('../util/logger');
 var errorHandler = require('../util/errorhandler');
+var config = require('config');
 
 exports.post = function(req, res, next) {
 
@@ -62,7 +63,7 @@ exports.put = function(req, res, next) {
 
 exports.get = function(req, res, next) {
 
-  var whereoption = req.user.is('admin') ? {} : {username: req.user.username};
+  var whereoption = req.user.is(config.application.init.admin.role) ? {} : {username: req.user.username};
 
   User.find(
     whereoption
@@ -87,7 +88,7 @@ exports.delete = function(req, res, next) {
     }
 
     // validate role
-    if (!req.user.is('admin')) return next(new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave')));
+    if (!req.user.is(config.application.init.admin.role)) return next(new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave')));
 
     user.remove(function(err, user) {
       if (err) return next(new errorHandler.DatabaseQueryException(err));

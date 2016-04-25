@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var config = require('config');
 var logger = require('../util/logger');
 var errorHandler = require('../util/errorhandler');
 var passwordValidate = require('../util/passwordValidate');
@@ -46,7 +47,7 @@ function getUser(param) {
         if (err) return reject(err);
         if (!user) return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.notfound.user')));
 
-        if (user.is('admin')) return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.adminChange')));
+        if (user.is(config.application.init.admin.role)) return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.adminChange')));
 
         param.user = user;
         resolve(param);

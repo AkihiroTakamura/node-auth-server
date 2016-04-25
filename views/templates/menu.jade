@@ -2,7 +2,7 @@ div.container.contents#template-menu(style="display: none;")
   if user
     h2!= __('menu.title')
     div.row
-      if user && user.is('admin')
+      if user && user.is(config.application.init.admin.role)
         div(class="col-sm-6 col-md-4")
           div.card
             img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")

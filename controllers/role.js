@@ -1,5 +1,6 @@
 var Role = require('../models/role');
 var logger = require('../util/logger');
+var config = require('config');
 var errorHandler = require('../util/errorhandler');
 
 exports.post = function(req, res, next) {
@@ -76,7 +77,7 @@ exports.delete = function(req, res, next) {
     if (err) return next(new errorHandler.DatabaseQueryException(err));
 
     // validate role
-    if (!req.role.is('admin')) return next(new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave')));
+    if (!req.role.is(config.application.init.admin.role)) return next(new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave')));
 
     //TODO: validate users exist has target role
 
