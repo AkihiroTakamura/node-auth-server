@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var logger = require('../util/logger');
 var bcrypt = require('bcrypt-nodejs');
 var Setting = require('./setting');
 var moment = require('moment');
@@ -144,6 +145,11 @@ UserSchema.methods.is = function(rolename) {
   if (!user.roles || !user.roles.length) return false;
 
   for (i = 0; i < user.roles.length; i++) {
+    if (!user.roles[i].name) {
+      logger.system.error("could not find role name from user model. Didn't you forget pupulate user and role? ");
+    }
+
+
     if (user.roles[i].name && user.roles[i].name == rolename) return true;
   }
   return false;

@@ -40,13 +40,18 @@ exports.put = function(req, res, next) {
 
 function getUser(param) {
   return new Promise(function(resolve, reject) {
-    User.findOne({username: param.req.body.username}, function(err, user) {
-      if (err) return reject(err);
-      if (!user) return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.notfound.user')));
+    User.findOne({username: param.req.body.username})
+      .populate('roles')
+      .exec(function(err, user) {
+        if (err) return reject(err);
+        if (!user) return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.notfound.user')));
 
-      param.user = user;
-      resolve(param);
-    });
+        if (user.is('admin')) return reject(new errorHandler.ParameterInvalidException(i18n.__('validate.password.adminChange')));
+
+        param.user = user;
+        resolve(param);
+      }
+    );
   });
 }
 
