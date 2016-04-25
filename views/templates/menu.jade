@@ -1,37 +1,33 @@
 div.container.contents#template-menu(style="display: none;")
   if user
     h2!= __('menu.title')
-    div.row
+    .row
       if user && user.is(config.application.init.admin.role)
-        div(class="col-sm-6 col-md-4")
-          div.card
-            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
-            div.card-block
+        .col-sm-6.col-md-4
+          .card
+            .card-block
               h4.card-title!= __('menu.manage.user.title')
               p.card-text!= __('menu.manage.user.detail')
               a(class="btn btn-primary btn-start", data-kind="user") start
 
-        div(class="col-sm-6 col-md-4")
-          div.card
-            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
-            div.card-block
+        .col-sm-6.col-md-4
+          .card
+            .card-block
               h4.card-title!= __('menu.manage.role.title')
               p.card-text!= __('menu.manage.role.detail')
               a(class="btn btn-primary btn-start", data-kind="role") start
 
-        div(class="col-sm-6 col-md-4")
-          div.card
-            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
-            div.card-block
+        .col-sm-6.col-md-4
+          .card
+            .card-block
               h4.card-title!= __('menu.manage.setting.title')
               p.card-text!= __('menu.manage.setting.detail')
               a(class="btn btn-primary btn-start", data-kind="setting") start
 
       if user
-        div(class="col-sm-6 col-md-4")
-          div.card
-            img.card-img-top(src="//placehold.jp/318x180.png", style="width: 100%;")
-            div.card-block
+        .col-sm-6.col-md-4
+          .card
+            .card-block
               h4.card-title!= __('menu.manage.client.title')
               p.card-text!= __('menu.manage.client.detail')
               a(class="btn btn-primary btn-start", data-kind="client") start

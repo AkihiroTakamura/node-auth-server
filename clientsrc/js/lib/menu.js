@@ -34,7 +34,6 @@ function hide() {
       .then(function() {
         $dom.fadeOut(config.get('Client.fadeInterval'), resolve);
       })
-      .then(resolve)
     ;
   });
 }

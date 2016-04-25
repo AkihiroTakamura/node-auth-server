@@ -19,7 +19,6 @@ function show() {
       .then(function() {
         $dom.fadeIn(config.get('Client.fadeInterval'), resolve);
       })
-      .then(resolve)
       .catch(reject)
     ;
   });
@@ -32,7 +31,6 @@ function hide() {
       .then(function() {
         $dom.fadeOut(config.get('Client.fadeInterval'), resolve);
       })
-      .then(resolve)
     ;
   });
 }
