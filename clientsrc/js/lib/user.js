@@ -3,6 +3,7 @@ var config = require('config');
 var error = require('../error');
 var notice = require('../notice');
 var confirm = require('../confirm');
+var i18n = require('../i18n');
 var $dom = $('#template-user');
 
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
 
 function show() {
   return new Promise(function(resolve, reject) {
-    Promise.resolve()
+    Promise.resolve({})
       .then(setUserTable)
       .then(refreshUserList)
       .then(eventBind)
@@ -55,11 +56,14 @@ function eventBind() {
     });
 
     $dom.on('click', '.btn-user-post', function(e) {
-      var data = $dom.find('.template-user-form').serialize();
-      Promise.resolve(data)
+      var param = {
+        data: $dom.find('.template-user-form').serialize()
+      };
+      Promise.resolve(param)
         .then(postUser)
-        .then(function() {
-          return notice.success('user added!!');
+        .then(function(param) {
+          notice.success('user added!!');
+          return param;
         })
         .then(hideModal)
         .then(refreshUserList)
@@ -68,11 +72,14 @@ function eventBind() {
     });
 
     $dom.on('click', '.btn-user-put', function(e) {
-      var data = $dom.find('.template-user-form').serialize();
-      Promise.resolve(data)
+      var param = {
+        data: $dom.find('.template-user-form').serialize()
+      }
+      Promise.resolve(param)
         .then(putUser)
         .then(function() {
-          return notice.success('user updated!!');
+          notice.success('user updated!!');
+          return param;
         })
         .then(hideModal)
         .then(refreshUserList)
@@ -93,8 +100,8 @@ function eventBind() {
       var data = JSON.parse($(e.target).closest('tr').attr('data-json'));
       Promise.resolve({data: data})
         .then(confirm.confirm)
-        .then(function(data) {
-          Promise.resolve(data)
+        .then(function(param) {
+          Promise.resolve(param)
             .then(deleteUsers)
             .then(refreshUserList)
             .catch(error.show)
@@ -133,7 +140,7 @@ function eventUnBind() {
   });
 }
 
-function setUserTable() {
+function setUserTable(param) {
   return new Promise(function(resolve, reject) {
 
     var table = $('<table></table>');
@@ -160,19 +167,19 @@ function setUserTable() {
       .empty()
       .append(table);
 
-    resolve();
+    resolve(param);
   });
 
 }
 
-function setUserTableRow(json) {
+function setUserTableRow(param) {
   return new Promise(function(resolve, reject) {
     var $tbody = $dom.find('.userlist').find('tbody');
 
     $tbody
       .empty();
 
-    $.each(json, function(index, user) {
+    $.each(param.users, function(index, user) {
       var row = $('<tr></tr>');
 
       row
@@ -201,18 +208,21 @@ function setUserTableRow(json) {
 
     });
 
-    resolve();
+    resolve(param);
 
   });
 }
 
 
-function getUsers() {
+function getUsers(param) {
   return new Promise(function(resolve, reject) {
     $.ajax({
       type: 'get',
       url: '/local/api/users',
-      success: resolve,
+      success: function(json) {
+        param.users = json;
+        resolve(param);
+      },
       error: function(xhr) {
         if (xhr.status == 401) {
           throw new error.UnAuthorizedException();
@@ -223,12 +233,15 @@ function getUsers() {
   });
 }
 
-function getRoles() {
+function getRoles(param) {
   return new Promise(function(resolve, reject) {
     $.ajax({
       type: 'get',
       url: '/local/api/roles',
-      success: resolve,
+      success: function(json) {
+        param.roles = json;
+        resolve(param);
+      },
       error: function(xhr) {
         if (xhr.status == 401) {
           throw new error.UnAuthorizedException();
@@ -239,13 +252,15 @@ function getRoles() {
   });
 }
 
-function postUser(data) {
+function postUser(param) {
   return new Promise(function(resolve, reject) {
     $.ajax({
       type: 'post',
       url: '/local/api/users',
-      data: data,
-      success: resolve,
+      data: param.data,
+      success: function() {
+        resolve(param);
+      },
       error: function(xhr) {
         if (xhr.status == 401) {
           throw new error.UnAuthorizedException();
@@ -259,13 +274,15 @@ function postUser(data) {
   });
 }
 
-function putUser(data) {
+function putUser(param) {
   return new Promise(function(resolve, reject) {
     $.ajax({
       type: 'put',
       url: '/local/api/users',
-      data: data,
-      success: resolve,
+      data: param.data,
+      success: function() {
+        resolve(param);
+      },
       error: function(xhr) {
         if (xhr.status == 401) {
           throw new error.UnAuthorizedException();
@@ -341,11 +358,11 @@ function initModal(param) {
 
     var $roles = $modal.find('[name=roles]');
 
-    Promise.resolve()
+    Promise.resolve(param)
       .then(getRoles)
-      .then(function(json) {
+      .then(function(param) {
         $roles.empty();
-        $.each(json, function(index, role) {
+        $.each(param.roles, function(index, role) {
           var option = $('<option></option>');
           option
             .attr('value', role._id)
@@ -354,8 +371,9 @@ function initModal(param) {
           ;
           $roles.append(option);
         });
+        return param;
       })
-      .then(function() {
+      .then(function(param) {
         resolve(param);
       })
     ;
@@ -453,9 +471,9 @@ function showModalMessage(err) {
 }
 
 
-function refreshUserList() {
+function refreshUserList(param) {
   return new Promise(function(resolve, reject) {
-    Promise.resolve()
+    Promise.resolve(param)
       .then(getUsers)
       .then(setUserTableRow)
       .then(resolve)
