@@ -1,5 +1,5 @@
 var $ = require('jquery');
-var config = require('../config');
+var config = require('config');
 var main = require('../main');
 var menu = require('./menu');
 

@@ -1,5 +1,5 @@
 var $ = require('jquery');
-var config = require('../config');
+var config = require('config');
 var error = require('../error');
 var notice = require('../notice');
 var confirm = require('../confirm');
@@ -17,7 +17,7 @@ function show() {
       .then(refreshList)
       .then(eventBind)
       .then(function() {
-        $dom.fadeIn(config.fadeInterval, resolve);
+        $dom.fadeIn(config.get('Client.fadeInterval'), resolve);
       })
       .then(resolve)
       .catch(reject)
@@ -30,7 +30,7 @@ function hide() {
     Promise.resolve()
       .then(eventUnBind)
       .then(function() {
-        $dom.fadeOut(config.fadeInterval, resolve);
+        $dom.fadeOut(config.get('Client.fadeInterval'), resolve);
       })
       .then(resolve)
     ;

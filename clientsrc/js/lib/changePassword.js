@@ -1,5 +1,5 @@
 var $ = require('jquery');
-var config = require('../config');
+var config = require('config');
 var error = require('../error');
 var notice = require('../notice');
 var confirm = require('../confirm');

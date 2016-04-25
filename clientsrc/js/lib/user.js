@@ -1,5 +1,5 @@
 var $ = require('jquery');
-var config = require('../config');
+var config = require('config');
 var error = require('../error');
 var notice = require('../notice');
 var confirm = require('../confirm');
@@ -17,7 +17,7 @@ function show() {
       .then(refreshUserList)
       .then(eventBind)
       .then(function() {
-        $dom.fadeIn(config.fadeInterval, resolve);
+        $dom.fadeIn(config.get('Client.fadeInterval'), resolve);
       })
       .then(resolve)
       .catch(reject)
@@ -30,7 +30,7 @@ function hide() {
     Promise.resolve()
       .then(eventUnBind)
       .then(function() {
-        $dom.fadeOut(config.fadeInterval, resolve);
+        $dom.fadeOut(config.get('Client.fadeInterval'), resolve);
       })
       .then(resolve)
     ;
@@ -146,7 +146,7 @@ function setUserTable() {
         $('<thead></thead>')
           .append(
             $('<tr></tr>')
-              .append($('<th></th>').text('id'))
+              .append($('<th></th>').text('id').hide())
               .append($('<th></th>').text('username'))
               .append($('<th></th>').text('fullName'))
               .append($('<th></th>').text('roles'))
@@ -179,7 +179,7 @@ function setUserTableRow(json) {
 
       row
         .attr('data-json', JSON.stringify(user))
-        .append($('<td></td>').text(user._id))
+        .append($('<td></td>').text(user._id).hide())
         .append($('<td></td>').text(user.username))
         .append($('<td></td>').text(user.fullName))
         .append($('<td></td>').text(user.roles.map(function(elem){ return elem.name}).join(',')))

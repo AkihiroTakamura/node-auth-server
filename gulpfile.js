@@ -13,6 +13,7 @@ var livereload = require('gulp-livereload');
 var concat = require('gulp-concat');
 var nodeInspector = require('gulp-node-inspector');
 var browserifyCss = require('browserify-css');
+var configify = require('config-browserify');
 
 gulp.task("sass", function() {
   gulp.src("./clientsrc/sass/**/*scss")
@@ -29,6 +30,7 @@ gulp.task('js', function() {
     debug: true, // sourcemapを出力、chromeでのdebug可能にする
   })
   .transform(browserifyCss)
+  .transform(configify)
   .bundle()
   .on('error', console.error.bind(console)) // js compileエラーでもwatchを止めない
   .pipe(source("app.js")) // ビルド後のファイル名
@@ -44,6 +46,7 @@ gulp.task('js-release', function() {
     debug: true, // sourcemapを出力、chromeでのdebug可能にする
   })
   .transform(browserifyCss)
+  .transform(configify)
   .bundle()
   .on('error', console.error.bind(console)) // js compileエラーでもwatchを止めない
   .pipe(source("app.js")) // ビルド後のファイル名

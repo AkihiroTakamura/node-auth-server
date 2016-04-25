@@ -21,7 +21,7 @@ var styleNode = require('../../public/css/style.css');
 // =======================
 // library
 // =======================
-var config = require('./config');
+var config = require('config');
 var error = require('./error');
 var navbar = require('./lib/navbar');
 var menu = require('./lib/menu');
@@ -56,7 +56,7 @@ window.onerror = function(msg, file, line, column, err){
 // entry point
 // =======================
 domready(function() {
-  $("body").fadeIn(config.fadeInterval, function() {
+  $("body").fadeIn(config.get('Client.fadeInterval'), function() {
 
     Promise.resolve()
       .then(function() {

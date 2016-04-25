@@ -1,5 +1,5 @@
 var $ = require('jquery');
-var config = require('../config');
+var config = require('config');
 var error = require('../error');
 var user = require("./user");
 var role = require("./role");
@@ -21,7 +21,7 @@ function show() {
       .then(hideControls)
       .then(eventBind)
       .then(function() {
-        $dom.fadeIn(config.fadeInterval, resolve);
+        $dom.fadeIn(config.get('Client.fadeInterval'), resolve);
       })
       .then(resolve);
   });
@@ -32,7 +32,7 @@ function hide() {
     Promise.resolve()
       .then(eventUnBind)
       .then(function() {
-        $dom.fadeOut(config.fadeInterval, resolve);
+        $dom.fadeOut(config.get('Client.fadeInterval'), resolve);
       })
       .then(resolve)
     ;

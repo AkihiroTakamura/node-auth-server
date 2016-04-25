@@ -57,5 +57,8 @@
         "roleFullName": "System Administrator"
       }
     }
+  },
+  "Client": {
+    "fadeInterval" : 500
   }
 }

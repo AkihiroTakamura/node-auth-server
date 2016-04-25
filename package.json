@@ -46,6 +46,7 @@
   "devDependencies": {
     "browserify": "^13.0.0",
     "browserify-css": "^0.9.1",
+    "config-browserify": "^1.0.5",
     "cssify": "^1.0.2",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
