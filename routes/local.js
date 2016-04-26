@@ -31,7 +31,7 @@ router.route('/setting')
   .get(authController.isSessionAuthenticated, settingController.get);
 
 router.route('/i18n')
-  .get(authController.isSessionAuthenticated, localeController.get);
+  .get(localeController.get);
 
 
 module.exports = router;

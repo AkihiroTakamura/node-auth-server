@@ -73,9 +73,6 @@ function geti18n(param) {
         resolve(param)
       },
       error: function(xhr) {
-        if (xhr.status == 401) {
-          throw new error.UnAuthorizedException();
-        }
         return reject(new error.AjaxException(xhr));
       }
     });
