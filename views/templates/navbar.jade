@@ -7,6 +7,7 @@ nav.navbar.navbar-light.bg-faded.navbar-fixed-top
       li.nav-item.active
         a.nav-link(data-href='home') Home
           span.sr-only (current)
+    //
       li.nav-item
         a.nav-link Features
       li.nav-item
@@ -15,8 +16,8 @@ nav.navbar.navbar-light.bg-faded.navbar-fixed-top
     .pull-xs-right
       if user
         span !{__('dsp.hello') + ' <strong>' + user.fullName + '</strong>' + __('dsp.user.title')}
-        a(class='btn btn-primary', href='/logout') #{__('dsp.control.logout')}
+        a.btn.btn-primary.btn-sm(href='/logout') #{__('dsp.control.logout')}
       else
-        a(class='btn btn-primary', href='/login') #{__('dsp.control.login')}
+        a.btn.btn-primary.btn-sm(href='/login') #{__('dsp.control.login')}
 
 

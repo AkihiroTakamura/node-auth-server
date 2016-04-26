@@ -1,10 +1,20 @@
+@charset "UTF-8";
 @import url(node_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css);
+body {
+  font-family: Avenir , "Helvetica Neue" , Helvetica , Arial , Verdana , Roboto , "游ゴシック" , "Yu Gothic" , "游ゴシック体" , "YuGothic" , "ヒラギノ角ゴ Pro W3" , "Hiragino Kaku Gothic Pro" , "Meiryo UI" , "メイリオ" , Meiryo , "ＭＳ Ｐゴシック" , "MS PGothic" , sans-serif;
+  background-image: -webkit-linear-gradient(145deg, #FFFFFF, #FDFFFF);
+  background-image: linear-gradient(-55deg, #FFFFFF, #FDFFFF); }
+
 .popover-content {
   word-break: break-all; }
 
 .modal-body {
   max-height: 450px;
   overflow-y: auto; }
+
+.navbar {
+  background-image: -webkit-linear-gradient(145deg, #FFFFFF, #FDFFFF);
+  background-image: linear-gradient(-55deg, #FFFFFF, #FDFFFF); }
 
 .login .panel-heading {
   padding: 5px 15px; }
