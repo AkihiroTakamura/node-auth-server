@@ -3,6 +3,7 @@ var config = require('config');
 var error = require('../error');
 var notice = require('../notice');
 var confirm = require('../confirm');
+var i18n = require('../i18n');
 var $dom = $('#template-role');
 
 module.exports = {
@@ -133,10 +134,10 @@ function setTable() {
         $('<thead></thead>')
           .append(
             $('<tr></tr>')
-              .append($('<th></th>').text('id'))
-              .append($('<th></th>').text('name'))
-              .append($('<th></th>').text('fullName'))
-              .append($('<th></th>').text('action'))
+              .append($('<th></th>').text('id').hide())
+              .append($('<th></th>').text(i18n.get('dsp.control.role.name')))
+              .append($('<th></th>').text(i18n.get('dsp.control.role.fullName')))
+              .append($('<th></th>').text(i18n.get('dsp.control.action')))
           )
       )
       .append(
@@ -165,17 +166,17 @@ function setTableRow(json) {
 
       row
         .attr('data-json', JSON.stringify(role))
-        .append($('<td></td>').text(role._id))
+        .append($('<td></td>').text(role._id).hide())
         .append($('<td></td>').text(role.name))
         .append($('<td></td>').text(role.fullName))
         .append($('<td></td>').append([
           $('<button></button>')
             .addClass('btn btn-primary btn-edit')
-            .text('edit'),
+            .text(i18n.get('dsp.control.button.edit')),
           $('<span></span>').html('&nbsp'),
           $('<button></button>')
             .addClass('btn btn-primary btn-delete')
-            .text('delete')
+            .text(i18n.get('dsp.control.button.delete'))
         ]))
       ;
 
@@ -280,8 +281,8 @@ function showModal(param) {
 
     } else {
       // post mode
-      $modal.find('.btn-user-put').hide();
-      $modal.find('.btn-user-post').show();
+      $modal.find('.btn-role-put').hide();
+      $modal.find('.btn-role-post').show();
       $modal.find('[name=name]').prop('disabled', false);
     }
 

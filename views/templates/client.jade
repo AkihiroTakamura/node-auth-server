@@ -1,6 +1,6 @@
 #template-client.container.contents(style="display: none;")
   h1!= __('menu.manage.client.title')
-  button.btn.btn-primary.btn-client-add add
+  button.btn.btn-primary.btn-client-add!= __('dsp.control.button.add')
   .clientlist
 
   #template-client-modal.modal.fade(client='dialog')
@@ -14,16 +14,16 @@
           form.template-client-form
             input#input-id(name='_id', type='hidden')
             .form-group
-              label(for='input-name')!= __('dsp.control.name.client')
+              label(for='input-name')!= __('dsp.control.client.name')
               input#input-name.form-control(name='name', type='text', placeholder='application name')
             .form-group
               label(for='input-name')!= __('dsp.control.clientid')
               input#input-name.form-control(name='id', type='text', placeholder='application id')
             .form-group
               label(for='input-name')!= __('dsp.control.domain')
-              input#input-name.form-control(name='domain', type='text', placeholder='trial.com')
+              input#input-name.form-control(name='domain', type='text', placeholder='example.com')
 
         .modal-footer
-          button.btn.btn-default(data-dismiss='modal') Close
-          button.btn.btn-primary.btn-client-post Save changes
-          button.btn.btn-primary.btn-client-put Save changes
+          button.btn.btn-default(data-dismiss='modal')!= __('dsp.control.button.close')
+          button.btn.btn-primary.btn-client-post!= __('dsp.control.button.save')
+          button.btn.btn-primary.btn-client-put!= __('dsp.control.button.save')

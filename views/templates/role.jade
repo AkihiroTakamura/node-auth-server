@@ -1,6 +1,6 @@
 #template-role.container.contents(style="display: none;")
   h1!= __('menu.manage.role.title')
-  button.btn.btn-primary.btn-role-add add
+  button.btn.btn-primary.btn-role-add!= __('dsp.control.button.add')
   .rolelist
 
   #template-role-modal.modal.fade(role='dialog')
@@ -9,18 +9,18 @@
         .modal-header
           button.close(type='button', data-dismiss='modal', area-label='close')
             span(area-hidden='true')
-          h4.modal-title Modal title
+          h4.modal-title!= __('dsp.modal.title')
         .modal-body
           form.template-role-form
             input#input-id(name='_id', type='hidden')
             .form-group
-              label(for='input-name')!= __('dsp.control.name.role')
+              label(for='input-name')!= __('dsp.control.role.name')
               input#input-name.form-control(name='name', type='text', placeholder='role name')
             .form-group
-              label(for='input-fullName')!= __('dsp.control.name.roleFullName')
+              label(for='input-fullName')!= __('dsp.control.role.fullName')
               input#input-fullName.form-control(name='fullName', type='text', placeholder='role full name')
 
         .modal-footer
-          button.btn.btn-default(data-dismiss='modal') Close
-          button.btn.btn-primary.btn-role-post Save changes
-          button.btn.btn-primary.btn-role-put Save changes
+          button.btn.btn-default(data-dismiss='modal')!= __('dsp.control.button.close')
+          button.btn.btn-primary.btn-role-post!= __('dsp.control.button.save')
+          button.btn.btn-primary.btn-role-put!= __('dsp.control.button.save')

@@ -39,7 +39,7 @@ function hide() {
 function eventBind() {
   return new Promise(function(resolve, reject) {
     $dom.on('click', '.btn-user-add', function(e) {
-      Promise.resolve()
+      Promise.resolve({})
         .then(initModal)
         .then(showModal)
       ;
@@ -152,10 +152,10 @@ function setUserTable(param) {
           .append(
             $('<tr></tr>')
               .append($('<th></th>').text('id').hide())
-              .append($('<th></th>').text('username'))
-              .append($('<th></th>').text('fullName'))
-              .append($('<th></th>').text('roles'))
-              .append($('<th></th>').text('action'))
+              .append($('<th></th>').text(i18n.get('dsp.control.username')))
+              .append($('<th></th>').text(i18n.get('dsp.control.userFullName')))
+              .append($('<th></th>').text(i18n.get('dsp.control.role.title')))
+              .append($('<th></th>').text(i18n.get('dsp.control.action')))
           )
       )
       .append(
@@ -187,19 +187,19 @@ function setUserTableRow(param) {
         .append($('<td></td>').text(user._id).hide())
         .append($('<td></td>').text(user.username))
         .append($('<td></td>').text(user.fullName))
-        .append($('<td></td>').text(user.roles.map(function(elem){ return elem.name}).join(',')))
+        .append($('<td></td>').text(user.roles.map(function(elem){ return elem.fullName}).join(',')))
         .append($('<td></td>').append([
           $('<button></button>')
             .addClass('btn btn-primary btn-edit')
-            .text('edit'),
+            .text(i18n.get('dsp.control.button.edit')),
           $('<span></span>').html('&nbsp'),
           $('<button></button>')
             .addClass('btn btn-primary btn-delete')
-            .text('delete'),
+            .text(i18n.get('dsp.control.button.delete')),
           $('<span></span>').html('&nbsp'),
           $('<button></button>')
             .addClass('btn btn-primary btn-token')
-            .text('check token')
+            .text(i18n.get('dsp.control.button.checkToken'))
         ]))
       ;
 
@@ -367,7 +367,7 @@ function initModal(param) {
           option
             .attr('value', role._id)
             .addClass('list-group-item')
-            .text(role.name)
+            .text(role.fullName)
           ;
           $roles.append(option);
         });

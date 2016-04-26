@@ -30,19 +30,39 @@
 		"user": {
 			"title": "さん"
 		},
+		"confirm": {
+			"execute": "実行してよろしいですか？"
+		},
 		"require": "(必須)",
 		"control": {
+			"button": {
+				"add": "追加",
+				"edit": "編集",
+				"delete": "削除",
+				"close": "閉じる",
+				"save": "保存",
+				"checkToken": "トークン確認"
+			},
+			"action": "操作",
 			"login": "ログイン",
 			"logout": "ログアウト",
 			"username": "ユーザID",
 			"userFullName": "ユーザ名",
 			"password": "パスワード",
 			"authorize": "許可して続行",
-			"role": "ロール",
-			"name": {
-				"role": "ロールID",
-				"roleFullName": "ロール名",
+			"role": {
+				"title": "ロール",
+				"name": "ロールID",
+				"fullName": "ロール名",
 				"client": "アプリケーション名"
+			},
+			"client": {
+				"title": "認可アプリケーション",
+				"ownerUserName": "管理ユーザID",
+				"name": "アプリケーション名",
+				"clientId": "アプリケーションID",
+				"cliantSecret": "アプリケーションシークレット",
+				"domain": "ドメイン"
 			},
 			"clientid": "アプリケーションID",
 			"domain": "ドメイン(認証後コールバック先のホスト名等)",

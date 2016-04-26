@@ -1,6 +1,6 @@
 #template-user.container.contents(style="display: none;")
   h1!= __('menu.manage.user.title')
-  button.btn.btn-primary.btn-user-add add
+  button.btn.btn-primary.btn-user-add!=__('dsp.control.button.add')
   .userlist
 
   #template-user-modal.modal.fade(role='dialog')
@@ -23,7 +23,7 @@
               label(for='input-password')!= __('dsp.control.password')
               input#input-password.form-control(name='password', type='password')
             .form-group
-              label!= __('dsp.control.role') + __('dsp.require')
+              label!= __('dsp.control.role.title') + __('dsp.require')
               select.list-group.checked-list-box(name='roles', multiple, style='width: 100%')
             .form-group
               label(for='input-email')!= __('dsp.control.email')
@@ -33,9 +33,9 @@
               input#input-phone.form-control(name='phone', type='text', placeholder='phone number')
 
         .modal-footer
-          button.btn.btn-default(data-dismiss='modal') Close
-          button.btn.btn-primary.btn-user-post Save changes
-          button.btn.btn-primary.btn-user-put Save changes
+          button.btn.btn-default(data-dismiss='modal')!=__('dsp.control.button.close')
+          button.btn.btn-primary.btn-user-post!=__('dsp.control.button.save')
+          button.btn.btn-primary.btn-user-put!=__('dsp.control.button.save')
 
   #template-token-modal.modal.fade(role='dialog')
     .modal-dialog
@@ -47,4 +47,4 @@
         .modal-body
 
         .modal-footer
-          button.btn.btn-default(data-dismiss='modal') Close
+          button.btn.btn-default(data-dismiss='modal')!=__('dsp.control.button.close')

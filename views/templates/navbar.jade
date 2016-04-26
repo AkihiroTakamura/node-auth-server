@@ -14,7 +14,7 @@ nav.navbar.navbar-light.bg-faded.navbar-fixed-top
 
     .pull-xs-right
       if user
-        span !{__('dsp.hello') + ' <strong>' + user.username + '</strong>' + __('dsp.user.title')}
+        span !{__('dsp.hello') + ' <strong>' + user.fullName + '</strong>' + __('dsp.user.title')}
         a(class='btn btn-primary', href='/logout') #{__('dsp.control.logout')}
       else
         a(class='btn btn-primary', href='/login') #{__('dsp.control.login')}

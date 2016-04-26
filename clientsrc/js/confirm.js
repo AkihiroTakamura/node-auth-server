@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var i18n = require('./i18n');
 
 module.exports = {
   alert: alert,
@@ -15,7 +16,7 @@ function alert(param) {
 
 function confirm(param) {
   return new Promise(function(resolve, reject) {
-    if (window.confirm('are you sure?')) {
+    if (window.confirm(i18n.get('dsp.confirm.execute'))) {
       resolve(param);
     } else {
       reject();

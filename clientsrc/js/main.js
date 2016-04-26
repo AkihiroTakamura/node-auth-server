@@ -26,6 +26,7 @@ var error = require('./error');
 var navbar = require('./lib/navbar');
 var menu = require('./lib/menu');
 var changePassword = require('./lib/changePassword');
+var i18n = require('./i18n');
 
 // =======================
 // jQuery setting
@@ -59,6 +60,7 @@ domready(function() {
   $("body").fadeIn(config.get('Client.fadeInterval'), function() {
 
     Promise.resolve()
+      .then(i18n.init)
       .then(function() {
         return new Promise(function(resolve, reject) {
           if ($('body').find('nav').length != 0) {

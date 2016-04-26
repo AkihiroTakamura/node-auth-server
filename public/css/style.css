@@ -2,6 +2,10 @@
 .popover-content {
   word-break: break-all; }
 
+.modal-body {
+  max-height: 450px;
+  overflow-y: auto; }
+
 .login .panel-heading {
   padding: 5px 15px; }
 

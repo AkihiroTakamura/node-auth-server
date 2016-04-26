@@ -3,6 +3,7 @@ var config = require('config');
 var error = require('../error');
 var notice = require('../notice');
 var confirm = require('../confirm');
+var i18n = require('../i18n');
 var $dom = $('#template-client');
 
 module.exports = {
@@ -129,12 +130,12 @@ function setTable() {
         $('<thead></thead>')
           .append(
             $('<tr></tr>')
-              .append($('<th></th>').text('userId'))
-              .append($('<th></th>').text('application name'))
-              .append($('<th></th>').text('application id'))
-              .append($('<th></th>').text('application secret'))
-              .append($('<th></th>').text('domain'))
-              .append($('<th></th>').text('action'))
+              .append($('<th></th>').text(i18n.get('dsp.control.client.ownerUserName')))
+              .append($('<th></th>').text(i18n.get('dsp.control.client.name')))
+              .append($('<th></th>').text(i18n.get('dsp.control.client.clientId')))
+              .append($('<th></th>').text(i18n.get('dsp.control.client.cliantSecret')))
+              .append($('<th></th>').text(i18n.get('dsp.control.client.domain')))
+              .append($('<th></th>').text(i18n.get('dsp.control.action')))
           )
       )
       .append(
@@ -171,11 +172,11 @@ function setTableRow(json) {
         .append($('<td></td>').append([
           $('<button></button>')
             .addClass('btn btn-primary btn-edit')
-            .text('edit'),
+            .text(i18n.get('dsp.control.button.edit')),
           $('<span></span>').html('&nbsp'),
           $('<button></button>')
             .addClass('btn btn-primary btn-delete')
-            .text('delete')
+            .text(i18n.get('dsp.control.button.delete'))
         ]))
       ;
 

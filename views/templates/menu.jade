@@ -8,21 +8,21 @@ div.container.contents#template-menu(style="display: none;")
             .card-block
               h4.card-title!= __('menu.manage.user.title')
               p.card-text!= __('menu.manage.user.detail')
-              a(class="btn btn-primary btn-start", data-kind="user") start
+              a.btn.btn-primary.btn-start(data-kind="user") start
 
         .col-sm-6.col-md-4
           .card
             .card-block
               h4.card-title!= __('menu.manage.role.title')
               p.card-text!= __('menu.manage.role.detail')
-              a(class="btn btn-primary btn-start", data-kind="role") start
+              a.btn.btn-primary.btn-start(data-kind="role") start
 
         .col-sm-6.col-md-4
           .card
             .card-block
               h4.card-title!= __('menu.manage.setting.title')
               p.card-text!= __('menu.manage.setting.detail')
-              a(class="btn btn-primary btn-start", data-kind="setting") start
+              a.btn.btn-primary.btn-start(data-kind="setting") start
 
       if user
         .col-sm-6.col-md-4
@@ -30,7 +30,7 @@ div.container.contents#template-menu(style="display: none;")
             .card-block
               h4.card-title!= __('menu.manage.client.title')
               p.card-text!= __('menu.manage.client.detail')
-              a(class="btn btn-primary btn-start", data-kind="client") start
+              a.btn.btn-primary.btn-start(data-kind="client") start
 
 if user && user.is('admin')
   include user

@@ -6,6 +6,7 @@ var userController    = require('../controllers/user');
 var roleController    = require('../controllers/role');
 var clientController  = require('../controllers/client');
 var settingController  = require('../controllers/setting');
+var localeController  = require('../controllers/locale');
 
 router.route('/users')
   .post(authController.isSessionAuthenticated, userController.post)
@@ -28,5 +29,9 @@ router.route('/clients')
 router.route('/setting')
   .put(authController.isSessionAuthenticated, settingController.put)
   .get(authController.isSessionAuthenticated, settingController.get);
+
+router.route('/i18n')
+  .get(authController.isSessionAuthenticated, localeController.get);
+
 
 module.exports = router;
