@@ -1,23 +1,26 @@
-nav.navbar.navbar-light.bg-faded.navbar-fixed-top
-  button.navbar-toggler.hidden-sm-up(type='button' data-toggle='collapse' data-target='#collapseNavbar') &#9776
+nav.navbar.navbar-default.navbar-fixed-top
+  .container-fluid
+    .navbar-header
+      btn.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar-collapse', aria-expanded='false')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='#')!=__('app.name')
 
-  div#collapseNavbar.collapse.navbar-toggleable-xs
-    a.navbar-brand #{__('app.name')}
-    ul.nav.navbar-nav
-      li.nav-item.active
-        a.nav-link(data-href='home') Home
-          span.sr-only (current)
-    //
-      li.nav-item
-        a.nav-link Features
-      li.nav-item
-        a.nav-link Features2
+    #navbar-collapse.navbar-collapse.collapse
+      ul.nav.navbar-nav
+        li
+          a.nav-link(data-href='home') Home
 
-    .pull-xs-right
-      if user
-        span !{__('dsp.hello') + ' <strong>' + user.fullName + '</strong>' + __('dsp.user.title')}
-        a.btn.btn-primary.btn-sm(href='/logout') #{__('dsp.control.logout')}
-      else
-        a.btn.btn-primary.btn-sm(href='/login') #{__('dsp.control.login')}
-
+      ul.nav.navbar-nav.navbar-right
+        if user
+          li.dropdown
+            a.dropdown-toggle(data-toggle='dropdown', area-expanded='false') !{user.fullName + '<span class="caret"></span>'}
+            ul.dropdown-menu
+              li
+                a(href='/logout') #{__('dsp.control.logout')}
+        else
+          li
+            a(href='/login') #{__('dsp.control.login')}
 

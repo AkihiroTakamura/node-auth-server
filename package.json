@@ -12,7 +12,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.2",
-    "bootstrap": "^4.0.0-alpha.2",
+    "bootstrap-sass": "^3.3.6",
     "bootstrap-switch": "^3.3.2",
     "config": "^1.19.0",
     "connect-flash": "^0.1.1",
