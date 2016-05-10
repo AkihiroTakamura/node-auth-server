@@ -14,6 +14,7 @@ var concat = require('gulp-concat');
 var nodeInspector = require('gulp-node-inspector');
 var browserifyCss = require('browserify-css');
 var configify = require('config-browserify');
+var runSequence = require('run-sequence');
 
 var config = {
   bootstrapDir: './node_modules/bootstrap-sass',
@@ -107,31 +108,55 @@ gulp.task('debugserver', ['inspect'],  function() {
 
 gulp.task('watch', function() {
   gulp.watch([config.srcDir + "/js/**/*.js"], ["js"]);
-  gulp.watch([config.srcDir + "/sass/**/*.scss"], ["sass", "js"]); // jsでcssをrequireしているのでjsも実行する
+  gulp.watch([config.srcDir + "/sass/**/*.scss"], ["css"]);
   gulp.watch([config.publicDir + "/**/*.*", "./views/**/*.*"], function(e) {
     livereload.changed(e);
   });
 });
 
-gulp.task("default", [
-  'sass',
-  'fonts',
-  'js',
-  'debugserver',
-  'watch'
-]);
+gulp.task("css", function(callback) {
+  return runSequence(
+    'sass',
+    'js', // jsでcssをrequireしているのでjsも実行する
+    callback
+  );
+});
+gulp.task("default", function(callback) {
+  return runSequence(
+    'sass',
+    'fonts',
+    'js',
+    'debugserver',
+    'watch',
+    callback
+  );
+});
+gulp.task("default", function(callback) {
+  return runSequence(
+    'sass',
+    'fonts',
+    'js',
+    'debugserver',
+    'watch',
+    callback
+  );
+});
 
-gulp.task("build", [
-  'sass',
-  'fonts',
-  'js-release'
-]);
+gulp.task("build", function(callback) {
+  return runSequence(
+    'sass',
+    'fonts',
+    'js-release',
+    callback
+  );
+});
 
-gulp.task("run", [
-  'sass',
-  'fonts',
-  'js',
-  'server'
-]);
-
-
+gulp.task("run", function(callback) {
+  return runSequence(
+    'sass',
+    'fonts',
+    'js',
+    'server',
+    callback
+  );
+});
