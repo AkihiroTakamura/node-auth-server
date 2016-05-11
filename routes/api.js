@@ -20,17 +20,10 @@ router.route('/oauth2/authorize')
   .post(oauth2Controller.decision);
 
 // echange authorization code to access token
+// accept grant_type: code, password, client_credentials
 router.route('/oauth2/token')
   .post(
     authController.isClientAuthenticated,
-    oauth2Controller.token
-  );
-
-// exchange username/password to access token
-router.route('/oauth2/password-token')
-  .post(
-    authController.isClientAuthenticated,
-    authController.isUserAuthentiacted,
     oauth2Controller.token
   );
 

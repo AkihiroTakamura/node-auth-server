@@ -127,15 +127,44 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
     if (err) return callback(new errorHandler.DatabaseQueryException(err));
     if (!user) return callback(new Error('user is not found. username: ', username));
 
-    issueToken({
-      clientId: client._id,
-      userId: user._id,
-      scope: scope
-    }, function(err, accesstoken, extra_info, token) {
-      if (err) return callback(err);
-      callback(null, token);
+    user.verifyPassword(password, function(err, isMatch) {
+      if (err) return callback(new errorHandler.DatabaseQueryException(" error : user verifyPassword : [", err ,"]"));
+
+      if (!isMatch) {
+        logger.system.info(" password verify failed : password: [", password ,"]");
+        return callback(new Error('password is invalid'));
+      }
+
+      issueToken({
+        clientId: client._id,
+        userId: user._id,
+        scope: scope
+      }, function(err, accesstoken, extra_info, token) {
+        if (err) return callback(err);
+        callback(null, token);
+      });
+
     });
 
+  });
+
+}));
+
+// Exchange clientid/secret to access token
+server.exchange(oauth2orize.exchange.clientCredentials(function(client, scope, callback) {
+  logger.system.info("* Exchange client_credentials");
+  logger.system.debug('client:', client);
+  logger.system.debug('scope:', scope);
+
+  if (!client) return callback(new Error('client is not found.'));
+
+  issueToken({
+    clientId: client._id,
+    userId: client._id,
+    scope: scope
+  }, function(err, accesstoken, extra_info, token) {
+    if (err) return callback(err);
+    callback(null, token);
   });
 
 }));
@@ -186,22 +215,27 @@ function issueToken(option, callback) {
         token.save(function(err) {
           if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
+          var extra_info = {
+            refresh_token: token.refreshtoken,
+            client_id: token.clientId,
+            user_id: token.userId,
+            expiration_date: token.expirationDate,
+            scope: token.scope,
+            expires_in: config.token.expiresIn
+          };
+
           // relation token to User
           User.findById(option.userId, function(err, user) {
             if (err) return callback(new errorHandler.DatabaseQueryException(err));
+
+            // client_credentialsの場合、userがないのでここで正常終了させている
+            //TODO: clientにもtokenを紐付ける？ -> それならclientを更新する
+            if (!user) return callback(null, token.accesstoken, extra_info, token);
 
             user.tokens.push(token);
             user.save(function(err) {
               if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
-              var extra_info = {
-                refresh_token: token.refreshtoken,
-                client_id: token.clientId,
-                user_id: token.userId,
-                expiration_date: token.expirationDate,
-                scope: token.scope,
-                expires_in: config.token.expiresIn
-              };
 
               callback(null, token.accesstoken, extra_info, token);
             });
