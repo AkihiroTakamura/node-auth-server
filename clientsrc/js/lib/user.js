@@ -18,7 +18,7 @@ function show() {
       .then(refreshUserList)
       .then(eventBind)
       .then(function() {
-        $dom.fadeIn(config.get('Client.fadeInterval'), resolve);
+        $dom.fadeIn(config.get('Client.fadeInterval')).promise().done(resolve);
       })
       .catch(reject)
     ;
@@ -30,8 +30,9 @@ function hide() {
     Promise.resolve()
       .then(eventUnBind)
       .then(function() {
-        $dom.fadeOut(config.get('Client.fadeInterval'), resolve);
+        $dom.fadeOut(config.get('Client.fadeInterval')).promise().done(resolve);
       })
+      .catch(reject)
     ;
   });
 }
