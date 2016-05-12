@@ -37,26 +37,26 @@ router.route('/profile')
 // Client Password API
 // =======================
 router.route('/users')
-  .post(authController.isClientPasswordAuthenticated, userController.post)
-  .put(authController.isClientPasswordAuthenticated, userController.put)
-  .delete(authController.isClientPasswordAuthenticated, userController.delete)
-  .get(authController.isClientPasswordAuthenticated, userController.get);
+  .post(bearerAuthController.isBearerAuthentiacted, userController.post)
+  .put(bearerAuthController.isBearerAuthentiacted, userController.put)
+  .delete(bearerAuthController.isBearerAuthentiacted, userController.delete)
+  .get(bearerAuthController.isBearerAuthentiacted, userController.get);
 
 router.route('/roles')
-  .post(authController.isClientPasswordAuthenticated, roleController.post)
-  .put(authController.isClientPasswordAuthenticated, roleController.put)
-  .delete(authController.isClientPasswordAuthenticated, roleController.delete)
-  .get(authController.isClientPasswordAuthenticated, roleController.get);
+  .post(bearerAuthController.isBearerAuthentiacted, roleController.post)
+  .put(bearerAuthController.isBearerAuthentiacted, roleController.put)
+  .delete(bearerAuthController.isBearerAuthentiacted, roleController.delete)
+  .get(bearerAuthController.isBearerAuthentiacted, roleController.get);
 
 router.route('/clients')
-  .post(authController.isClientPasswordAuthenticated, clientController.post)
-  .put(authController.isClientPasswordAuthenticated, clientController.put)
-  .delete(authController.isClientPasswordAuthenticated, clientController.delete)
-  .get(authController.isClientPasswordAuthenticated, clientController.get);
+  .post(bearerAuthController.isBearerAuthentiacted, clientController.post)
+  .put(bearerAuthController.isBearerAuthentiacted, clientController.put)
+  .delete(bearerAuthController.isBearerAuthentiacted, clientController.delete)
+  .get(bearerAuthController.isBearerAuthentiacted, clientController.get);
 
 router.route('/setting')
-  .put(authController.isSessionAuthenticated, settingController.put)
-  .get(authController.isSessionAuthenticated, settingController.get);
+  .put(bearerAuthController.isBearerAuthentiacted, settingController.put)
+  .get(bearerAuthController.isBearerAuthentiacted, settingController.get);
 
 
 module.exports = router;

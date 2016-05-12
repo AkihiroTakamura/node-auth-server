@@ -5,6 +5,7 @@ var config = require('config');
 
 exports.post = function(req, res, next) {
 
+  if (!req.user.is(config.application.init.admin.role)) return next(new errorHandler.PermissionDeniedException(res.__('validate.permission.nothave')));
   if (!req.body.username) return next(new errorHandler.ParameterInvalidException(res.__('validate.require.name')));
   if (!req.body.fullName) return next(new errorHandler.ParameterInvalidException(res.__('validate.require.fullName')));
   if (!req.body.password) return next(new errorHandler.ParameterInvalidException(res.__('validate.require.password')));
@@ -36,6 +37,7 @@ exports.post = function(req, res, next) {
 
 exports.put = function(req, res, next) {
 
+  if (!req.user.is(config.application.init.admin.role)) return next(new errorHandler.PermissionDeniedException(res.__('validate.permission.nothave')));
   if (!req.body._id) return next(new errorHandler.ParameterInvalidException(res.__('validate.require._id')));
 
   User.findById(req.body._id, 'id username', function(err, user) {
@@ -79,6 +81,10 @@ exports.get = function(req, res, next) {
 }
 
 exports.delete = function(req, res, next) {
+
+  if (!req.user.is(config.application.init.admin.role)) return next(new errorHandler.PermissionDeniedException(res.__('validate.permission.nothave')));
+  if (!req.body._id) return next(new errorHandler.ParameterInvalidException(res.__('validate.require._id')));
+
   User.findById(req.body._id, 'id username', function(err, user) {
     if (err) return next(new errorHandler.DatabaseQueryException(err));
 

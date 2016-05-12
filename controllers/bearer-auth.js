@@ -25,7 +25,10 @@ passport.use(new BearerStrategy(
         return callback(null, false);
       }
 
-      User.findOne({ _id: token.userId}, function (err, user) {
+      User.findOne({ _id: token.userId})
+      .populate('roles')
+      .populate('clients')
+      .exec(function (err, user) {
         if (err) return callback(new errorHandler.DatabaseQueryException(" error : bearer passport : user find : [", err ,"]"));
 
         if (!user) {

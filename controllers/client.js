@@ -66,6 +66,11 @@ exports.put = function(req, res, next) {
     if (err) return next(new errorHandler.DatabaseQueryException(err));
     if (!client) return next(new errorHandler.ParameterInvalidException(res.__('validate.notfound.client')));
 
+    if (!req.user.is(config.application.init.admin.role)) {
+      // if not admin, cannot access data expect own
+      if (client.userId !== req.user._id) return next(new errorHandler.PermissionDeniedException(res.__('validate.permission.nothave')));
+    }
+
     Client.count({id: req.body.id}, function(err, count) {
       if (err) return next(new errorHandler.DatabaseQueryException(err));
       if (req.body.id != client.id && count > 0) {
@@ -113,6 +118,11 @@ exports.get = function(req, res, next) {
 exports.delete = function(req, res, next) {
   Client.findById(req.body._id, function(err, client) {
     if (err) return next(new errorHandler.DatabaseQueryException(err));
+
+    if (!req.user.is(config.application.init.admin.role)) {
+      // if not admin, cannot access data expect own
+      if (client.userId !== req.user._id) return next(new errorHandler.PermissionDeniedException(res.__('validate.permission.nothave')));
+    }
 
     User.findOne(
       {_id: req.user._id}

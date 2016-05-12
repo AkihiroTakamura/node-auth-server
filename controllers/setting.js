@@ -5,6 +5,8 @@ var validator = require('validator');
 
 exports.put = function(req, res, next) {
 
+  if (!req.user.is(config.application.init.admin.role)) return next(new errorHandler.PermissionDeniedException(res.__('validate.permission.nothave')));
+
   if (!req.body._id) return next(new errorHandler.ParameterInvalidException(res.__('validate.require._id')));
 
   if (req.body.minLength && !validator.isInt(req.body.minLength))
