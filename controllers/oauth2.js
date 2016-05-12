@@ -160,7 +160,7 @@ server.exchange(oauth2orize.exchange.clientCredentials(function(client, scope, c
 
   issueToken({
     clientId: client._id,
-    userId: client._id,
+    userId: client.userId,  // when client credentials -> role devendent with user who client owner
     scope: scope
   }, function(err, accesstoken, extra_info, token) {
     if (err) return callback(err);
@@ -207,7 +207,8 @@ function issueToken(option, callback) {
           clientId: option.clientId,
           userId: option.userId,
           expirationDate: new Date(new Date().getTime() + (config.token.expiresIn * 1000)),
-          scope: option.scope
+          scope: option.scope,
+          user: option.userId
         });
 
         logger.system.info("* Create access token accesstoken[", token.accesstoken ,"] scope[", token.scope,"]");
@@ -228,14 +229,9 @@ function issueToken(option, callback) {
           User.findById(option.userId, function(err, user) {
             if (err) return callback(new errorHandler.DatabaseQueryException(err));
 
-            // client_credentialsの場合、userがないのでここで正常終了させている
-            //TODO: clientにもtokenを紐付ける？ -> それならclientを更新する
-            if (!user) return callback(null, token.accesstoken, extra_info, token);
-
             user.tokens.push(token);
             user.save(function(err) {
               if (err) return callback(new errorHandler.DatabaseQueryException(err));
-
 
               callback(null, token.accesstoken, extra_info, token);
             });
@@ -268,6 +264,8 @@ exports.authorization = [
           logger.system.info(i18n.__('validate.oauth.notfound.client', clientId));
           return done(null, false);
         }
+
+        //TODO: add scope validation
 
         // validate redirectUri -> only host name
         var match = false;

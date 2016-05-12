@@ -13,7 +13,11 @@ var TokenSchema = new mongoose.Schema({
     } else {
       return value;
     }
-  }, default: true }
+  }, default: true },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 
 module.exports = mongoose.model('Token', TokenSchema);
