@@ -31,7 +31,7 @@ router.route('/oauth2/token')
 // Bearer API
 // =======================
 router.route('/profile')
-  .get(bearerAuthController.hasScopeIdAndRole, profileController.get);
+  .get(bearerAuthController.isBearerAuthentiacted, profileController.get);
 
 // =======================
 // Client Password API

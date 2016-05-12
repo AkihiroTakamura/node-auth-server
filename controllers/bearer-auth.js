@@ -57,36 +57,3 @@ exports.isBearerAuthentiacted = function(req, res, callback) {
 
   })(req, res, callback);
 }
-
-exports.hasScopeIdAndRole = function(req, res, callback) {
-  passport.authenticate('bearer', {session: false}, function(err, user, info) {
-    if (err) return callback(err);
-    if (!user) return callback(new errorHandler.AuthenticationException(i18n.__('validate.invalid.accesstoken')));
-
-    if (!hasScope(info.scope, "id") || !hasScope(info.scope, "role")) {
-      return callback(new errorHandler.PermissionDeniedException(i18n.__('validate.invalid.permission', {detail: info.scope})));
-    }
-
-    // set info to request object
-    req.info = info;
-
-    req.logIn(user, function(err) {
-      if (err) return callback(err);
-      return callback();
-    });
-
-  })(req, res, callback);
-}
-
-// find scope from scope string(expect comma separated)
-function hasScope(scope, target) {
-  if (!scope || !target) return false;
-
-  var scopeArray = scope.split(',');
-
-  for (var i = 0; i < scopeArray.length; i++) {
-    if (scopeArray[i] == target) return true;
-  }
-  return false;
-}
-
