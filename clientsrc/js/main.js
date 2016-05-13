@@ -9,6 +9,7 @@ var domready = require('domready');
 var noty = require('noty');
 $.noty.defaults.layout = 'topRight';
 $.noty.defaults.timeout = 3000;
+var page = require('page');
 
 // =======================
 // css
@@ -22,10 +23,13 @@ var styleNode = require('../../public/css/style.css');
 // =======================
 var config = require('config');
 var error = require('./error');
-var navbar = require('./lib/navbar');
-var menu = require('./lib/menu');
-var changePassword = require('./lib/changePassword');
 var i18n = require('./i18n');
+var router = require('./router');
+
+// =======================
+// Controller
+// =======================
+var navbar = require('./lib/navbar');
 
 // =======================
 // jQuery setting
@@ -60,42 +64,8 @@ domready(function() {
 
     Promise.resolve()
       .then(i18n.init)
-      .then(function() {
-        return new Promise(function(resolve, reject) {
-          if ($('body').find('nav').length != 0) {
-            Promise.resolve()
-              .then(navbar.init)
-              .then(resolve)
-            ;
-            return;
-          }
-          resolve();
-        });
-      })
-      .then(function() {
-        return new Promise(function(resolve, reject) {
-          if ($('body').find('#template-menu').length != 0) {
-            Promise.resolve()
-              .then(menu.show)
-              .then(resolve)
-            ;
-            return;
-          }
-          resolve();
-        });
-      })
-      .then(function() {
-        return new Promise(function(resolve, reject) {
-          if ($('body').find('#template-changePassword-modal').length != 0) {
-            Promise.resolve()
-              .then(changePassword.init)
-              .then(resolve)
-            ;
-            return;
-          }
-          resolve();
-        });
-      })
+      .then(router.init)
+      .then(navbar.init)
     ;
 
   });

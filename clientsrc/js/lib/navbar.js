@@ -2,6 +2,7 @@ var $ = require('jquery');
 var config = require('config');
 var main = require('../main');
 var menu = require('./menu');
+var page = require('page');
 
 var $dom = $('nav');
 
@@ -47,10 +48,6 @@ function onNavLink(e) {
 
 function home() {
   return new Promise(function(resolve, reject) {
-    Promise.resolve()
-      .then(menu.hideControls)
-      .then(menu.show)
-      .then(resolve)
-    ;
+    page.redirect('/');
   });
 }
