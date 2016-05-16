@@ -16,37 +16,139 @@
 			"client": {
 				"title": "Manage Client",
 				"detail": "regist oauth2 client"
+			},
+			"setting": {
+				"title": "Environment Settings",
+				"detail": "system settings"
+			},
+			"profile": {
+				"title": "Profile",
+				"detail": "edit profile information"
 			}
 		}
 	},
 	"dsp": {
 		"success": "suceeded!",
 		"notlogined": "not logined",
-		"hello": "Hellog",
+		"hello": "Hello",
 		"user": {
 			"title": "."
 		},
+		"confirm": {
+			"execute": "Are you sure?"
+		},
+		"require": "(required)",
 		"control": {
+			"button": {
+				"add": "add",
+				"edit": "edit",
+				"delete": "delete",
+				"close": "close",
+				"save": "save",
+				"checkToken": "check token"
+			},
+			"action": "action",
 			"login": "Sign in",
 			"logout": "Sign Out",
 			"username": "username",
+			"userFullName": "full name",
 			"password": "password",
 			"authorize": "approve and continue",
-			"role": "role",
-			"name": {
-				"role": "role name",
-				"client": "client name"
+			"role": {
+				"title": "title",
+				"name": "name",
+				"fullName": "full role name",
+				"client": "application name"
 			},
-			"clientid": "client id",
-			"domain": "domain e.g(www.example.com)"
+			"client": {
+				"title": "authorized application",
+				"ownerUserName": "owner username",
+				"name": "application name",
+				"clientId": "application id",
+				"cliantSecret": "application secret",
+				"domain": "callback domain"
+			},
+			"clientid": "application id",
+			"domain": "domain",
+			"email": "Email Address",
+			"phone": "phone number",
+			"fullName": "full name",
+			"changePassword": "change password",
+			"newPassword": "new password",
+			"newPasswordAgain": "new password confirm",
+			"setting": {
+				"password": {
+					"minLength": {
+						"title": "password min length",
+						"small": "numeric"
+					},
+					"maxLength": {
+						"title": "password max length",
+						"small": "numeric"
+					},
+					"enabledLockout": {
+						"title": "enabled password lockout",
+						"small": "on - lockout enabled"
+					},
+					"lockoutCount": {
+						"title": "password lockout limit",
+						"small": "numeric"
+					},
+					"enabledLockoutRelease": {
+						"title": "enabled auto release password lockout",
+						"small": "on - enabled auto release"
+					},
+					"lockoutReleaseInterval": {
+						"title": "lockout auto release interval",
+						"small": "second"
+					},
+					"mustIncludeUpperCase": {
+						"title": "password must include upper case",
+						"small": "on - enabled"
+					},
+					"mustIncludeLowerCase": {
+						"title": "password must include lower case",
+						"small": "on - enabled"
+					},
+					"mustIncludeSymbolCase": {
+						"title": "password must include symbol case",
+						"small": "on - enabled"
+					},
+					"mustIncludeNumberCase": {
+						"title": "password must include number case",
+						"small": "on - enabled"
+					},
+					"mustExcludeId": {
+						"title": "password must exclude username",
+						"small": "on - enabled"
+					},
+					"disabledReuse": {
+						"title": "disabled reuse password",
+						"small": "on - enabled"
+					},
+					"reuseExpireCount": {
+						"title": "count of expiring password reuse",
+						"small": "numeric"
+					},
+					"expireDateCount": {
+						"title": "password expired date",
+						"small": "date count"
+					},
+					"disabledMultipleUpdateSameday": {
+						"title": "disabled multiple update password in same day",
+						"small": "on - enabled"
+					}
+				}
+			}
 		},
 		"modal": {
-			"title": "Controle"
+			"title": "Controle",
+			"changePassword": "change password"
 		},
 		"login": "Sign in ",
 		"msg": {
 			"require": {
-				"permission": "application uses following permission",
+				"scope": "application uses following permission",
 				"login": "Sign in and Authorize",
 				"logined": "Authorize"
 			},
@@ -62,7 +164,10 @@
 	"validate": {
 		"require": {
 			"name": "name is required",
+			"fullName": "fullName is required",
 			"password": "password is required",
+			"newPassword": "new password is required",
+			"newPasswordAgain": "new password confirm is required",
 			"id": "id is required",
 			"_id": "_id is required",
 			"domain": "domain is required"
@@ -73,13 +178,38 @@
 		"exist": {
 			"already": "already registered"
 		},
+		"password": {
+			"minLength": "password was too short",
+			"maxLength": "password was too long",
+			"mustIncludeUpperCase": "password must include upper case",
+			"mustIncludeLowerCase": "password must include lower case",
+			"mustIncludeSymbolCase": "password must include symbol case",
+			"mustIncludeNumberCase": "password must include number case",
+			"mustExcludeId": "password must exclude username",
+			"disabledReuse": "password do not allow reuse",
+			"disabledMultipleUpdateSameday": "already changed password today",
+			"expired": "password expired. you have to chenge your password",
+			"lock": "your account is locked. please change your password or inform to system administrator",
+			"adminChange": "to change Administrators password, please log in to admin console"
+		},
 		"notfound": {
 			"client": "client was not found",
-			"user": "user was not found"
+			"role": "role was not found",
+			"user": "user was not found",
+			"setting": "settings were not found"
 		},
 		"invalid": {
 			"password": "invalid password",
-			"accesstoken": "accesstoken is invalid of expired"
+			"samePassword": "can not use same password again",
+			"accesstoken": "invalid or expired access token",
+			"permission": "you do not have collect permission to this scope required scope: {{detail}}",
+			"newPasswordAgain": "there is difference of new password and new password confirm",
+			"compare": "the magnitude relation of value is invalid",
+			"type": {
+				"int": "value was not numeric"
+			},
+			"imageFile": "value was not image file",
+			"adminRole": "can not change administration role"
 		},
 		"oauth": {
 			"notfound": {
