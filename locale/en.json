@@ -159,6 +159,13 @@
 			"password": {
 				"notshare": "password will not be shared to application"
 			}
+		},
+		"title": {
+			"auth": "Authentification and Authorization",
+			"setting": {
+				"password": "password settings",
+				"system": "system settings"
+			}
 		}
 	},
 	"validate": {
