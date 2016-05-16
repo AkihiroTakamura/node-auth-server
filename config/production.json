@@ -53,6 +53,7 @@
       "admin": {
         "username": "admin",
         "password": "admin",
+        "fullName": "System Administrator",
         "role": "admin",
         "roleFullName": "System Administrator"
       }

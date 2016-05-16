@@ -7,7 +7,7 @@
     "expiresInDate": 14
   },
   "database": {
-    "mongo": "mongodb://localhost/nodeauthserver"
+    "mongo": "mongodb://localhost/nodeauthserver2"
   },
   "token": {
     "expiresIn": 3600
@@ -38,6 +38,7 @@
       "admin": {
         "username": "admin",
         "password": "admin",
+        "fullName": "System Administrator",
         "role": "admin",
         "roleFullName": "System Administrator"
       }

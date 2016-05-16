@@ -7,20 +7,26 @@ var Setting = require('../models/setting');
 
 exports.index = function(req, res) {
   Promise.resolve()
-    .then(function() {
+    .then(function(resolve, reject) {
       Promise.resolve()
         .then(isExistSetting)
         .then(addDefaultSetting)
+        .then(resolve)
+        .catch(reject)
     })
-    .then(function() {
+    .then(function(resolve, reject) {
       Promise.resolve()
         .then(isExistRole)
         .then(addDefaultRole)
+        .then(resolve)
+        .catch(reject)
     })
-    .then(function() {
+    .then(function(resolve, reject) {
       Promise.resolve()
       .then(isExistUser)
       .then(addDefaultUser)
+      .then(resolve)
+      .catch(reject)
     })
     .then(function() {
       res.render('index', {user: req.user, config: config, error: req.flash('error')});
@@ -74,6 +80,7 @@ function addDefaultRole() {
     });
     role.save(function(err) {
       if (err) reject(err);
+      logger.system.info("inserted default role.");
       resolve();
     })
   });
@@ -98,11 +105,13 @@ function addDefaultUser() {
       var user = new User({
         username: config.application.init.admin.username,
         password: config.application.init.admin.password,
+        fullName: config.application.init.admin.fullName,
         roles: [role._id]
       });
 
       user.save(function(err) {
         if (err) reject(err);
+        logger.system.info("inserted default user.");
         resolve();
       });
 
@@ -129,6 +138,7 @@ function addDefaultSetting() {
 
     setting.save(function(err) {
       if (err) reject(err);
+      logger.system.info("inserted default setting.");
       resolve();
     });
 

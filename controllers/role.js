@@ -83,7 +83,7 @@ exports.delete = function(req, res, next) {
     if (err) return next(new errorHandler.DatabaseQueryException(err));
 
     // validate role
-    if (!req.role.is(config.application.init.admin.role)) return next(new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave')));
+    if (!req.user.is(config.application.init.admin.role)) return next(new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave')));
 
     //TODO: validate users exist has target role
 
