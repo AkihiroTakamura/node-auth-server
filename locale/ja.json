@@ -215,7 +215,8 @@
 			"type": {
 				"int": "数字形式ではありません"
 			},
-			"imageFile": "画像ファイルではありません"
+			"imageFile": "画像ファイルではありません",
+			"adminRole": "管理者ロールは変更できません"
 		},
 		"oauth": {
 			"notfound": {

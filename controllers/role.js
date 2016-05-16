@@ -41,6 +41,8 @@ exports.put = function(req, res, next) {
     if (err) return next(new errorHandler.DatabaseQueryException(err));
     if (!role) return next(new errorHandler.ParameterInvalidException(res.__('validate.notfound.role')));
 
+    if (role.name == config.application.init.admin.role) return next(new errorHandler.ParameterInvalidException(res.__('validate.invalid.adminRole')));
+
     Role.count({id: req.body.name}, function(err, count) {
       if (err) return next(new errorHandler.DatabaseQueryException(err));
       if (req.body.name != role.name && count > 0) {
@@ -84,8 +86,7 @@ exports.delete = function(req, res, next) {
 
     // validate role
     if (!req.user.is(config.application.init.admin.role)) return next(new errorHandler.ParameterInvalidException(res.__('validate.permission.nothave')));
-
-    //TODO: validate users exist has target role
+    if (role.name == config.application.init.admin.role) return next(new errorHandler.ParameterInvalidException(res.__('validate.invalid.adminRole')));
 
     role.remove(function(err, role) {
       if (err) return next(new errorHandler.DatabaseQueryException(err));
