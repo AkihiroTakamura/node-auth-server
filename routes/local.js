@@ -1,5 +1,14 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
+var upload = multer({
+  limits: {
+    fieldNameSize: 100, // max filename 100byte
+    fileSize: 5242880,  // max filesize 5MB
+    files: 1  // max file count
+  },
+  imMemory: true
+});
 
 var authController    = require('../controllers/auth');
 var userController    = require('../controllers/user');
@@ -7,6 +16,7 @@ var roleController    = require('../controllers/role');
 var clientController  = require('../controllers/client');
 var settingController  = require('../controllers/setting');
 var localeController  = require('../controllers/locale');
+var profileController   = require('../controllers/profile');
 
 router.route('/users')
   .post(authController.isSessionAuthenticated, userController.post)
@@ -33,5 +43,10 @@ router.route('/setting')
 router.route('/i18n')
   .get(localeController.get);
 
+router.route('/profile/upload')
+  .post(authController.isSessionAuthenticated, upload.single('file'), profileController.upload);
+
+router.route('/profile/avator/:username')
+  .get(profileController.avator);
 
 module.exports = router;

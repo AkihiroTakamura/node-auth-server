@@ -26,6 +26,10 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  image: {
+    type: String, // expect image file convert to Base64 string
+    required: false
+  },
   passwordExpiredDate: {
     type: Date,
     required: false,

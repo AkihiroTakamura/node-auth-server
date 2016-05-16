@@ -1,5 +1,14 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
+var upload = multer({
+  limits: {
+    fieldNameSize: 100, // max filename 100byte
+    fileSize: 5242880,  // max filesize 5MB
+    files: 1  // max file count
+  },
+  imMemory: true
+});
 
 var userController    = require('../controllers/user');
 var authController    = require('../controllers/auth');
@@ -57,6 +66,9 @@ router.route('/clients')
 router.route('/setting')
   .put(bearerAuthController.isBearerAuthentiacted, settingController.put)
   .get(bearerAuthController.isBearerAuthentiacted, settingController.get);
+
+router.route('/profile/upload')
+  .post(bearerAuthController.isBearerAuthentiacted, upload.single('file'), profileController.upload);
 
 
 module.exports = router;

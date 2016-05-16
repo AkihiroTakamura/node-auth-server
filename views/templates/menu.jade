@@ -32,6 +32,13 @@ div.container.contents#template-menu(style="display: none;")
               p.card-text!= __('menu.manage.client.detail')
               a.btn.btn-primary.btn-start(data-kind="client") start
 
+        .col-sm-6.col-md-4
+          .card
+            .card-block
+              h4.card-title!= __('menu.manage.profile.title')
+              p.card-text!= __('menu.manage.profile.detail')
+              a.btn.btn-primary.btn-start(data-kind="profile") start
+
 if user && user.is('admin')
   include user
   include role
@@ -39,3 +46,4 @@ if user && user.is('admin')
 
 if user
   include client
+  include profile

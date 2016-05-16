@@ -1,0 +1,8 @@
+#template-profile.container.contents(style="display: none;")
+  h1!= __('menu.manage.profile.title')
+
+  form(method='post', action='/profile/upload')
+    fieldset.form-group
+      label.strong(for='avatar') Image:
+      #avatar.muted
+        #clickable.dz-clickable Upload Image

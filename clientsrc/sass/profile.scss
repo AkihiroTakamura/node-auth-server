@@ -1,0 +1,19 @@
+#template-profile {
+  & div#avatar {
+    background-color: #f8f8f8;
+    border: 1px dashed silver;
+    width: 120px;
+    height: 120px;
+  }
+
+  & div#clickable {
+    width: 120px;
+    text-align: center;
+    line-height: 120px;
+  }
+
+  & .dz-clickable {
+    cursor: pointer;
+  }
+
+}

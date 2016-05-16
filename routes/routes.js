@@ -1,18 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var multer = require('multer');
-var upload = multer({
-  limits: {
-    fieldNameSize: 100, // max filename 100byte
-    fileSize: 5242880,  // max filesize 5MB
-    files: 1  // max file count
-  },
-  imMemory: true
-});
 
 var siteController    = require('../controllers/site');
 var authController    = require('../controllers/auth');
 var changePasswordController    = require('../controllers/changePassword');
+var profileController   = require('../controllers/profile');
 
 router.route('/')
   .get(siteController.index);
@@ -37,5 +29,8 @@ router.route('/profile')
 
 router.route('/changePassword')
   .put(changePasswordController.put)
+
+router.route('/profile/avator/:username')
+  .get(profileController.avator);
 
 module.exports = router;

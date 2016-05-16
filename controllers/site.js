@@ -55,9 +55,6 @@ exports.profile = function(req, res) {
   res.render('profile', {user: req.user});
 }
 
-exports.upload = function(req, res) {
-  console.log(req.files);
-}
 
 function isExistRole() {
   return new Promise(function(resolve, reject) {
