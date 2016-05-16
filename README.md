@@ -16,11 +16,11 @@
 
 ```
 # install
-$ brew install mongodb
+brew install mongodb
 
 # mongoDB auto start
-$ ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
-$ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
+ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
+launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
 
 ```
 
@@ -46,22 +46,48 @@ sudo service mongod start
 ```
 
 
+## install node(mac)(if not installed)
+
+```
+brew install node
+npm install -g n
+n stable
+```
+
+## install node(Linux)(if not installed)
+
+```
+yum install nodejs npm --enablerepo=epel
+npm install -g n
+n stable
+```
+
 ## install global node modules
 
 ```
-$ npm install -g node-inspector gulp nodemon
+npm install -g node-inspector gulp nodemon pm2
 
 ```
 
 
-## how to start application
+## how to debug application
 
 ```
-$ git clone ...
-$ cd node-auth-server
-$ npm install
-$ gulp
+git clone ...
+cd node-auth-server
+npm install
+gulp
 ```
+
+## how to run application
+
+```
+export NODE_ENV=production
+pm2 start server.js --name="node-auth-server" --watch
+
+```
+
+
 
 
 # Functions
@@ -69,7 +95,7 @@ $ gulp
   * basic authenticate/form authenticate
 * Application Authorization by clientid/clientsecret
   * OAuth2.0 grant code flow
-* Management page for User/Role/Client
+* Management page for User/Role/Client and so on.
 
 
 # Tutorial
@@ -82,7 +108,7 @@ $ gulp
 
 > default user is defined config/*.json
 
-![Kobito.G0NnGF.png](https://qiita-image-store.s3.amazonaws.com/0/60056/9c4ab2d1-3214-c746-c069-59d0460a7da9.png "Kobito.G0NnGF.png")
+![Kobito.lO2E2S.png](https://qiita-image-store.s3.amazonaws.com/0/60056/576b920d-4264-7768-7879-cf443ee82028.png "Kobito.lO2E2S.png")
 
 ## regist client
 
@@ -99,6 +125,7 @@ $ gulp
 
 ![Kobito.nyxfJc.png](https://qiita-image-store.s3.amazonaws.com/0/60056/8deeda95-f864-97ef-fb93-3c67efc6c040.png "Kobito.nyxfJc.png")
 
+
 * after client registed, application secret is shown. please note this for oauth connection.
 
 ![Kobito.qYLYnv.png](https://qiita-image-store.s3.amazonaws.com/0/60056/08525f1b-6ac3-28b4-cae3-fb94ed4f1e4b.png "Kobito.qYLYnv.png")
@@ -111,12 +138,13 @@ $ gulp
 * open browser and input following url.
 
 ```
-http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&redirect_uri=http://localhost:9999&scope=admin
+http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&redirect_uri=http://localhost:9999&scope=username role fullName email phone image
 ```
 
 * authorization page opened, click 'aoorove and continue'
 
-![Kobito.IWYdUv.png](https://qiita-image-store.s3.amazonaws.com/0/60056/72901875-e52f-37a4-33ff-4162b6412593.png "Kobito.IWYdUv.png")
+![Kobito.qNCcT3.png](https://qiita-image-store.s3.amazonaws.com/0/60056/bdc894d3-4821-0770-ae50-96f28fba975e.png "Kobito.qNCcT3.png")
+
 
 * see url bar in your browser.
 * url includes oauth code like http://localhost:9999/code=mf7IOpFpY8kb6g5B
@@ -129,19 +157,19 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 
 * url: /api/oauth2/token
 * method: POST
-* header: none
+* header:
+  * Authorization: Basic [converted base64 string 'clientid:client secret']
 * body
   * code: mf7IOpFpY8kb6g5B
 
   > set OAuthCode - you noted a little while ago
 
   * grant_type: authorization_code
-  * client_id: sampleapp
-  * client_secret: xxxxx
 
-  > set client id and secret to request body
+![Kobito.nnD6w0.png](https://qiita-image-store.s3.amazonaws.com/0/60056/86a9cd86-d3f2-9b7e-ab95-1e7c334b2fbe.png "Kobito.nnD6w0.png")
 
-![Kobito.QABSyq.png](https://qiita-image-store.s3.amazonaws.com/0/60056/06713b79-e198-1020-f0b8-15920f24c590.png "Kobito.QABSyq.png")
+
+![Kobito.Ec05Hd.png](https://qiita-image-store.s3.amazonaws.com/0/60056/0888ff29-08bc-678a-0b13-9902a7fcd023.png "Kobito.Ec05Hd.png")
 
 
 * if ok, return access token by json
@@ -155,12 +183,12 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 
 
 ## Get Profile Information by accessToken
-* url: /api/users/
+* url: /api/profile
 * method: GET
 * header
   * Authorization: Bearer <accesstoken>
 
-![Kobito.QTfaQm.png](https://qiita-image-store.s3.amazonaws.com/0/60056/68546dbd-abd6-a4a0-8e61-860fd67307b5.png "Kobito.QTfaQm.png")
+![Kobito.EHf6NK.png](https://qiita-image-store.s3.amazonaws.com/0/60056/8eb21a5f-8b95-23ee-afb4-1549a534feeb.png "Kobito.EHf6NK.png")
 
 
 # Grant Types
@@ -168,10 +196,10 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 * see Tutorial
 
 
-## password
+## Resource Owner Password Credentials
 > Exchange username/password to AccessToken
 
-* url: /api/oauth2/password-token
+* url: /api/oauth2/token
 * method: POST
 * header
   * Authorization: Basic clientid:clientsecret
@@ -185,6 +213,18 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 ![Kobito.pZ7Mjj.png](https://qiita-image-store.s3.amazonaws.com/0/60056/83754b14-42ab-4a90-b7cc-301d24259078.png "Kobito.pZ7Mjj.png")
 
 ![Kobito.M1l2ge.png](https://qiita-image-store.s3.amazonaws.com/0/60056/0c11acb4-c4d6-a932-96b8-7a1b9def7d4d.png "Kobito.M1l2ge.png")
+
+## Client Credentials
+> Exchange client_id/client_secret to AccessToken
+
+* url: /api/oauth2/token
+* method: POST
+* header
+  * Authorization: Basic clientid:clientsecret
+* body
+  * grant_type: client_credentials
+  * scope: username,role,fullName,email,phone
+
 
 ## refresh token
 * url: /api/oauth2/token
@@ -208,6 +248,7 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 * body
   * username: user id
   * password: user password
+  * fullName: user full name
   * roles: user roles(Array)
 
 ## add client
@@ -218,23 +259,5 @@ http://localhost:9999/api/oauth2/authorize?client_id=example&response_type=code&
 * body
   * name: client(application) name
   * id: client(application) id
-  * secret: client(application) password
   * domain: client(application) domain e.g)hostname
-
-
-# TODO
-* ~~redirect_uriのvalidation~~
-* ~~clientsecretのencrypt~~
-* ~~deny押した時の挙動~~
-* ~~accessTokenの有効期限とrefreshToken~~
-* ~~userのログアウト~~
-* ~~userの権限(admin権限は全ユーザ・クライアント見れる)~~
-* ~~user認証の共有api~~
-* ~~user認可ありのアプリ一覧、認可の解除機能~~
-* ~~通常ログイン時のprofile等、メニュー画面~~
-* ~~accesstoken状態、session状態等~~
-* ~~同一role/userによる再authの場合、スルーしてcode返却~~
-* ~~apiでusername/password認証(web以外などcode flowできないケース対応)~~
-  * ~~clientid/secretの認証とともに実施~~
-
 
